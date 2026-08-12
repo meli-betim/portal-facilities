@@ -7,6 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
@@ -409,7 +411,7 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
 
 <script>
 // ═══════════════════════════════════════════════════════
-// CENTRAL DATA STORE (localStorage)
+// CENTRAL DATA STORE (Firebase Realtime Database — compartilhado)
 // ═══════════════════════════════════════════════════════
 // ═══════════════════════════════════════════════════════
 // DADOS FIXOS DA PLANILHA — Todas as abas importadas
@@ -418,72 +420,100 @@ const COLETAS_FIXAS_PLANILHA = [{"id": "xl0005", "data": "2026-05-11", "dia": "S
 const SOB_DEMANDA_PLANILHA = [{"id": "sd001", "dataSolic": "2026-05-12", "dataPrevista": "2026-05-13", "dataRealiz": "2026-05-13", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd002", "dataSolic": "2026-05-15", "dataPrevista": "2026-05-15", "dataRealiz": "2026-05-15", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd003", "dataSolic": "2026-05-15", "dataPrevista": "2026-05-16", "dataRealiz": "2026-05-16", "tipo": "Compactadora Organico", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd004", "dataSolic": "2026-05-15", "dataPrevista": "2026-05-16", "dataRealiz": "-", "tipo": "Compactador Organico", "volume": "", "status": "❌ Não Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd005", "dataSolic": "2026-05-15", "dataPrevista": "2026-05-16", "dataRealiz": "2026-05-16", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd006", "dataSolic": "2026-06-25", "dataPrevista": "2026-06-25", "dataRealiz": "2026-06-25", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd007", "dataSolic": "2026-06-25", "dataPrevista": "2026-05-26", "dataRealiz": "28 e 29/05/2026", "tipo": "Bombonas - Perigosos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd008", "dataSolic": "2026-05-27", "dataPrevista": "2026-05-27", "dataRealiz": "2026-05-27", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd009", "dataSolic": "2026-06-01", "dataPrevista": "2026-06-01", "dataRealiz": "2026-06-02", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd010", "dataSolic": "2026-06-02", "dataPrevista": "2026-06-02", "dataRealiz": "2026-06-02", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd011", "dataSolic": "2026-06-08", "dataPrevista": "2026-06-08", "dataRealiz": "2026-06-09", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd012", "dataSolic": "2026-06-12", "dataPrevista": "2026-06-12", "dataRealiz": "2026-06-12", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd013", "dataSolic": "2026-06-16", "dataPrevista": "2026-06-16", "dataRealiz": "2026-06-18", "tipo": "Compactadora Resíduos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd014", "dataSolic": "2026-06-18", "dataPrevista": "2026-06-18", "dataRealiz": "2026-06-19", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd015", "dataSolic": "2026-06-22", "dataPrevista": "2026-06-22", "dataRealiz": "2026-06-25", "tipo": "Bombonas - Perigosos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd016", "dataSolic": "2026-06-24", "dataPrevista": "2026-06-24", "dataRealiz": "2026-06-25", "tipo": "Bombonas - Restaurante", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd017", "dataSolic": "2026-06-25", "dataPrevista": "2026-06-25", "dataRealiz": "2026-06-26", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd025", "dataSolic": "2026-07-03", "dataPrevista": "2026-07-03", "dataRealiz": "2026-07-03", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd026", "dataSolic": "2026-07-07", "dataPrevista": "2026-07-07", "dataRealiz": "2026-07-09", "tipo": "Bombonas Restaurante", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd027", "dataSolic": "2026-07-08", "dataPrevista": "2026-07-08", "dataRealiz": "2026-07-13", "tipo": "Caçamba Metal (doca10)", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd028", "dataSolic": "2026-07-13", "dataPrevista": "2026-07-13", "dataRealiz": "2026-07-14", "tipo": "Bombonas Perigosos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd029", "dataSolic": "2026-07-21", "dataPrevista": "2026-07-21", "dataRealiz": "2026-07-24", "tipo": "Bombonas Restaurante", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd030", "dataSolic": "2026-07-21", "dataPrevista": "2026-07-21", "dataRealiz": "2026-07-21", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd031", "dataSolic": "2026-07-21", "dataPrevista": "2026-07-21", "dataRealiz": "2026-07-22", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd032", "dataSolic": "2026-07-27", "dataPrevista": "2026-07-27", "dataRealiz": "2026-07-27", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd033", "dataSolic": "2026-07-27", "dataPrevista": "2026-07-27", "dataRealiz": "2026-07-27", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd034", "dataSolic": "2026-07-30", "dataPrevista": "2026-07-30", "dataRealiz": "2026-08-01", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd035", "dataSolic": "2026-08-03", "dataPrevista": "2026-08-03", "dataRealiz": "2026-08-05", "tipo": "Bombonas Perigosos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd036", "dataSolic": "2026-08-07", "dataPrevista": "2026-08-07", "dataRealiz": "2026-08-07", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd037", "dataSolic": "2026-08-07", "dataPrevista": "2026-08-07", "dataRealiz": "-", "tipo": "Bombonas Restaurante", "volume": "", "status": "❌ Não Realizada", "resp": "Eduarda", "obs": "(Demanda que solicitamos antecipção e não foi realizada no dia combinado)"}, {"id": "sd038", "dataSolic": "2026-08-10", "dataPrevista": "2026-08-10", "dataRealiz": "2026-08-11", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd039", "dataSolic": "2026-08-11", "dataPrevista": "2026-08-11", "dataRealiz": "", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "🔄 Solicitada", "resp": "", "obs": ""}];
 const NAO_CONFORMIDADES_PLANILHA = [{"id": "nc01", "data": "2026-05-11", "tipoColeta": "Orgânico - Resíduos", "tipoNC": "Coleta não realizada", "descricao": "Coleta não realizada", "acao": "", "prazo": "", "resp": "", "status": "🟢 Encerrada"}, {"id": "nc02", "data": "2026-05-18", "tipoColeta": "Caçamba apoio cami.", "tipoNC": "Coleta não realizada", "descricao": "Coleta não realizada", "acao": "", "prazo": "", "resp": "", "status": "🟢 Encerrada"}, {"id": "nc03", "data": "2026-05-18", "tipoColeta": "Compactadora Resíduos", "tipoNC": "Coleta não realizada", "descricao": "Atraso na coleta", "acao": "A Ambiensys disponibilizou uma caçamba extra de resíduos comum, devido a coleta não realizada no dia 18/05/2026", "prazo": "2026-05-19", "resp": "Sonali", "status": "🟢 Encerrada"}, {"id": "nc04", "data": "2026-05-19", "tipoColeta": "Orgânico - Caçamba 5m", "tipoNC": "Outro", "descricao": "Aguardando ", "acao": "A Ambiensys disponibilizou a troca extra pelo motivo citado acima", "prazo": "2026-05-19", "resp": "Ana Silva ", "status": "🟢 Encerrada"}, {"id": "nc05", "data": "2026-05-25", "tipoColeta": "Bombonas Perigosos ", "tipoNC": "Atraso na coleta", "descricao": "Aguardando ", "acao": "Foi solicitado a troca das bombonas de perigosos (Que seriam trocadas no dia 26/05/2026) O que não veio, segundo a Ana da Ambienys foi o ''segundo atraso pontual'' ", "prazo": "", "resp": "Ana Silva ", "status": "🟢 Encerrada"}, {"id": "nc06", "data": "2026-07-01", "tipoColeta": "Compactadora Resíduos", "tipoNC": "Falha operacional interna ", "descricao": "", "acao": "No dia 01/07/2026 (quarta-feira) enviaram a compactadora de resíduos comum para troca sem a nossa solicitação. Registrando o desvio para compensar na medição.", "prazo": "", "resp": "", "status": "🟢 Encerrada"}, {"id": "nc07", "data": "2026-07-31", "tipoColeta": "Caçamba Extra Restaurante", "tipoNC": "Coleta não realizada", "descricao": "Coleta não realizada", "acao": "Solicitamos no dia 31/07/2026 (sexta-feira) uma coleta extra para o restaurante que seria realizada no sabádo dia 01/08/2026 porém não tinham janela de encaixe para o dia.", "prazo": "", "resp": "", "status": "🟢 Encerrada"}, {"id": "nc08", "data": "2026-08-11", "tipoColeta": "Caçamba Extra Restaurante", "tipoNC": "Coleta não realizada", "descricao": "Coleta não realizada", "acao": "Solicitamos no dia 07/08/2026 (sexta-feira) uma coleta extra para o restaurente na segunda-feira (10/08/2026) pois na sexta já existia um alto volume de lixo organico a ser descartado. A Ambiensys GARANTIU que atenderia o cliente na segunda-feira no primeiro horário. Eles não vieram realizar a coleta solicitada na segunda-feira.", "prazo": "", "resp": "", "status": "🔴 Aberta"}];
 
+/* ===================== PERSISTÊNCIA COMPARTILHADA (Firebase) =====================
+   Todos os usuários que abrirem este link se conectam ao mesmo banco de dados
+   na nuvem (Firebase Realtime Database), então qualquer alteração feita por
+   uma pessoa (novo bebedouro, checklist preenchido, medição lançada etc.)
+   aparece automaticamente para todos os outros, em tempo real. */
+const firebaseConfig = {
+  apiKey: "AIzaSyDGyxkynuZ-CUHxKa5Nao21lhlVID0yr2k",
+  authDomain: "sistema-de-limpeza-betim.firebaseapp.com",
+  databaseURL: "https://sistema-de-limpeza-betim-default-rtdb.firebaseio.com",
+  projectId: "sistema-de-limpeza-betim",
+  storageBucket: "sistema-de-limpeza-betim.firebasestorage.app",
+  messagingSenderId: "416446347972",
+  appId: "1:416446347972:web:37b5481d7ef3307f59a791"
+};
+firebase.initializeApp(firebaseConfig);
+const fbRoot = firebase.database().ref('portal_facilities');
+
+// DB mantém a mesma interface síncrona (get/set) que o resto do arquivo já usa —
+// por baixo dos panos, get() lê de um cache em memória (populado a partir do
+// Firebase) e set() atualiza esse cache na hora (otimista) e grava na nuvem.
+const DB_CACHE = {};
+let dbReady = false;
 const DB = {
-  get(key){ try{return JSON.parse(localStorage.getItem('fac_'+key)||'null');}catch{return null;}},
-  set(key,val){ localStorage.setItem('fac_'+key, JSON.stringify(val)); },
-  init(key,def){ if(!DB.get(key)) DB.set(key,def); return DB.get(key); }
+  get(key){ return DB_CACHE.hasOwnProperty(key) ? DB_CACHE[key] : null; },
+  set(key,val){
+    DB_CACHE[key] = val;
+    fbRoot.child(key).set(val).catch(e=>{
+      console.error('Firebase set error', key, e);
+      alert('⚠️ Não foi possível salvar na nuvem (verifique sua conexão). A alteração pode não ter sido compartilhada com os outros usuários.');
+    });
+  },
+  init(key,def){ if(DB.get(key)===null || DB.get(key)===undefined) DB.set(key,def); return DB.get(key); }
 };
 
 // ─── INIT DEFAULT DATA ───
-const fornecedores = DB.init('fornecedores',[
-  {id:'f1',nome:'Sapore',cnpj:'',servico:'Alimentação',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
-  {id:'f2',nome:'Rentokil',cnpj:'',servico:'Controle de Pragas',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
-  {id:'f3',nome:'Ambiensys',cnpj:'',servico:'Gestão de Resíduos',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
-  {id:'f4',nome:'GranCoffee',cnpj:'',servico:'Máquinas de Café',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
-]);
-const localizacoes = DB.init('localizacoes',[
-  {id:'l1',nome:'Térreo',status:'Ativo'},
-  {id:'l2',nome:'1º Andar',status:'Ativo'},
-  {id:'l3',nome:'2º Andar',status:'Ativo'},
-  {id:'l4',nome:'Refeitório',status:'Ativo'},
-  {id:'l5',nome:'Área Externa',status:'Ativo'},
-  {id:'l6',nome:'Almoxarifado',status:'Ativo'},
-  {id:'l7',nome:'Restaurante',status:'Ativo'},
-]);
-const tiposProblema = DB.init('tiposProblema',[
-  {id:'tp1',nome:'Vazamento',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp2',nome:'Entupimento',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp3',nome:'Não está gelado',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp4',nome:'Baixa vazão',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp5',nome:'Problema elétrico',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp6',nome:'Problema no filtro',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp7',nome:'Ruído',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp8',nome:'Falha no compressor',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp9',nome:'Falha na torneira',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp10',nome:'Outros',modulo:'bebedouro',status:'Ativo'},
-  {id:'tp11',nome:'Máquina parada',modulo:'grancoffee',status:'Ativo'},
-  {id:'tp12',nome:'Falha no café',modulo:'grancoffee',status:'Ativo'},
-  {id:'tp13',nome:'Falha no cappuccino',modulo:'grancoffee',status:'Ativo'},
-  {id:'tp14',nome:'Falha na leitura',modulo:'grancoffee',status:'Ativo'},
-  {id:'tp15',nome:'Vazamento',modulo:'grancoffee',status:'Ativo'},
-  {id:'tp16',nome:'Falha elétrica',modulo:'grancoffee',status:'Ativo'},
-  {id:'tp17',nome:'Problema de abastecimento',modulo:'grancoffee',status:'Ativo'},
-  {id:'tp18',nome:'Outros',modulo:'grancoffee',status:'Ativo'},
-]);
-const tiposEquipamento = DB.init('tiposEquipamento',[
-  {id:'te1',nome:'Bebedouro Industrial',status:'Ativo'},
-  {id:'te2',nome:'Purificador de Água Brastemp',status:'Ativo'},
-]);
-const bebedouros = DB.init('bebedouros',[]);
-const historicoBeb = DB.init('historicoBeb',[]);
-const maquinasCafe = DB.init('maquinasCafe',[]);
-const chamadosCafe = DB.init('chamadosCafe',[]);
-const dosesCafe = DB.init('dosesCafe',[]);
-const checklistData = DB.init('checklistData',[]);
-const medicoes = DB.init('medicoes',[]);
-const reunioes = DB.init('reunioes',[]);
-// ═══ CARGA INICIAL — BASE ÚNICA ═══════════════════════════
-// Versão dos dados da planilha — incrementar ao reimportar
-const VERSAO_CARGA = '2026-08-12-v1';
+// Tudo isto só pode rodar DEPOIS que os dados iniciais chegarem do Firebase
+// (senão sobrescreveríamos dados já existentes na nuvem com estes padrões).
+// Por isso vira uma função, chamada pelo boot() lá no fim do arquivo.
+function seedDefaults(){
+  DB.init('fornecedores',[
+    {id:'f1',nome:'Sapore',cnpj:'',servico:'Alimentação',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
+    {id:'f2',nome:'Rentokil',cnpj:'',servico:'Controle de Pragas',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
+    {id:'f3',nome:'Ambiensys',cnpj:'',servico:'Gestão de Resíduos',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
+    {id:'f4',nome:'GranCoffee',cnpj:'',servico:'Máquinas de Café',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
+  ]);
+  DB.init('localizacoes',[
+    {id:'l1',nome:'Térreo',status:'Ativo'},
+    {id:'l2',nome:'1º Andar',status:'Ativo'},
+    {id:'l3',nome:'2º Andar',status:'Ativo'},
+    {id:'l4',nome:'Refeitório',status:'Ativo'},
+    {id:'l5',nome:'Área Externa',status:'Ativo'},
+    {id:'l6',nome:'Almoxarifado',status:'Ativo'},
+    {id:'l7',nome:'Restaurante',status:'Ativo'},
+  ]);
+  DB.init('tiposProblema',[
+    {id:'tp1',nome:'Vazamento',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp2',nome:'Entupimento',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp3',nome:'Não está gelado',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp4',nome:'Baixa vazão',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp5',nome:'Problema elétrico',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp6',nome:'Problema no filtro',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp7',nome:'Ruído',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp8',nome:'Falha no compressor',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp9',nome:'Falha na torneira',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp10',nome:'Outros',modulo:'bebedouro',status:'Ativo'},
+    {id:'tp11',nome:'Máquina parada',modulo:'grancoffee',status:'Ativo'},
+    {id:'tp12',nome:'Falha no café',modulo:'grancoffee',status:'Ativo'},
+    {id:'tp13',nome:'Falha no cappuccino',modulo:'grancoffee',status:'Ativo'},
+    {id:'tp14',nome:'Falha na leitura',modulo:'grancoffee',status:'Ativo'},
+    {id:'tp15',nome:'Vazamento',modulo:'grancoffee',status:'Ativo'},
+    {id:'tp16',nome:'Falha elétrica',modulo:'grancoffee',status:'Ativo'},
+    {id:'tp17',nome:'Problema de abastecimento',modulo:'grancoffee',status:'Ativo'},
+    {id:'tp18',nome:'Outros',modulo:'grancoffee',status:'Ativo'},
+  ]);
+  DB.init('tiposEquipamento',[
+    {id:'te1',nome:'Bebedouro Industrial',status:'Ativo'},
+    {id:'te2',nome:'Purificador de Água Brastemp',status:'Ativo'},
+  ]);
+  DB.init('bebedouros',[]);
+  DB.init('historicoBeb',[]);
+  DB.init('maquinasCafe',[]);
+  DB.init('chamadosCafe',[]);
+  DB.init('dosesCafe',[]);
+  DB.init('checklistData',[]);
+  DB.init('medicoes',[]);
+  DB.init('reunioes',[]);
 
-(function initBaseUnica(){
-  const VK = 'fac_versao_carga';
-  const versaoSalva = localStorage.getItem(VK);
+  // ═══ CARGA INICIAL — BASE ÚNICA ═══════════════════════════
+  // Versão dos dados da planilha — incrementar ao reimportar
+  const VERSAO_CARGA = '2026-08-12-v1';
+  const versaoSalva = DB.get('versaoCarga');
 
   // ── residuosColetas ──
-  const chaveC = 'fac_residuosColetas';
-  const existing = JSON.parse(localStorage.getItem(chaveC)||'null');
-
+  const existing = DB.get('residuosColetas');
   if(!existing || !existing.length || versaoSalva !== VERSAO_CARGA){
     // Primeira abertura OU nova carga: merge inteligente
     const base = existing && existing.length ? [...existing] : [];
@@ -499,35 +529,30 @@ const VERSAO_CARGA = '2026-08-12-v1';
       }
       // Se fonte='manual': preserva sem alterar
     }
-    localStorage.setItem(chaveC, JSON.stringify(base));
+    DB.set('residuosColetas', base);
   }
 
   // ── sobDemanda ──
-  const chaveS = 'fac_sobDemanda';
-  if(!localStorage.getItem(chaveS) || versaoSalva !== VERSAO_CARGA){
-    const existS = JSON.parse(localStorage.getItem(chaveS)||'null')||[];
-    const baseS = [...existS];
+  if(!DB.get('sobDemanda') || versaoSalva !== VERSAO_CARGA){
+    const baseS = [...(DB.get('sobDemanda')||[])];
     for(const r of SOB_DEMANDA_PLANILHA){
       if(!baseS.find(s=>s.id===r.id)) baseS.push(r);
     }
-    localStorage.setItem(chaveS, JSON.stringify(baseS));
+    DB.set('sobDemanda', baseS);
   }
 
   // ── naoConformidades ──
-  const chavaN = 'fac_naoConformidades';
-  if(!localStorage.getItem(chavaN) || versaoSalva !== VERSAO_CARGA){
-    const existN = JSON.parse(localStorage.getItem(chavaN)||'null')||[];
-    const baseN = [...existN];
+  if(!DB.get('naoConformidades') || versaoSalva !== VERSAO_CARGA){
+    const baseN = [...(DB.get('naoConformidades')||[])];
     for(const r of NAO_CONFORMIDADES_PLANILHA){
       if(!baseN.find(n=>n.id===r.id)) baseN.push(r);
     }
-    localStorage.setItem(chavaN, JSON.stringify(baseN));
+    DB.set('naoConformidades', baseN);
   }
 
-  localStorage.setItem(VK, VERSAO_CARGA);
-})();
-
-const estoque = DB.init('estoque',[]);
+  DB.set('versaoCarga', VERSAO_CARGA);
+  DB.init('estoque',[]);
+}
 
 
 // ═══════════════════════════════════════════════════════
@@ -555,6 +580,7 @@ function recuperarSessao(){
 }
 
 function doLogin(){
+  if(!dbReady){ alert('Ainda carregando os dados da nuvem, aguarde um instante e tente de novo.'); return; }
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pw').value;
   const match = USERS.find(x=>x.user===u && x.pw===p);
@@ -571,17 +597,29 @@ function doLogin(){
 }
 function entrarNoPortal(){
   updateUserUI();
+  currentScreenName='home';
   showScreen('home');
   initHomeGreeting();
   renderPortalGrid();
 }
 function doLogout(){
   currentUser=null;
+  currentScreenName='login';
   limparSessao();
   document.getElementById('login-user').value='';
   document.getElementById('login-pw').value='';
   showScreen('login');
   document.getElementById('login-user').focus();
+}
+
+// Chamado toda vez que os dados mudam na nuvem (por qualquer usuário, incluindo
+// a própria aba). Re-renderiza só a tela visível agora, sem mexer em modais abertos
+// (para não atrapalhar alguém no meio do preenchimento de um formulário).
+function refreshCurrentView(){
+  const modalAberto = document.getElementById('modal-overlay').classList.contains('open');
+  if(modalAberto) return;
+  if(currentScreenName==='home') renderPortalGrid();
+  else if(currentScreenName==='module' && currentModId) renderModContent(currentModId, currentPage||undefined);
 }
 function updateUserUI(){
   if(!currentUser) return;
@@ -603,7 +641,7 @@ function showScreen(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
 }
-function goHome(){ showScreen('home'); renderPortalGrid(); }
+function goHome(){ currentScreenName='home'; showScreen('home'); renderPortalGrid(); }
 function initHomeGreeting(){
   const h = new Date().getHours();
   const g = h<12?'Bom dia ☀️':h<18?'Boa tarde 🌤':' Boa noite 🌙';
@@ -663,11 +701,14 @@ const MODULE_MENUS = {
 };
 
 let currentModId=null;
+let currentPage=null;
+let currentScreenName='login';
 
 function openModule(id){
   const mod=MODULES.find(m=>m.id===id);
   if(!mod) return;
   currentModId=id;
+  currentScreenName='module';
   document.getElementById('mod-breadcrumb').textContent=mod.label;
   document.getElementById('mod-topbar-name').textContent=mod.label;
   const ti=document.getElementById('mod-topbar-icon');
@@ -706,6 +747,7 @@ function setActiveNav(page,mod){
 }
 
 function renderModContent(id,page){
+  currentModId=id; currentPage=page;
   const mod=MODULES.find(m=>m.id===id);
   setActiveNav(page,mod);
   const c=document.getElementById('mod-content');
@@ -3247,22 +3289,45 @@ function toggleTipoEquip(id){
 }
 
 // ═══════════════════════════════════════════════════════
-// INIT — restaura sessão se ainda válida (< 8h)
+// INIT — conecta ao Firebase, carrega os dados compartilhados
+// e só então restaura sessão (se ainda válida, < 8h) ou mostra o login.
+// fbRoot.on('value', ...) dispara imediatamente com o estado atual
+// (equivalente ao primeiro carregamento) e depois a cada mudança feita
+// por qualquer usuário — é assim que a tela de todo mundo se atualiza sozinha.
 // ═══════════════════════════════════════════════════════
-(function(){
-  try{
-    const saved = recuperarSessao();
-    if(saved && saved.user && saved.nome){
-      currentUser = saved;
-      entrarNoPortal();
-    } else {
+const loginBtn = document.querySelector('#screen-login .login-btn');
+const loginBtnTextoOriginal = loginBtn ? loginBtn.textContent : '';
+if(loginBtn){ loginBtn.disabled = true; loginBtn.textContent = 'Carregando dados…'; loginBtn.style.opacity = '0.6'; }
+
+fbRoot.on('value', (snapshot) => {
+  const dados = snapshot.val() || {};
+  Object.keys(dados).forEach(k => { DB_CACHE[k] = dados[k]; });
+
+  if(!dbReady){
+    // Primeiro carregamento
+    dbReady = true;
+    seedDefaults();
+    if(loginBtn){ loginBtn.disabled = false; loginBtn.textContent = loginBtnTextoOriginal; loginBtn.style.opacity = ''; }
+    try{
+      const saved = recuperarSessao();
+      if(saved && saved.user && saved.nome){
+        currentUser = saved;
+        entrarNoPortal();
+      } else {
+        document.getElementById('login-user').focus();
+      }
+    } catch(e){
+      console.error('Init error:', e);
       document.getElementById('login-user').focus();
     }
-  } catch(e){
-    console.error('Init error:', e);
-    document.getElementById('login-user').focus();
+  } else {
+    // Atualização vinda de outro usuário (ou eco da nossa própria gravação)
+    refreshCurrentView();
   }
-})();
+}, (error) => {
+  console.error('Firebase connection error', error);
+  if(loginBtn){ loginBtn.textContent = '⚠️ Sem conexão com o servidor'; }
+});
 </script>
 </body>
 </html>
