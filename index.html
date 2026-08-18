@@ -9,6 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
@@ -436,6 +437,9 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const fbRoot = firebase.database().ref('portal_facilities');
+// Firebase Storage — usa o mesmo bucket já configurado em firebaseConfig.storageBucket
+// (usado para os PDFs do Check List Fácil; ver seção "MODULE: CHECKLIST — PDFs")
+const fbStorage = firebase.storage();
 
 // DB mantém a mesma interface síncrona (get/set) que o resto do arquivo já usa —
 // por baixo dos panos, get() lê de um cache em memória (populado a partir do
@@ -693,7 +697,7 @@ const MODULE_MENUS = {
   bebedouros:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'equipamentos',icon:'🥤',label:'Equipamentos'},{key:'filtros',icon:'🔄',label:'Controle de Filtros'},{key:'historico',icon:'📋',label:'Histórico de Problemas'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
   residuos:[{key:'dashboard',icon:'📅',label:'Programação do Dia'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'dash2',icon:'📊',label:'Dashboard Gerencial'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'procedimentos',icon:'📁',label:'Procedimentos'},{key:'novo',icon:'➕',label:'Nova Coleta'}],
   estoque:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'itens',icon:'📦',label:'Itens do Estoque'},{key:'movimentos',icon:'🔄',label:'Movimentos'}],
-  checklist:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'lancamento',icon:'➕',label:'Novo Lançamento'},{key:'painel',icon:'📋',label:'Painel Mensal'}],
+  checklist:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'lancamento',icon:'➕',label:'Novo Lançamento'},{key:'painel',icon:'📋',label:'Painel Mensal'},{key:'listagem',icon:'📄',label:'Check Lists'}],
   grancoffee:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'maquinas',icon:'☕',label:'Máquinas'},{key:'chamados',icon:'🔔',label:'Chamados'},{key:'doses',icon:'📊',label:'Controle de Doses'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
   medicao:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'registros',icon:'📋',label:'Registros'},{key:'novo',icon:'➕',label:'Nova Medição'},{key:'visao',icon:'📅',label:'Visão Anual'}],
   reunioes:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'calendario',icon:'📅',label:'Calendário'},{key:'lista',icon:'📋',label:'Lista de Reuniões'},{key:'nova',icon:'➕',label:'Nova Reunião'}],
@@ -2780,10 +2784,29 @@ function renderChecklist(page){
         });
         const vals=medias.filter(v=>v!==null);
         const media=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):'—';
+        const fornEsc=f.nome.replace(/'/g,"\\'");
         return `<tr><td><b>${f.nome}</b></td>
-          ${medias.map(m=>m!==null?`<td style="font-weight:600;color:${m>=90?'#00A650':m>=70?'#E67700':'#D1242F'}">${m}%</td>`:'<td style="color:var(--light)">—</td>').join('')}
+          ${medias.map((m,idx)=>m!==null?`<td style="font-weight:600;color:${m>=90?'#00A650':m>=70?'#E67700':'#D1242F'};cursor:pointer;text-decoration:underline;text-decoration-style:dotted" title="Ver detalhamento semanal" onclick="abrirDetalheSemanal('${fornEsc}',${meses[idx]},${anoAtual})">${m}%</td>`:'<td style="color:var(--light)">—</td>').join('')}
           <td><b style="color:${typeof media==='number'?(media>=90?'#00A650':media>=70?'#E67700':'#D1242F'):'var(--muted)'}">${typeof media==='number'?media+'%':media}</b></td></tr>`;
       }).join('')}</tbody></table></div>`;
+  }
+  if(page==='listagem'){
+    const rows=[...data].sort((a,b)=>(b.data||'').localeCompare(a.data||'')||((b.semana||0)-(a.semana||0)));
+    return `<div class="content-header"><div><div class="content-title">📄 Check Lists Lançados</div><div class="content-sub">Todos os lançamentos semanais por fornecedor</div></div>
+      <div class="content-actions"><button class="btn btn-primary" onclick="abrirFormChecklistModal(null,{afterSave:()=>renderModContent('checklist','listagem')})">+ Novo Check List</button></div></div>
+      ${rows.length===0?`<div class="empty-state"><div class="empty-icon">📄</div><div>Nenhum checklist registrado ainda.</div></div>`
+      :`<div class="data-table-wrap"><table><thead><tr><th>Data</th><th>Fornecedor</th><th>Semana</th><th>Nota</th><th>PDF</th><th>Ações</th></tr></thead>
+      <tbody>${rows.map(c=>`<tr>
+        <td>${fmtDate(c.data)}</td>
+        <td><b>${c.fornecedor}</b></td>
+        <td>${c.semana||'—'}</td>
+        <td><b style="color:${c.resultado>=90?'var(--green)':c.resultado>=70?'#E67700':'var(--red)'}">${c.resultado}%</b></td>
+        <td>${c.pdfUrl?`<button class="btn btn-outline btn-sm" onclick="visualizarPdfChecklist('${c.id}')">📄 Ver PDF</button>`:'<span style="color:var(--light)">—</span>'}</td>
+        <td>
+          <button class="btn btn-outline btn-sm" onclick="abrirFormChecklistModal('${c.id}',{afterSave:()=>renderModContent('checklist','listagem')})" title="Editar">✏️</button>
+          <button class="btn btn-outline btn-sm" onclick="excluirChecklist('${c.id}',()=>renderModContent('checklist','listagem'))" title="Excluir">🗑️</button>
+        </td>
+      </tr>`).join('')}</tbody></table></div>`}`;
   }
   return '<div class="empty-state"><div class="empty-icon">🚧</div></div>';
 }
@@ -2798,6 +2821,169 @@ function salvarChecklist(){
     semana:parseInt(document.getElementById('cl-sem').value)||0,
     obs:document.getElementById('cl-obs').value});
   DB.set('checklistData',d);alert('Checklist salvo!');renderModContent('checklist','painel');
+}
+
+// ─── CRIAR/EDITAR/EXCLUIR CHECK LIST (modal) ───
+// Mesma fonte de dados (checklistData) usada pelo formulário "Novo Lançamento";
+// isto apenas dá acesso a criar/editar/excluir a partir da listagem e do
+// detalhamento mensal, sem duplicar a estrutura de dados.
+let _checklistModalCtx=null;
+function abrirFormChecklistModal(id,opts){
+  opts=opts||{};
+  const data=DB.get('checklistData')||[];
+  const rec=id?data.find(c=>c.id===id):null;
+  const forn=(DB.get('fornecedores')||[]).filter(f=>f.status==='Ativo');
+  const hoje=new Date();
+  const dataVal=rec?rec.data:(opts.data||hoje.toISOString().slice(0,10));
+  const fornVal=rec?rec.fornecedor:(opts.fornecedor||'');
+  const semVal=rec?(rec.semana!=null?rec.semana:''):(opts.semana!=null?opts.semana:'');
+  const resVal=rec?(rec.resultado!=null?rec.resultado:''):'';
+  const obsVal=rec?(rec.obs||''):'';
+  _checklistModalCtx={id:rec?rec.id:null,afterSave:opts.afterSave||function(){renderModContent('checklist','dashboard');}};
+  const body=`
+    <div class="form-row"><div class="form-group"><label class="form-label">Data *</label><input type="date" class="form-input" id="clm-data" value="${dataVal}"/></div>
+    <div class="form-group"><label class="form-label">Fornecedor *</label><select class="form-select" id="clm-forn">
+      ${forn.map(f=>`<option${f.nome===fornVal?' selected':''}>${f.nome}</option>`).join('')}</select></div></div>
+    <div class="form-row"><div class="form-group"><label class="form-label">Resultado (0–100%)</label><input type="number" class="form-input" id="clm-res" min="0" max="100" value="${resVal}"/></div>
+    <div class="form-group"><label class="form-label">Semana nº</label><input type="number" class="form-input" id="clm-sem" value="${semVal}"/></div></div>
+    <div class="form-group"><label class="form-label">Observações</label><textarea class="form-textarea" id="clm-obs">${obsVal}</textarea></div>`;
+  openModal(rec?'Editar Check List':'Novo Check List',body,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
+     <button class="btn btn-primary" onclick="salvarChecklistModal()">Salvar</button>`);
+}
+function salvarChecklistModal(){
+  const dt=document.getElementById('clm-data').value;
+  if(!dt){alert('Data obrigatória.');return;}
+  const dObj=new Date(dt+'T12:00');
+  const forn=document.getElementById('clm-forn').value;
+  const res=parseFloat(document.getElementById('clm-res').value)||0;
+  const sem=parseInt(document.getElementById('clm-sem').value)||0;
+  const obs=document.getElementById('clm-obs').value;
+  const ctx=_checklistModalCtx||{};
+  const d=DB.get('checklistData')||[];
+  if(ctx.id){
+    const i=d.findIndex(c=>c.id===ctx.id);
+    if(i>=0){ d[i]={...d[i],data:dt,mes:dObj.getMonth()+1,ano:dObj.getFullYear(),fornecedor:forn,resultado:res,semana:sem,obs:obs}; }
+  } else {
+    d.push({id:uid(),data:dt,mes:dObj.getMonth()+1,ano:dObj.getFullYear(),fornecedor:forn,resultado:res,semana:sem,obs:obs});
+  }
+  DB.set('checklistData',d);
+  closeModalDirect();
+  const afterSave=ctx.afterSave;
+  if(afterSave) afterSave();
+}
+function excluirChecklist(id,afterDelete){
+  if(!confirm('Excluir este lançamento de check list? Esta ação não pode ser desfeita.')) return;
+  const d=DB.get('checklistData')||[];
+  DB.set('checklistData',d.filter(c=>c.id!==id));
+  if(afterDelete) afterDelete();
+}
+// Reaplica a página atual do módulo Check List (recalcula Painel Mensal / Listagem
+// automaticamente a partir de checklistData) e, opcionalmente, reabre o
+// detalhamento semanal com os dados já atualizados.
+function _refreshChecklistView(reopenDetalhe){
+  if(currentModId==='checklist'){ renderModContent('checklist',currentPage); }
+  if(reopenDetalhe) reopenDetalhe();
+}
+function editarChecklistNaSemana(id,fornecedor,mes,ano){
+  abrirFormChecklistModal(id,{afterSave:()=>_refreshChecklistView(()=>abrirDetalheSemanal(fornecedor,mes,ano))});
+}
+function excluirChecklistNaSemana(id,fornecedor,mes,ano){
+  excluirChecklist(id,()=>_refreshChecklistView(()=>abrirDetalheSemanal(fornecedor,mes,ano)));
+}
+function adicionarChecklistNaSemana(fornecedor,mes,ano){
+  const dataDefault=`${ano}-${String(mes).padStart(2,'0')}-01`;
+  abrirFormChecklistModal(null,{
+    fornecedor:fornecedor,
+    data:dataDefault,
+    afterSave:()=>_refreshChecklistView(()=>abrirDetalheSemanal(fornecedor,mes,ano))
+  });
+}
+
+// ─── DETALHAMENTO SEMANAL + PDF DO CHECK LIST ───
+// Reaproveita checklistData (nota já é armazenada por semana) e o Storage do
+// mesmo projeto Firebase (firebaseConfig.storageBucket). Não cria nova fonte
+// de dados: cada registro semanal existente ganha, opcionalmente, pdfUrl/pdfPath.
+let _pdfUploadRecordId=null;
+function abrirDetalheSemanal(fornecedor,mes,ano){
+  const data=DB.get('checklistData')||[];
+  const regs=data.filter(c=>c.fornecedor===fornecedor&&c.mes===mes&&c.ano===ano)
+                  .sort((a,b)=>(a.semana||0)-(b.semana||0));
+  const vals=regs.map(r=>r.resultado).filter(v=>typeof v==='number'&&!isNaN(v));
+  const media=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;
+  const mediaStr=media!==null?(Math.round(media*10)/10).toString().replace('.',','):'—';
+  const fornEsc=fornecedor.replace(/'/g,"\\'");
+  const body=`
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--muted)"><b style="color:var(--navy)">${fornecedor}</b> — ${fmtMes(mes)}/${ano}</div>
+      <button class="btn btn-primary btn-sm" onclick="adicionarChecklistNaSemana('${fornEsc}',${mes},${ano})">+ Adicionar Check List</button>
+    </div>
+    ${regs.length===0?`<div class="empty-state"><div class="empty-icon">📋</div><div>Nenhuma nota lançada neste mês.</div></div>`:
+    regs.map(r=>`
+      <div class="card-section" style="margin-bottom:10px;padding:14px 16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div>
+            <div style="font-weight:700;font-size:13px">Semana ${r.semana||'—'}</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px">Nota: <b style="color:${r.resultado>=90?'var(--green)':r.resultado>=70?'#E67700':'var(--red)'}">${r.resultado}%</b></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${r.pdfUrl?`<button class="btn btn-outline btn-sm" onclick="visualizarPdfChecklist('${r.id}')">👁️ Visualizar PDF</button>`:''}
+            <button class="btn btn-outline btn-sm" onclick="prepararUploadPdfChecklist('${r.id}')">${r.pdfUrl?'🔄 Substituir PDF':'📎 Anexar PDF'}</button>
+            <button class="btn btn-outline btn-sm" onclick="editarChecklistNaSemana('${r.id}','${fornEsc}',${mes},${ano})" title="Editar">✏️ Editar</button>
+            <button class="btn btn-outline btn-sm" onclick="excluirChecklistNaSemana('${r.id}','${fornEsc}',${mes},${ano})" title="Excluir">🗑️ Excluir</button>
+          </div>
+        </div>
+        <div id="pdf-status-${r.id}" style="font-size:11px;margin-top:8px"></div>
+      </div>`).join('')}
+    ${regs.length?`<div style="border-top:1px solid var(--line);margin-top:14px;padding-top:14px;text-align:center">
+      <span style="font-size:13px;font-weight:700">MÉDIA DO MÊS: ${mediaStr}%</span></div>`:''}
+    <input type="file" id="pdf-upload-input" accept="application/pdf" style="display:none" onchange="onPdfFileSelected(event)"/>
+  `;
+  openModal('Detalhamento Semanal',body,`<button class="btn btn-outline" onclick="closeModalDirect()">Fechar</button>`,true);
+}
+function prepararUploadPdfChecklist(recordId){
+  _pdfUploadRecordId=recordId;
+  document.getElementById('pdf-upload-input').click();
+}
+function onPdfFileSelected(event){
+  const file=event.target.files[0];
+  event.target.value='';
+  const id=_pdfUploadRecordId;
+  const statusEl=id?document.getElementById('pdf-status-'+id):null;
+  if(!file) return;
+  if(file.type!=='application/pdf'){
+    if(statusEl) statusEl.innerHTML='<span style="color:var(--red)">Apenas arquivos PDF são aceitos.</span>';
+    else alert('Apenas arquivos PDF são aceitos.');
+    return;
+  }
+  const data=DB.get('checklistData')||[];
+  const rec=data.find(c=>c.id===id);
+  if(!rec){ alert('Registro não encontrado.'); return; }
+  if(statusEl) statusEl.innerHTML='<span style="color:var(--blue)">Enviando PDF…</span>';
+  const fornSlug=String(rec.fornecedor||'fornecedor').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_');
+  const mesFmt=String(rec.mes).padStart(2,'0');
+  const semanaFmt=rec.semana||0;
+  const path=`checklists/${rec.ano}/${fornSlug}/${mesFmt}/semana-${semanaFmt}/checklist.pdf`;
+  fbStorage.ref(path).put(file).then(snap=>snap.ref.getDownloadURL()).then(url=>{
+    const d2=DB.get('checklistData')||[];
+    const i=d2.findIndex(c=>c.id===id);
+    if(i>=0){ d2[i]={...d2[i],pdfUrl:url,pdfPath:path}; DB.set('checklistData',d2); }
+    abrirDetalheSemanal(rec.fornecedor,rec.mes,rec.ano);
+    setTimeout(()=>{
+      const st=document.getElementById('pdf-status-'+id);
+      if(st) st.innerHTML='<span style="color:var(--green)">PDF anexado com sucesso.</span>';
+    },0);
+  }).catch(err=>{
+    console.error('Erro ao enviar PDF do checklist',err);
+    const st=document.getElementById('pdf-status-'+id);
+    if(st) st.innerHTML='<span style="color:var(--red)">Falha ao enviar o PDF. Verifique sua conexão e tente novamente.</span>';
+    else alert('Falha ao enviar o PDF. Verifique sua conexão e tente novamente.');
+  });
+}
+function visualizarPdfChecklist(recordId){
+  const data=DB.get('checklistData')||[];
+  const rec=data.find(c=>c.id===recordId);
+  if(rec&&rec.pdfUrl) window.open(rec.pdfUrl,'_blank');
 }
 
 // ═══════════════════════════════════════════════════════
