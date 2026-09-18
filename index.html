@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-storage-compat.js"></script>
@@ -298,6 +299,13 @@ firebase.initializeApp(firebaseConfig);
 const fbRoot = firebase.database().ref('portal_facilities');
 const fbStorage = firebase.storage();
 
+// pdf.js — usado para extrair texto de PDFs de medição de resíduos
+// (leitura no navegador, sem backend). Worker obrigatório para a lib
+// funcionar de forma assíncrona sem bloquear a UI.
+if(typeof pdfjsLib !== 'undefined'){
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
 const DB_CACHE = {};
 let dbReady = false;
 const DB = {
@@ -411,6 +419,7 @@ function seedDefaults(){
 
   DB.set('versaoCarga', VERSAO_CARGA);
   DB.init('estoque',[]);
+  DB.init('medicoesResiduos',[]);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -533,7 +542,7 @@ function renderPortalGrid(){
 
 const MODULE_MENUS = {
   bebedouros:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'equipamentos',icon:'🥤',label:'Equipamentos'},{key:'filtros',icon:'🔄',label:'Controle de Filtros'},{key:'historico',icon:'📋',label:'Histórico de Problemas'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
-  residuos:[{key:'dash2',icon:'📊',label:'Dashboard Gerencial'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'procedimentos',icon:'📁',label:'Procedimentos'}],
+  residuos:[{key:'dashres',icon:'📊',label:'Dashboard de Resíduos'},{key:'dash2',icon:'🚚',label:'Gestão de Coletas'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'procedimentos',icon:'📁',label:'Procedimentos'}],
   estoque:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'itens',icon:'📦',label:'Itens do Estoque'},{key:'movimentos',icon:'🔄',label:'Movimentos'}],
   checklist:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'lancamento',icon:'➕',label:'Novo Lançamento'},{key:'painel',icon:'📋',label:'Painel Mensal'}],
   grancoffee:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'maquinas',icon:'☕',label:'Máquinas'},{key:'chamados',icon:'🔔',label:'Chamados'},{key:'doses',icon:'📊',label:'Controle de Doses'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
@@ -1229,13 +1238,15 @@ function renderResiduos(page){
   const sob=DB.get('sobDemanda')||[];
   const ncs=DB.get('naoConformidades')||[];
 
+  if(page==='dashres') return renderDashboardResiduos();
+  if(page==='resultadoAnalise') return renderResultadoAnaliseResiduos();
   if(page==='coletas')   return renderGradeColetas();
   if(page==='sobdemanda') return renderSobDemanda();
   if(page==='ncs')       return renderNaoConformidades();
   if(page==='dash2')     return renderDashboardGerencial();
   if(page==='procedimentos') return `<div class="content-header"><div><div class="content-title">Procedimentos e Documentos</div></div>
     <div class="content-actions"><button class="btn btn-primary" onclick="abrirFormProcedimento()">+ Adicionar</button></div></div>${renderProcedimentos()}`;
-  return renderDashboardGerencial();
+  return renderDashboardResiduos();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -1943,6 +1954,1318 @@ function gradeProcessarColagem(){
   else filtrarHistorico();
 }
 
+// ═══════════════════════════════════════════════════════
+// DASHBOARD DE RESÍDUOS — Volume, composição, destinação e evolução.
+// Alimentado pela importação de medições mensais em PDF. Base própria
+// 'medicoesResiduos', independente de 'residuosColetas' (que continua
+// alimentando exclusivamente a Gestão Gerencial de Coletas — execução
+// operacional). Os dois objetivos NUNCA se misturam.
+// ═══════════════════════════════════════════════════════
+
+const TIPOS_RESIDUO_PADRAO = [
+  'Papelão','Plástico Stretch','Plástico Polionda','Orgânicos','Rejeito',
+  'Perigosos','Madeira','RSS','Pallet','Sucata Metálica'
+];
+const DESTINACOES_PADRAO = ['Reciclagem','Compostagem','Aterro','Tratamento','Reuso','Coprocessamento'];
+const MESES_PT_FULL = ['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
+const MESES_ABREV_RES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const RESIDUO_MAX_BYTES = 8 * 1024 * 1024; // 8 MB por PDF de medição
+
+function normalizarTipoResiduo(raw){
+  const s = String(raw||'').trim();
+  if(!s) return null;
+  const clean = s.toLowerCase().replace(/[^\wà-ú\s]/gi,'').trim();
+  const map = {
+    'papelao':'Papelão', 'papel':'Papelão',
+    'plastico stretch':'Plástico Stretch', 'stretch':'Plástico Stretch',
+    'plastico polionda':'Plástico Polionda', 'polionda':'Plástico Polionda',
+    'organicos':'Orgânicos', 'organico':'Orgânicos',
+    'rejeito':'Rejeito', 'rejeitos':'Rejeito',
+    'perigosos':'Perigosos', 'perigoso':'Perigosos',
+    'madeira':'Madeira',
+    'rss':'RSS',
+    'pallet':'Pallet', 'pallets':'Pallet',
+    'sucata metalica':'Sucata Metálica', 'sucata':'Sucata Metálica',
+  };
+  if(map[clean]) return map[clean];
+  for(const [k,v] of Object.entries(map)){ if(clean.includes(k)) return v; }
+  return null;
+}
+
+// Extrai o mês de referência pelo campo NOMINAL (ex: "AGOSTO/26"), nunca
+// pelas datas individuais de coleta — exatamente como especificado.
+function extrairMesReferencia(texto){
+  const regex = new RegExp('(' + MESES_PT_FULL.join('|') + ')\\s*[/\\-]\\s*(\\d{2,4})', 'i');
+  const m = texto.match(regex);
+  if(!m) return null;
+  const mesNome = m[1].toUpperCase();
+  const mesNum = MESES_PT_FULL.indexOf(mesNome) + 1;
+  let ano = parseInt(m[2]);
+  if(ano < 100) ano += 2000;
+  return { mes: mesNum, ano, chave: `${ano}-${String(mesNum).padStart(2,'0')}`, label: `${MESES_ABREV_RES[mesNum-1]}/${ano}` };
+}
+function extrairCNPJ(texto){
+  const m = texto.match(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/);
+  return m ? m[0] : null;
+}
+function extrairUnidade(texto, cnpj){
+  if(!cnpj) return null;
+  const linhas = texto.split(/\n/).map(l=>l.trim()).filter(Boolean);
+  const idx = linhas.findIndex(l=>l.includes(cnpj));
+  return idx > 0 ? linhas[idx-1] : null;
+}
+function extrairFornecedor(texto){
+  const m = texto.match(/Fornecedor[:\s]+([^\n]+)/i);
+  return m ? m[1].trim() : null;
+}
+function extrairPeriodo(texto){
+  const m = texto.match(/Per[íi]odo[:\s]+([^\n]+)/i);
+  return m ? m[1].trim() : null;
+}
+// Regra fundamental: NUNCA tratar uma linha como "resumo por tipo" se
+// ela contiver uma DATA — isso indica detalhamento por coleta individual
+// (uma linha por coleta), não o total do mês por tipo. Muitos relatórios
+// trazem as duas seções (detalhamento + totais); só a segunda interessa
+// aqui. Cada tipo é contado no máximo uma vez, mesmo que o resumo apareça
+// repetido em mais de uma página do PDF.
+const REGEX_DATA_RESIDUO = /\d{1,2}\/\d{1,2}\/\d{2,4}/;
+function extrairLinhasResiduo(texto){
+  const linhas = texto.split(/\n/).map(l=>l.trim()).filter(Boolean);
+  const porTipo = {};
+  for(const linha of linhas){
+    if(REGEX_DATA_RESIDUO.test(linha)) continue; // linha de detalhamento por coleta — ignorada
+
+    // A linha deve COMEÇAR com um tipo de resíduo reconhecido (não basta "conter",
+    // isso evita capturar menções ao tipo em observações/rodapés).
+    let tipoEncontrado = null;
+    for(const tipoPadrao of TIPOS_RESIDUO_PADRAO){
+      const regexInicio = new RegExp('^' + tipoPadrao.replace(/[^\wà-ú]/gi, '\\s*.?\\s*'), 'i');
+      if(regexInicio.test(linha)){ tipoEncontrado = tipoPadrao; break; }
+    }
+    if(!tipoEncontrado || porTipo[tipoEncontrado]) continue;
+
+    const resto = linha.replace(new RegExp('^'+tipoEncontrado.replace(/[^\wà-ú]/gi,'.?'),'i'), '').trim();
+    const numeros = resto.match(/[\d.]+,\d+|[\d.]{1,}/g) || [];
+    // Volume: primeiro número com valor plausível de massa em kg (>=10);
+    // descarta números de 1-2 dígitos isolados, que tendem a ser contagens.
+    const candidatosVolume = numeros
+      .map(n => parseFloat(n.replace(/\./g,'').replace(',','.')))
+      .filter(n => !isNaN(n) && n >= 10);
+    if(!candidatosVolume.length) continue;
+    const volume = candidatosVolume[0];
+
+    const destMatch = DESTINACOES_PADRAO.find(d=>linha.toLowerCase().includes(d.toLowerCase()));
+    // Coletas: número inteiro pequeno (<1000) na linha — geralmente o
+    // último número, após o volume e a destinação.
+    const inteirosPequenos = numeros.map(n=>parseInt(n.replace(/\./g,''))).filter(n=>!isNaN(n) && n>0 && n<1000);
+    const qtdColetas = inteirosPequenos.length >= 1 ? inteirosPequenos[inteirosPequenos.length-1] : null;
+
+    porTipo[tipoEncontrado] = { tipo: tipoEncontrado, volume, destinacao: destMatch||null, coletas: qtdColetas };
+  }
+  return Object.values(porTipo);
+}
+
+// Extrai o texto completo de um PDF usando pdf.js. Retorna string vazia
+// se o PDF não tiver texto selecionável (ex: imagem escaneada) — nunca
+// lança erro fatal, para que o fluxo caia graciosamente na conferência
+// manual.
+async function _extrairTextoPdf(arrayBuffer){
+  try{
+    const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+    let textoCompleto = '';
+    for(let i=1; i<=pdf.numPages; i++){
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const linhasPagina = {};
+      content.items.forEach(item=>{
+        const y = Math.round(item.transform[5]);
+        if(!linhasPagina[y]) linhasPagina[y]=[];
+        linhasPagina[y].push(item.str);
+      });
+      const ys = Object.keys(linhasPagina).map(Number).sort((a,b)=>b-a);
+      ys.forEach(y=>{ textoCompleto += linhasPagina[y].join(' ') + '\n'; });
+    }
+    return textoCompleto;
+  } catch(err){
+    console.error('Falha ao extrair texto do PDF', err);
+    return '';
+  }
+}
+
+// Interpreta o texto extraído e monta o objeto de prévia (nunca grava
+// nada ainda). Campos não identificados ficam null/vazio.
+function interpretarMedicaoPdf(texto){
+  const cnpj = extrairCNPJ(texto);
+  const unidade = extrairUnidade(texto, cnpj);
+  const mesRef = extrairMesReferencia(texto);
+  const fornecedor = extrairFornecedor(texto);
+  const periodo = extrairPeriodo(texto);
+  const linhas = extrairLinhasResiduo(texto);
+  return {
+    unidade: unidade || '',
+    cnpj: cnpj || '',
+    mesReferencia: mesRef ? mesRef.chave : '',
+    mesReferenciaLabel: mesRef ? mesRef.label : '',
+    fornecedor: fornecedor || '',
+    periodo: periodo || '',
+    linhas: linhas.map(l=>({...l, id:_gradeNovoTempId?_gradeNovoTempId():('tmp'+Math.random().toString(36).slice(2))})),
+    textoReconhecido: texto.length > 30, // heurística simples: PDF tinha texto extraível
+  };
+}
+
+// ═══════════════════════════════════════════════════════
+// FILTROS E AGREGAÇÕES
+// ═══════════════════════════════════════════════════════
+function _resGetFiltros(){
+  const checkboxes = document.querySelectorAll('.dres-mes-checkbox:checked');
+  const mesesReferencia = checkboxes.length ? [...checkboxes].map(c=>c.value) : [];
+  return {
+    mesesReferencia,
+    unidade: document.getElementById('dres-unidade')?.value || '',
+    fornecedor: document.getElementById('dres-fornecedor')?.value || '',
+    tipoResiduo: document.getElementById('dres-tipo')?.value || '',
+  };
+}
+function _resAplicarFiltro(medicoes, f){
+  return medicoes.filter(m=>{
+    const mesOk = !f.mesesReferencia || !f.mesesReferencia.length || f.mesesReferencia.includes(m.mesReferencia);
+    const unidadeOk = !f.unidade || m.unidade===f.unidade;
+    const fornecedorOk = !f.fornecedor || m.fornecedor===f.fornecedor;
+    const tipoOk = !f.tipoResiduo || m.tipoResiduo===f.tipoResiduo;
+    return mesOk && unidadeOk && fornecedorOk && tipoOk;
+  });
+}
+function _resMesLabel(chaveMes){
+  if(!chaveMes) return '';
+  const [ano,mes] = chaveMes.split('-');
+  return `${MESES_ABREV_RES[parseInt(mes)-1]}/${ano}`;
+}
+
+// ═══════════════════════════════════════════════════════
+// TELA PRINCIPAL — DASHBOARD DE RESÍDUOS
+// ═══════════════════════════════════════════════════════
+function renderDashboardResiduos(){
+  const medicoes = DB.get('medicoesResiduos')||[];
+  const mesesDisponiveis = [...new Set(medicoes.map(m=>m.mesReferencia))].sort().reverse();
+  const unidades = [...new Set(medicoes.map(m=>m.unidade).filter(Boolean))].sort();
+  const fornecedores = [...new Set(medicoes.map(m=>m.fornecedor).filter(Boolean))].sort();
+  const tipos = [...new Set(medicoes.map(m=>m.tipoResiduo).filter(Boolean))].sort();
+  const mesPadrao = mesesDisponiveis[0] || '';
+
+  return `
+  <div class="content-header">
+    <div>
+      <div class="content-title">📊 Dashboard de Resíduos</div>
+      <div class="content-sub">Acompanhe o volume, a composição e a evolução dos resíduos.</div>
+    </div>
+    <div class="content-actions">
+      <button class="btn btn-outline" onclick="resAbrirHistoricoImportacoes()">🕘 Histórico de Importações</button>
+      <button class="btn btn-outline" onclick="exportCSV(DB.get('medicoesResiduos')||[],'medicoes_residuos.csv')">↓ Exportar Relatório</button>
+      <button class="btn btn-primary" onclick="resAbrirImportarMedicao()">+ Importar Medição</button>
+    </div>
+  </div>
+
+  <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:16px">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+      <div style="position:relative">
+        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">PERÍODO / MESES</label>
+        <button type="button" class="filter-select" onclick="resToggleMesDropdown()" id="dres-mes-btn" style="font-size:12px;min-width:180px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+          <span id="dres-mes-btn-label">${mesPadrao?_resMesLabel(mesPadrao):'Todos os meses'}</span> <span>▾</span>
+        </button>
+        <div id="dres-mes-dropdown" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);padding:10px;z-index:50;min-width:200px;max-height:260px;overflow-y:auto">
+          <div style="display:flex;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line)">
+            <button type="button" class="btn btn-outline btn-sm" onclick="resSelecionarTodosMeses()" style="font-size:10px">Todos os meses</button>
+            <button type="button" class="btn btn-outline btn-sm" onclick="resLimparSelecaoMeses()" style="font-size:10px">Limpar seleção</button>
+          </div>
+          ${mesesDisponiveis.map((m,i)=>`<label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 0;cursor:pointer">
+            <input type="checkbox" class="dres-mes-checkbox" value="${m}" onchange="resAoMudarSelecaoMeses()" ${i===0?'checked':''}/>
+            ${_resMesLabel(m)}
+          </label>`).join('')}
+        </div>
+      </div>
+      <div>
+        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">UNIDADE</label>
+        <select class="filter-select" id="dres-unidade" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:130px">
+          <option value="">Todas</option>
+          ${unidades.map(u=>`<option>${u}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">FORNECEDOR</label>
+        <select class="filter-select" id="dres-fornecedor" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:170px">
+          <option value="">Todos</option>
+          ${fornecedores.map(f=>`<option>${f}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">TIPO DE RESÍDUO</label>
+        <select class="filter-select" id="dres-tipo" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:140px">
+          <option value="">Todos</option>
+          ${tipos.map(t=>`<option>${t}</option>`).join('')}
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="atualizarDashboardResiduos()" style="align-self:flex-end">Atualizar</button>
+      <button class="btn btn-outline" onclick="resLimparFiltros()" style="align-self:flex-end">Limpar</button>
+    </div>
+  </div>
+
+  <div id="dres-body"></div>
+  <script>setTimeout(()=>atualizarDashboardResiduos(),50);<\/script>`;
+}
+
+// Dropdown de seleção múltipla de meses — abre/fecha e mantém o rótulo
+// do botão sincronizado com o que está marcado.
+function resToggleMesDropdown(){
+  const dd = document.getElementById('dres-mes-dropdown');
+  if(dd) dd.style.display = dd.style.display==='none' ? 'block' : 'none';
+}
+document.addEventListener('click', function(e){
+  const dd = document.getElementById('dres-mes-dropdown');
+  const btn = document.getElementById('dres-mes-btn');
+  if(dd && dd.style.display==='block' && !dd.contains(e.target) && e.target!==btn && !btn?.contains(e.target)){
+    dd.style.display='none';
+  }
+});
+function _resAtualizarLabelMesBtn(){
+  const label = document.getElementById('dres-mes-btn-label');
+  if(!label) return;
+  const marcados = [...document.querySelectorAll('.dres-mes-checkbox:checked')];
+  if(!marcados.length) label.textContent = 'Todos os meses';
+  else if(marcados.length===1) label.textContent = _resMesLabel(marcados[0].value);
+  else label.textContent = `${marcados.length} meses selecionados`;
+}
+function resSelecionarTodosMeses(){
+  document.querySelectorAll('.dres-mes-checkbox').forEach(c=>c.checked=true);
+  resAoMudarSelecaoMeses();
+}
+function resLimparSelecaoMeses(){
+  document.querySelectorAll('.dres-mes-checkbox').forEach(c=>c.checked=false);
+  resAoMudarSelecaoMeses();
+}
+function resAoMudarSelecaoMeses(){
+  _resAtualizarLabelMesBtn();
+  atualizarDashboardResiduos();
+}
+
+function resLimparFiltros(){
+  document.querySelectorAll('.dres-mes-checkbox').forEach(c=>c.checked=false);
+  _resAtualizarLabelMesBtn();
+  ['dres-unidade','dres-fornecedor','dres-tipo'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  atualizarDashboardResiduos();
+}
+
+function atualizarDashboardResiduos(){
+  const el=document.getElementById('dres-body');
+  if(!el) return;
+  const medicoesTodas = DB.get('medicoesResiduos')||[];
+
+  if(!medicoesTodas.length){
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">📊</div>
+      <div>Nenhuma medição importada ainda.<br><button class="btn btn-primary" style="margin-top:12px" onclick="resAbrirImportarMedicao()">+ Importar Medição</button></div></div>`;
+    return;
+  }
+
+  const f = _resGetFiltros();
+  const medicoesFiltradas = _resAplicarFiltro(medicoesTodas, f);
+
+  if(!medicoesFiltradas.length){
+    el.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div>Não existem medições para os filtros selecionados.</div></div>`;
+    return;
+  }
+
+  // Regra de exibição (seção 6 do prompt): com 2+ meses selecionados,
+  // a evolução histórica passa a ser o foco — adiciona o gráfico de
+  // evolução por tipo e a tabela de variação. Com 0 ou 1 mês, mantém o
+  // dashboard padrão (cards + gráficos do período).
+  const mesesSelecionados = f.mesesReferencia && f.mesesReferencia.length
+    ? f.mesesReferencia
+    : [...new Set(medicoesTodas.map(m=>m.mesReferencia))];
+  const modoEvolucao = mesesSelecionados.length >= 2;
+
+  el.innerHTML = `
+    <div id="dres-cards" style="margin-bottom:18px"></div>
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px" id="dres-grid1"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="dres-grid2"></div>
+    ${modoEvolucao ? `<div id="dres-evolucao-tipo" style="margin-bottom:16px"></div>` : ''}
+    <div id="dres-tabela"></div>
+  `;
+
+  document.getElementById('dres-cards').innerHTML = _resRenderCards(medicoesFiltradas);
+  document.getElementById('dres-grid1').innerHTML = _resRenderGraficoBarras(medicoesFiltradas) + _resRenderGraficoRosca(medicoesFiltradas);
+  document.getElementById('dres-grid2').innerHTML = _resRenderGraficoEvolucao(medicoesTodas, f) + _resRenderGraficoEmpilhado(medicoesTodas, f);
+  if(modoEvolucao){
+    document.getElementById('dres-evolucao-tipo').innerHTML = _resRenderSecaoEvolucaoPorTipo(medicoesTodas, f, mesesSelecionados);
+  }
+  document.getElementById('dres-tabela').innerHTML = _resRenderTabelaResumo(medicoesFiltradas);
+}
+
+// ═══════════════════════════════════════════════════════
+// CARDS
+// ═══════════════════════════════════════════════════════
+function _resRenderCards(medicoes){
+  const volumeTotal = medicoes.reduce((s,m)=>s+(m.volumeKg||0),0);
+  const tiposUnicos = new Set(medicoes.map(m=>m.tipoResiduo)).size;
+  const totalColetas = medicoes.reduce((s,m)=>s+(m.qtdColetas||0),0);
+  const porTipo = {};
+  medicoes.forEach(m=>{ porTipo[m.tipoResiduo]=(porTipo[m.tipoResiduo]||0)+(m.volumeKg||0); });
+  const principal = Object.entries(porTipo).sort((a,b)=>b[1]-a[1])[0];
+  const principalPct = principal && volumeTotal>0 ? ((principal[1]/volumeTotal)*100).toFixed(1) : '0';
+
+  const fmt = v=>v.toLocaleString('pt-BR',{minimumFractionDigits:v%1!==0?1:0,maximumFractionDigits:1});
+
+  return `<div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi-box">
+      <div class="kpi-box-label">Volume Total de Resíduos</div>
+      <div class="kpi-box-val" style="color:#1A73E8">${fmt(volumeTotal)} kg</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-box-label">Tipos de Resíduos</div>
+      <div class="kpi-box-val" style="color:#7C3AED">${tiposUnicos}</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-box-label">Total de Coletas</div>
+      <div class="kpi-box-val" style="color:#00A650">${totalColetas}</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-box-label">Principal Resíduo</div>
+      <div class="kpi-box-val" style="font-size:16px;color:#E67700">${principal?principal[0]:'—'}</div>
+      <div class="kpi-box-sub">${principal?fmt(principal[1])+' kg · '+principalPct+'%':''}</div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// GRÁFICO DE BARRAS — Volume por tipo (kg)
+// ═══════════════════════════════════════════════════════
+function _resRenderGraficoBarras(medicoes){
+  const porTipo = {};
+  medicoes.forEach(m=>{ porTipo[m.tipoResiduo]=(porTipo[m.tipoResiduo]||0)+(m.volumeKg||0); });
+  const data = Object.entries(porTipo).sort((a,b)=>b[1]-a[1]);
+  const max = Math.max(...data.map(d=>d[1]),1);
+  const fmt = v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">📦 Volume de Resíduos por Tipo (kg)</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${data.map(([tipo,val])=>`
+        <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})" title="Clique para filtrar: ${tipo}">
+          <div style="width:120px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${tipo}</div>
+          <div style="flex:1;height:20px;background:#F0F0F0;border-radius:4px;overflow:hidden">
+            <div style="height:100%;background:#1A73E8;width:${Math.max(Math.round((val/max)*100),val>0?2:0)}%;border-radius:4px;transition:width .4s"></div>
+          </div>
+          <div style="width:80px;font-size:11px;font-weight:700;color:var(--navy);text-align:right">${fmt(val)} kg</div>
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+function resFiltrarPorTipo(tipo){
+  const el=document.getElementById('dres-tipo');
+  if(el){ el.value=tipo; atualizarDashboardResiduos(); }
+}
+
+// ═══════════════════════════════════════════════════════
+// GRÁFICO DE ROSCA — Participação por tipo de resíduo
+// ═══════════════════════════════════════════════════════
+function _resRenderGraficoRosca(medicoes){
+  const porTipo = {};
+  medicoes.forEach(m=>{ porTipo[m.tipoResiduo]=(porTipo[m.tipoResiduo]||0)+(m.volumeKg||0); });
+  const total = Object.values(porTipo).reduce((a,b)=>a+b,0);
+  const data = Object.entries(porTipo).sort((a,b)=>b[1]-a[1]);
+  const CORES=['#1A73E8','#00A650','#E67700','#D1242F','#7C3AED','#0891B2','#059669','#BE123C','#6B6B6B','#F59E0B'];
+
+  const R=70, C=2*Math.PI*R, cx=90, cy=90;
+  let acumulado=0;
+  const segmentos = data.map(([tipo,val],i)=>{
+    const pct = total>0 ? val/total : 0;
+    const dash = pct*C;
+    const offset = C - (acumulado*C);
+    acumulado += pct;
+    return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${CORES[i%CORES.length]}" stroke-width="26"
+      stroke-dasharray="${dash.toFixed(1)} ${(C-dash).toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
+      transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})">
+      <title>${tipo}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg (${(pct*100).toFixed(1)}%)</title>
+    </circle>`;
+  }).join('');
+
+  const fmtTotal = total.toLocaleString('pt-BR',{maximumFractionDigits:1});
+
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">🍩 Participação por Tipo de Resíduo</div>
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <div style="position:relative;width:180px;height:180px;flex-shrink:0">
+        <svg width="180" height="180" viewBox="0 0 180 180">${segmentos}</svg>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
+          <div style="font-size:15px;font-weight:800;color:var(--navy)">${fmtTotal}</div>
+          <div style="font-size:9px;color:var(--muted)">kg total</div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:140px;display:flex;flex-direction:column;gap:5px">
+        ${data.map(([tipo,val],i)=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})">
+          <span style="width:9px;height:9px;border-radius:2px;background:${CORES[i%CORES.length]};flex-shrink:0"></span>
+          <span style="color:var(--txt);flex:1">${tipo}</span>
+          <b style="color:var(--navy)">${total>0?((val/total)*100).toFixed(1):'0'}%</b>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// GRÁFICO DE LINHA — Evolução do volume total (todos os meses da base,
+// independente do filtro de mês — só respeita unidade/fornecedor/tipo)
+// ═══════════════════════════════════════════════════════
+function _resRenderGraficoEvolucao(medicoesTodas, f){
+  const fSemMes = {...f, mesesReferencia:[]};
+  const base = _resAplicarFiltro(medicoesTodas, fSemMes);
+  const meses = [...new Set(base.map(m=>m.mesReferencia))].sort();
+  const porMes = meses.map(mes=>({
+    mes, volume: base.filter(m=>m.mesReferencia===mes).reduce((s,m)=>s+(m.volumeKg||0),0)
+  }));
+
+  if(porMes.length < 1) return `<div class="card-section" style="margin:0"><div class="card-section-title">📈 Evolução do Volume Total de Resíduos</div>
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem histórico suficiente.</div></div>`;
+
+  const W=480,H=180,padL=50,padB=24,padT=14,padR=14;
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const maxVal = Math.max(...porMes.map(p=>p.volume),1);
+  const xStep = porMes.length>1 ? plotW/(porMes.length-1) : 0;
+  const pts = porMes.map((p,i)=>({x:padL+i*xStep, y:padT+plotH-(p.volume/maxVal)*plotH, ...p}));
+  const path = pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+  const circles = pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="#1A73E8" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="resFiltrarPorMes(${JSON.stringify(p.mes)})">
+    <title>${_resMesLabel(p.mes)}: ${p.volume.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg</title></circle>`).join('');
+  const labels = pts.map(p=>`<text x="${p.x.toFixed(1)}" y="${H-6}" font-size="9" fill="#999" text-anchor="middle">${_resMesLabel(p.mes)}</text>`).join('');
+  const gridY = [0,0.5,1].map(pct=>{
+    const y = padT+plotH-(pct*plotH);
+    return `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#EEE" stroke-width="1"/>
+      <text x="${padL-6}" y="${y+3}" font-size="8" fill="#999" text-anchor="end">${Math.round(maxVal*pct).toLocaleString('pt-BR')}</text>`;
+  }).join('');
+
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">📈 Evolução do Volume Total de Resíduos <span style="font-size:10px;color:var(--muted);font-weight:400">(kg)</span></div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">
+      ${gridY}<path d="${path}" fill="none" stroke="#1A73E8" stroke-width="2.5"/>${circles}${labels}
+    </svg>
+  </div>`;
+}
+function resFiltrarPorMes(mes){
+  document.querySelectorAll('.dres-mes-checkbox').forEach(c=>{ c.checked = (c.value===mes); });
+  _resAtualizarLabelMesBtn();
+  atualizarDashboardResiduos();
+}
+
+// ═══════════════════════════════════════════════════════
+// GRÁFICO DE BARRAS EMPILHADAS — Volume por tipo, últimos meses
+// ═══════════════════════════════════════════════════════
+function _resRenderGraficoEmpilhado(medicoesTodas, f){
+  const fSemMes = {...f, mesesReferencia:[]};
+  const base = _resAplicarFiltro(medicoesTodas, fSemMes);
+  const meses = [...new Set(base.map(m=>m.mesReferencia))].sort().slice(-6);
+  const tipos = [...new Set(base.map(m=>m.tipoResiduo))];
+  const CORES=['#1A73E8','#00A650','#E67700','#D1242F','#7C3AED','#0891B2','#059669','#BE123C','#6B6B6B','#F59E0B'];
+
+  if(!meses.length) return `<div class="card-section" style="margin:0"><div class="card-section-title">📊 Volume por Tipo de Resíduo — Últimos Meses</div>
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem histórico suficiente.</div></div>`;
+
+  const totaisPorMes = meses.map(mes=>tipos.reduce((s,t)=>s+base.filter(m=>m.mesReferencia===mes&&m.tipoResiduo===t).reduce((s2,m)=>s2+(m.volumeKg||0),0),0));
+  const maxTotal = Math.max(...totaisPorMes,1);
+
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">📊 Volume por Tipo de Resíduo — Últimos Meses</div>
+    <div style="display:flex;align-items:flex-end;gap:14px;height:160px;padding-bottom:20px;overflow-x:auto">
+      ${meses.map((mes,mi)=>{
+        const barras = tipos.map((t,ti)=>{
+          const val = base.filter(m=>m.mesReferencia===mes&&m.tipoResiduo===t).reduce((s,m)=>s+(m.volumeKg||0),0);
+          if(val<=0) return '';
+          const alturaPct = (val/maxTotal)*100;
+          return `<div style="width:100%;background:${CORES[ti%CORES.length]};height:${alturaPct}%;cursor:pointer" onclick="resFiltrarPorTipoEMes(${JSON.stringify(t)},${JSON.stringify(mes)})" title="${t}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg"></div>`;
+        }).join('');
+        return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:34px">
+          <div style="width:100%;height:120px;display:flex;flex-direction:column-reverse;border-radius:4px 4px 0 0;overflow:hidden;background:#F5F5F5">${barras}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:4px">${_resMesLabel(mes)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
+      ${tipos.map((t,i)=>`<div style="display:flex;align-items:center;gap:4px;font-size:10px"><span style="width:8px;height:8px;border-radius:2px;background:${CORES[i%CORES.length]}"></span>${t}</div>`).join('')}
+    </div>
+  </div>`;
+}
+function resFiltrarPorTipoEMes(tipo, mes){
+  const elT=document.getElementById('dres-tipo'); if(elT) elT.value=tipo;
+  document.querySelectorAll('.dres-mes-checkbox').forEach(c=>{ c.checked = (c.value===mes); });
+  _resAtualizarLabelMesBtn();
+  atualizarDashboardResiduos();
+}
+
+// ═══════════════════════════════════════════════════════
+// TABELA — Resumo por tipo de resíduo (ordenável)
+// ═══════════════════════════════════════════════════════
+let _resOrdenacaoTabela = {campo:'volume', dir:'desc'};
+// ═══════════════════════════════════════════════════════
+// EVOLUÇÃO POR TIPO DE RESÍDUO — só exibida quando 2+ meses estão
+// selecionados no filtro. Gráfico de linhas (uma série por tipo) +
+// seletor de quais tipos comparar + tabela com variação % entre o
+// primeiro e o último mês selecionado. Nunca inventa dado: um tipo
+// ausente num mês aparece como lacuna na linha (não como zero).
+// ═══════════════════════════════════════════════════════
+let _resTiposSelecionadosEvolucao = null; // null = ainda não escolhido pelo usuário (usa todos)
+
+function _resRenderSecaoEvolucaoPorTipo(medicoesTodas, f, mesesSelecionados){
+  const fSemMes = {...f, mesesReferencia:[]};
+  const base = _resAplicarFiltro(medicoesTodas, fSemMes).filter(m=>mesesSelecionados.includes(m.mesReferencia));
+  const mesesOrdenados = [...mesesSelecionados].sort();
+  const todosTipos = [...new Set(base.map(m=>m.tipoResiduo))].sort();
+
+  if(_resTiposSelecionadosEvolucao===null){
+    _resTiposSelecionadosEvolucao = new Set(todosTipos);
+  }
+  const tiposParaComparar = todosTipos.filter(t=>_resTiposSelecionadosEvolucao.has(t));
+
+  return `
+  <div class="card-section">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
+      <div class="card-section-title" style="margin:0">📈 Evolução do Peso por Tipo de Resíduo</div>
+      <button class="btn btn-outline btn-sm" onclick="resToggleSeletorTipos()">🔧 Selecionar Resíduos para Comparar</button>
+    </div>
+    <div id="res-seletor-tipos-evolucao" style="display:none;background:#FAFAFA;border-radius:8px;padding:12px;margin-bottom:14px">
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <button class="btn btn-outline btn-sm" onclick="resSelecionarTodosTiposEvolucao(${JSON.stringify(todosTipos)})">Selecionar Todos</button>
+        <button class="btn btn-outline btn-sm" onclick="resLimparTiposEvolucao()">Limpar</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        ${todosTipos.map(t=>`<label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer">
+          <input type="checkbox" class="res-tipo-evolucao-checkbox" value="${t}" ${_resTiposSelecionadosEvolucao.has(t)?'checked':''} onchange="resAoMudarTiposEvolucao()"/>
+          ${t}
+        </label>`).join('')}
+      </div>
+    </div>
+    <div id="res-grafico-evolucao-tipo">${_resRenderGraficoLinhasPorTipo(base, mesesOrdenados, tiposParaComparar)}</div>
+  </div>
+
+  <div class="card-section">
+    <div class="card-section-title">📋 Peso por Tipo de Resíduo</div>
+    ${_resRenderTabelaEvolucao(base, mesesOrdenados, tiposParaComparar)}
+  </div>`;
+}
+
+function resToggleSeletorTipos(){
+  const el=document.getElementById('res-seletor-tipos-evolucao');
+  if(el) el.style.display = el.style.display==='none' ? 'block' : 'none';
+}
+function resSelecionarTodosTiposEvolucao(todosTipos){
+  _resTiposSelecionadosEvolucao = new Set(todosTipos);
+  atualizarDashboardResiduos();
+}
+function resLimparTiposEvolucao(){
+  _resTiposSelecionadosEvolucao = new Set();
+  atualizarDashboardResiduos();
+}
+function resAoMudarTiposEvolucao(){
+  const marcados = [...document.querySelectorAll('.res-tipo-evolucao-checkbox:checked')].map(c=>c.value);
+  _resTiposSelecionadosEvolucao = new Set(marcados);
+  atualizarDashboardResiduos();
+}
+
+// Gráfico de linhas: uma série por tipo de resíduo, eixo X = meses
+// selecionados, eixo Y = peso em kg. Tooltip mostra mês + todos os
+// tipos com seus respectivos pesos (seção 8 do prompt).
+function _resRenderGraficoLinhasPorTipo(medicoes, meses, tipos){
+  if(!meses.length || !tipos.length){
+    return `<div style="text-align:center;padding:30px;color:var(--muted);font-size:12px">Selecione ao menos um tipo de resíduo para comparar.</div>`;
+  }
+  const CORES=['#1A73E8','#00A650','#E67700','#D1242F','#7C3AED','#0891B2','#059669','#BE123C','#6B6B6B','#F59E0B'];
+
+  // Matriz tipo -> [valor por mês], preservando null quando o tipo não
+  // aparece naquele mês (nunca inventa zero).
+  const series = tipos.map((tipo,idx)=>{
+    const valores = meses.map(mes=>{
+      const reg = medicoes.find(m=>m.mesReferencia===mes && m.tipoResiduo===tipo);
+      return reg ? reg.volumeKg : null;
+    });
+    return {tipo, valores, cor:CORES[idx%CORES.length]};
+  });
+
+  const todosValores = series.flatMap(s=>s.valores).filter(v=>v!=null);
+  const maxVal = todosValores.length ? Math.max(...todosValores) : 1;
+
+  const W=760,H=240,padL=60,padB=28,padT=16,padR=16;
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const xStep = meses.length>1 ? plotW/(meses.length-1) : 0;
+
+  const linhasSVG = series.map(s=>{
+    const pts = s.valores.map((v,i)=>v==null?null:{x:padL+i*xStep, y:padT+plotH-(v/maxVal)*plotH, v, mes:meses[i]});
+    const segmentos=[]; let atual=[];
+    pts.forEach(p=>{ if(p){atual.push(p);} else { if(atual.length>1) segmentos.push(atual); atual=[]; } });
+    if(atual.length>1) segmentos.push(atual);
+    const path = segmentos.map(seg=>'M'+seg.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L')).join(' ');
+    const circles = pts.filter(Boolean).map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="${s.cor}" stroke="#fff" stroke-width="1.2">
+      <title>${_resMesLabel(p.mes)}\n${s.tipo}: ${p.v.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg</title></circle>`).join('');
+    return `<path d="${path}" fill="none" stroke="${s.cor}" stroke-width="2.2"/>${circles}`;
+  }).join('');
+
+  const gridY = [0,0.25,0.5,0.75,1].map(pct=>{
+    const y = padT+plotH-(pct*plotH);
+    return `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#EEE" stroke-width="1"/>
+      <text x="${padL-6}" y="${y+3}" font-size="9" fill="#999" text-anchor="end">${Math.round(maxVal*pct).toLocaleString('pt-BR')}</text>`;
+  }).join('');
+  const labelsX = meses.map((mes,i)=>`<text x="${padL+i*xStep}" y="${H-6}" font-size="9" fill="#999" text-anchor="middle">${_resMesLabel(mes)}</text>`).join('');
+
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${gridY}${linhasSVG}${labelsX}</svg>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
+    ${series.map(s=>`<div style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:9px;height:9px;border-radius:2px;background:${s.cor}"></span>${s.tipo}</div>`).join('')}
+  </div>`;
+}
+
+// Tabela: Tipo | (uma coluna por mês) | Variação (primeiro vs último
+// mês NÃO-nulo entre os selecionados). "—" quando não há dados
+// suficientes ou o valor inicial é zero (variação indefinida).
+function _resRenderTabelaEvolucao(medicoes, meses, tipos){
+  if(!meses.length || !tipos.length){
+    return `<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Nenhum tipo selecionado.</div>`;
+  }
+  const fmt = v=>v==null?'—':v.toLocaleString('pt-BR',{maximumFractionDigits:1})+' kg';
+
+  const linhas = tipos.map(tipo=>{
+    const valores = meses.map(mes=>{
+      const reg = medicoes.find(m=>m.mesReferencia===mes && m.tipoResiduo===tipo);
+      return reg ? reg.volumeKg : null;
+    });
+    const naoNulos = valores.map((v,i)=>({v,i})).filter(x=>x.v!=null);
+    let variacao = null;
+    if(naoNulos.length>=2){
+      const primeiro = naoNulos[0].v, ultimo = naoNulos[naoNulos.length-1].v;
+      if(primeiro>0) variacao = ((ultimo-primeiro)/primeiro)*100;
+    }
+    return {tipo, valores, variacao};
+  });
+
+  return `<div class="data-table-wrap"><table><thead><tr>
+    <th>Tipo</th>${meses.map(m=>`<th>${_resMesLabel(m)}</th>`).join('')}<th>Variação</th>
+  </tr></thead><tbody>
+  ${linhas.map(l=>`<tr>
+    <td><b>${l.tipo}</b></td>
+    ${l.valores.map(v=>`<td>${fmt(v)}</td>`).join('')}
+    <td style="font-weight:700;color:${l.variacao==null?'var(--muted)':(l.variacao>=0?'#00A650':'#D1242F')}">
+      ${l.variacao==null?'—':(l.variacao>=0?'+':'')+l.variacao.toFixed(1)+'%'}
+    </td>
+  </tr>`).join('')}
+  </tbody></table></div>`;
+}
+
+function _resRenderTabelaResumo(medicoes){
+  const porTipo = {};
+  medicoes.forEach(m=>{
+    const k=m.tipoResiduo;
+    if(!porTipo[k]) porTipo[k]={tipo:k, volume:0, coletas:0, destinacoes:new Set()};
+    porTipo[k].volume += (m.volumeKg||0);
+    porTipo[k].coletas += (m.qtdColetas||0);
+    if(m.destinacao) porTipo[k].destinacoes.add(m.destinacao);
+  });
+  const total = Object.values(porTipo).reduce((s,r)=>s+r.volume,0);
+  let linhas = Object.values(porTipo).map(r=>({
+    ...r, pct: total>0?(r.volume/total)*100:0, destinacao:[...r.destinacoes].join(', ')||'—'
+  }));
+
+  const {campo,dir} = _resOrdenacaoTabela;
+  linhas.sort((a,b)=>{
+    const va = campo==='tipo'||campo==='destinacao' ? a[campo] : a[campo];
+    const vb = campo==='tipo'||campo==='destinacao' ? b[campo] : b[campo];
+    if(typeof va === 'string') return dir==='asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+    return dir==='asc' ? va-vb : vb-va;
+  });
+
+  const setaIcon=(campo)=>_resOrdenacaoTabela.campo===campo ? (_resOrdenacaoTabela.dir==='asc'?' ▲':' ▼') : '';
+
+  return `<div class="card-section">
+    <div class="card-section-title">📋 Resumo por Tipo de Resíduo</div>
+    <div class="data-table-wrap"><table><thead><tr>
+      <th style="cursor:pointer" onclick="resOrdenarTabela('tipo')">Tipo de Resíduo${setaIcon('tipo')}</th>
+      <th style="cursor:pointer" onclick="resOrdenarTabela('volume')">Volume (kg)${setaIcon('volume')}</th>
+      <th style="cursor:pointer" onclick="resOrdenarTabela('pct')">% do Total${setaIcon('pct')}</th>
+      <th style="cursor:pointer" onclick="resOrdenarTabela('destinacao')">Destinação${setaIcon('destinacao')}</th>
+      <th style="cursor:pointer" onclick="resOrdenarTabela('coletas')">Qtd. Coletas${setaIcon('coletas')}</th>
+    </tr></thead><tbody>
+    ${linhas.map(l=>`<tr>
+      <td><b>${l.tipo}</b></td>
+      <td>${l.volume.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg</td>
+      <td>${l.pct.toFixed(1)}%</td>
+      <td style="font-size:11px">${l.destinacao}</td>
+      <td>${l.coletas}</td>
+    </tr>`).join('')}
+    </tbody></table></div>
+  </div>`;
+}
+function resOrdenarTabela(campo){
+  if(_resOrdenacaoTabela.campo===campo){
+    _resOrdenacaoTabela.dir = _resOrdenacaoTabela.dir==='asc' ? 'desc' : 'asc';
+  } else {
+    _resOrdenacaoTabela = {campo, dir:'desc'};
+  }
+  const f=_resGetFiltros();
+  const medicoes=_resAplicarFiltro(DB.get('medicoesResiduos')||[], f);
+  const el=document.getElementById('dres-tabela');
+  if(el) el.innerHTML=_resRenderTabelaResumo(medicoes);
+}
+
+// ═══════════════════════════════════════════════════════
+// IMPORTAÇÃO DE MEDIÇÃO — fluxo em etapas:
+//   PDF → análise automática (com feedback visual) → resumo + gráficos
+//   → conferência (só o que precisar de atenção) → confirmar → histórico
+//   → Dashboard atualizado com o mês recém-importado já selecionado.
+// Nunca mostra uma tabela extensa de edição linha a linha como tela
+// principal — o resultado da leitura já é apresentado como análise
+// visual (gráficos), e a conferência só aparece quando algo específico
+// precisa de atenção do usuário.
+// ═══════════════════════════════════════════════════════
+let _resArquivoSelecionado = null; // File pendente, aguardando "Analisar Relatório"
+let _resPreviaAtual = null;         // objeto de prévia após análise (nunca gravado ainda)
+let _resPdfPendenteBase64 = null;
+let _resPdfPendenteNome = null;
+
+function resAbrirImportarMedicao(){
+  _resArquivoSelecionado = null;
+  openModal('Importar relatório mensal',`
+    <div id="res-import-drop-area" style="border:2px dashed var(--line);border-radius:12px;padding:32px 20px;text-align:center;background:#FAFAFA;cursor:pointer;transition:border-color .2s"
+      onclick="document.getElementById('res-import-pdf-input').click()"
+      ondragover="event.preventDefault();this.style.borderColor='#1A73E8'"
+      ondragleave="this.style.borderColor='var(--line)'"
+      ondrop="resOnPdfDrop(event)">
+      <div style="font-size:32px;margin-bottom:8px">📄</div>
+      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px">Arraste o relatório PDF para cá</div>
+      <div style="font-size:12px;color:var(--muted)">ou <span style="color:#1A73E8;text-decoration:underline">selecione o arquivo</span></div>
+    </div>
+    <input type="file" id="res-import-pdf-input" accept="application/pdf" style="display:none" onchange="resOnPdfInputChange(event)"/>
+    <div style="font-size:11px;color:var(--light);margin-top:12px;text-align:center">
+      Envie o relatório mensal de medição de resíduos. O sistema irá analisar o documento
+      e identificar automaticamente o mês, unidade, tipos de resíduos e volumes.
+    </div>
+    <div id="res-import-arquivo-selecionado" style="margin-top:14px"></div>
+    <div id="res-import-status" style="font-size:12px;margin-top:12px"></div>`,
+    `<button class="btn btn-outline" id="res-import-btn-cancelar" onclick="closeModalDirect()">Cancelar</button>
+     <button class="btn btn-primary" id="res-import-btn-analisar" onclick="resAnalisarRelatorio()" style="display:none">🔍 Analisar Relatório</button>`);
+}
+
+function resOnPdfDrop(event){
+  event.preventDefault();
+  event.currentTarget.style.borderColor='var(--line)';
+  const file = event.dataTransfer.files[0];
+  if(file) _resProcessarSelecaoArquivo(file);
+}
+function resOnPdfInputChange(event){
+  const file = event.target.files[0];
+  event.target.value='';
+  if(file) _resProcessarSelecaoArquivo(file);
+}
+function _resProcessarSelecaoArquivo(file){
+  const statusEl=document.getElementById('res-import-status');
+  const selEl=document.getElementById('res-import-arquivo-selecionado');
+  if(file.type!=='application/pdf'){
+    if(statusEl) statusEl.innerHTML='<span style="color:var(--red)">❌ Apenas arquivos PDF são aceitos.</span>';
+    return;
+  }
+  if(file.size>RESIDUO_MAX_BYTES){
+    if(statusEl) statusEl.innerHTML=`<span style="color:var(--red)">❌ Arquivo muito grande (${(file.size/1024/1024).toFixed(2)} MB). O limite é 8 MB.</span>`;
+    return;
+  }
+  _resArquivoSelecionado = file;
+  if(statusEl) statusEl.innerHTML='';
+  if(selEl) selEl.innerHTML=`<div style="display:flex;align-items:center;gap:8px;font-size:12px;background:#EFF6FF;border-radius:8px;padding:8px 12px">
+    <span>📄</span><b>${file.name}</b><span style="color:var(--muted)">(${(file.size/1024).toFixed(0)} KB)</span>
+  </div>`;
+  const btnAnalisar=document.getElementById('res-import-btn-analisar');
+  if(btnAnalisar) btnAnalisar.style.display='inline-block';
+}
+
+// Etapa visual de processamento — cada item aparece em sequência,
+// dando ao usuário uma leitura clara do que está sendo feito.
+async function resAnalisarRelatorio(){
+  const file = _resArquivoSelecionado;
+  if(!file) return;
+  const btnAnalisar=document.getElementById('res-import-btn-analisar');
+  const btnCancelar=document.getElementById('res-import-btn-cancelar');
+  if(btnAnalisar) btnAnalisar.disabled=true;
+  if(btnCancelar) btnCancelar.disabled=true;
+
+  const statusEl=document.getElementById('res-import-status');
+  const etapas = ['Arquivo recebido','Texto do documento analisado','CNPJ identificado','Mês de referência identificado','Unidade identificada','Tipos de resíduos identificados','Volumes identificados','Dados preparados para análise'];
+  const renderEtapas = (concluidas)=>{
+    if(!statusEl) return;
+    statusEl.innerHTML = `<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">ANALISANDO RELATÓRIO</div>` +
+      etapas.map((e,i)=>`<div style="font-size:12px;color:${i<concluidas?'#00A650':'var(--light)'};margin-bottom:4px">${i<concluidas?'✓':'○'} ${e}</div>`).join('');
+  };
+  renderEtapas(1);
+  await new Promise(r=>setTimeout(r,250));
+
+  try{
+    const arrayBuffer = await file.arrayBuffer();
+    const texto = await _extrairTextoPdf(arrayBuffer.slice(0));
+    renderEtapas(2);
+    await new Promise(r=>setTimeout(r,200));
+
+    const base64 = await _lerArquivoComoBase64(file);
+    _resPdfPendenteBase64 = base64;
+    _resPdfPendenteNome = file.name;
+
+    const previa = interpretarMedicaoPdf(texto);
+    renderEtapas(previa.cnpj?3:2);
+    await new Promise(r=>setTimeout(r,200));
+    renderEtapas(previa.mesReferencia?4:3);
+    await new Promise(r=>setTimeout(r,200));
+    renderEtapas(previa.unidade?5:4);
+    await new Promise(r=>setTimeout(r,200));
+    renderEtapas(previa.linhas.length?6:5);
+    await new Promise(r=>setTimeout(r,200));
+    renderEtapas(previa.linhas.length?7:5);
+    await new Promise(r=>setTimeout(r,250));
+    renderEtapas(8);
+    await new Promise(r=>setTimeout(r,300));
+
+    _resPreviaAtual = previa;
+    closeModalDirect();
+    renderModContent('residuos','resultadoAnalise');
+  } catch(err){
+    console.error('Erro ao processar PDF de medição', err);
+    if(statusEl) statusEl.innerHTML = '<span style="color:var(--red)">❌ Não foi possível analisar este PDF automaticamente. Você pode preencher os dados manualmente na próxima tela.</span>';
+    _resPreviaAtual = { unidade:'', cnpj:'', mesReferencia:'', mesReferenciaLabel:'', fornecedor:'', periodo:'', linhas:[], textoReconhecido:false };
+    await new Promise(r=>setTimeout(r,900));
+    closeModalDirect();
+    renderModContent('residuos','resultadoAnalise');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// TELA DE RESULTADO DA ANÁLISE — resumo visual + gráficos imediatos +
+// conferência (só pendências) + confirmação. Esta é a tela principal
+// pós-upload; nunca uma tabela extensa de edição linha a linha.
+// ═══════════════════════════════════════════════════════
+function renderResultadoAnaliseResiduos(){
+  const p = _resPreviaAtual;
+  if(!p){
+    return `<div class="empty-state"><div class="empty-icon">📄</div><div>Nenhuma importação em andamento.</div>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="renderModContent('residuos','dashres')">← Voltar ao Dashboard</button></div>`;
+  }
+
+  const volumeTotal = p.linhas.reduce((s,l)=>s+(l.volume||0),0);
+  const tiposCount = p.linhas.length;
+  const coletasCount = p.linhas.reduce((s,l)=>s+(l.coletas||0),0);
+  const fmt = v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
+
+  // Pendências específicas — só os itens que realmente precisam de atenção.
+  const pendencias = [];
+  if(!p.mesReferencia) pendencias.push({campo:'mes', texto:'Mês de referência não identificado.'});
+  if(!p.unidade) pendencias.push({campo:'unidade', texto:'Unidade não identificada.'});
+  if(!p.cnpj) pendencias.push({campo:'cnpj', texto:'CNPJ não identificado.'});
+  if(!p.linhas.length) pendencias.push({campo:'linhas', texto:'Nenhum tipo de resíduo foi identificado no relatório.'});
+  p.linhas.forEach(l=>{
+    if(!l.destinacao) pendencias.push({campo:'destinacao:'+l.id, texto:`Destinação do resíduo "${l.tipo}" não identificada.`});
+    if(l.volume==null || l.volume<=0) pendencias.push({campo:'volume:'+l.id, texto:`Volume do resíduo "${l.tipo}" não identificado.`});
+  });
+
+  const totalCategorias = p.linhas.length;
+  const categoriasComPendencia = new Set(pendencias.filter(pd=>pd.campo.startsWith('destinacao:')||pd.campo.startsWith('volume:')).map(pd=>pd.campo.split(':')[1])).size;
+  const categoriasOk = totalCategorias - categoriasComPendencia;
+
+  return `
+  <div class="content-header">
+    <div>
+      <div class="content-title">✅ Relatório Analisado</div>
+      <div class="content-sub">${p.textoReconhecido ? 'Confira o resultado da análise automática antes de salvar.' : '⚠️ Não foi possível ler o texto deste PDF automaticamente — preencha os dados manualmente abaixo.'}</div>
+    </div>
+  </div>
+
+  <div class="card-section" style="text-align:center;padding:24px">
+    <div style="font-size:22px;font-weight:800;color:var(--navy)">${p.mesReferenciaLabel || '— mês não identificado —'}</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:16px">${p.unidade || '— unidade não identificada —'}</div>
+    <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap">
+      <div><div style="font-size:24px;font-weight:800;color:#1A73E8">${fmt(volumeTotal)} kg</div><div style="font-size:11px;color:var(--muted)">Volume total identificado</div></div>
+      <div><div style="font-size:24px;font-weight:800;color:#7C3AED">${tiposCount}</div><div style="font-size:11px;color:var(--muted)">Tipos de resíduos identificados</div></div>
+      <div><div style="font-size:24px;font-weight:800;color:#00A650">${coletasCount}</div><div style="font-size:11px;color:var(--muted)">Coletas identificadas</div></div>
+    </div>
+  </div>
+
+  <div style="background:${pendencias.length?'#FFF9E6':'#F0FDF4'};border:1px solid ${pendencias.length?'#FFE066':'#BBF7D0'};border-radius:10px;padding:14px 16px;margin-bottom:16px">
+    <div style="font-size:13px;font-weight:700;color:${pendencias.length?'#7A5C00':'#065F46'};margin-bottom:${pendencias.length?'8px':'0'}">
+      ${pendencias.length===0
+        ? '✓ Relatório conferido com sucesso.'
+        : `⚠ Atenção: encontramos informações que precisam de confirmação. Relatório analisado. ${categoriasOk} de ${totalCategorias} categorias foram identificadas automaticamente.`}
+    </div>
+    ${pendencias.length?`<div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+      ${pendencias.map(pd=>`<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#7A5C00;background:#fff;border-radius:6px;padding:6px 10px">
+        <span>⚠ ${pd.texto}</span>
+        <button class="btn btn-outline btn-sm" onclick="resCorrigirCampo('${pd.campo}')">Corrigir</button>
+      </div>`).join('')}
+    </div>`:''}
+  </div>
+
+  ${p.linhas.length ? `
+  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px">
+    ${_resRenderGraficoBarras(p.linhas.map(l=>({tipoResiduo:l.tipo, volumeKg:l.volume||0})))}
+    ${_resRenderGraficoRosca(p.linhas.map(l=>({tipoResiduo:l.tipo, volumeKg:l.volume||0})))}
+  </div>
+  <div class="card-section">
+    <div class="card-section-title">🚚 Destinação dos Resíduos</div>
+    ${_resRenderGraficoDestinacaoSimples(p.linhas)}
+  </div>
+  ${_resTemHistorico() ? _resRenderGraficoEvolucaoComNovo(p) : ''}
+  ` : ''}
+
+  <div id="res-corrigir-campo-area"></div>
+
+  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px">
+    <button class="btn btn-outline" onclick="resVoltarAoDashboardCancelando()">← Voltar</button>
+    <button class="btn btn-primary" onclick="resConfirmarESalvar()">✅ Confirmar e Salvar</button>
+  </div>`;
+}
+
+// Verifica se já existe histórico de outras competências, para decidir
+// se mostra o gráfico de evolução mensal (seção 6 do prompt: "quando
+// houver histórico anterior").
+function _resTemHistorico(){
+  return (DB.get('medicoesResiduos')||[]).length > 0;
+}
+function _resRenderGraficoEvolucaoComNovo(p){
+  // Combina o histórico já salvo com a prévia atual (ainda não salva)
+  // para dar uma ideia real da evolução, sem gravar nada ainda.
+  const medicoesTodas = DB.get('medicoesResiduos')||[];
+  const previaComoMedicoes = p.linhas.map(l=>({
+    mesReferencia: p.mesReferencia, unidade: p.unidade, fornecedor: p.fornecedor,
+    tipoResiduo: l.tipo, volumeKg: l.volume||0,
+  }));
+  const combinado = [...medicoesTodas.filter(m=>m.mesReferencia!==p.mesReferencia), ...previaComoMedicoes];
+  return _resRenderGraficoEvolucao(combinado, {mesesReferencia:[], unidade:'', fornecedor:'', tipoResiduo:''});
+}
+
+// Gráfico simples de destinação (barra horizontal por destinação),
+// específico da tela de resultado da análise.
+function _resRenderGraficoDestinacaoSimples(linhas){
+  const porDest = {};
+  linhas.forEach(l=>{
+    const d = l.destinacao || 'Não identificada';
+    porDest[d] = (porDest[d]||0) + (l.volume||0);
+  });
+  const data = Object.entries(porDest).sort((a,b)=>b[1]-a[1]);
+  const max = Math.max(...data.map(d=>d[1]),1);
+  const fmt = v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
+  const CORES={'Reciclagem':'#00A650','Compostagem':'#7C3AED','Aterro':'#D1242F','Tratamento':'#E67700','Reuso':'#0891B2','Coprocessamento':'#059669','Não identificada':'#999'};
+  return `<div style="display:flex;flex-direction:column;gap:8px">
+    ${data.map(([dest,val])=>`
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:110px;font-size:11px;color:var(--muted)">${dest}</div>
+        <div style="flex:1;height:18px;background:#F0F0F0;border-radius:4px;overflow:hidden">
+          <div style="height:100%;background:${CORES[dest]||'#999'};width:${Math.max(Math.round((val/max)*100),2)}%;border-radius:4px"></div>
+        </div>
+        <div style="width:80px;font-size:11px;font-weight:700;text-align:right">${fmt(val)} kg</div>
+      </div>`).join('')}
+  </div>`;
+}
+
+// Correção pontual: abre só o campo específico com problema, sem expor
+// uma tela de edição geral com todas as linhas.
+function resCorrigirCampo(campo){
+  const p = _resPreviaAtual;
+  const area = document.getElementById('res-corrigir-campo-area');
+  if(!area) return;
+
+  if(campo==='mes'){
+    area.innerHTML = `<div class="card-section" style="max-width:400px">
+      <div class="form-group"><label class="form-label">Mês de Referência</label>
+        <input type="month" class="form-input" id="corrigir-input" value="${p.mesReferencia||''}"/></div>
+      <button class="btn btn-primary btn-sm" onclick="resSalvarCorrecaoCampo('mes')">Salvar</button>
+    </div>`;
+  } else if(campo==='unidade'){
+    area.innerHTML = `<div class="card-section" style="max-width:400px">
+      <div class="form-group"><label class="form-label">Unidade</label>
+        <input class="form-input" id="corrigir-input" value="${p.unidade||''}"/></div>
+      <button class="btn btn-primary btn-sm" onclick="resSalvarCorrecaoCampo('unidade')">Salvar</button>
+    </div>`;
+  } else if(campo==='cnpj'){
+    area.innerHTML = `<div class="card-section" style="max-width:400px">
+      <div class="form-group"><label class="form-label">CNPJ</label>
+        <input class="form-input" id="corrigir-input" value="${p.cnpj||''}"/></div>
+      <button class="btn btn-primary btn-sm" onclick="resSalvarCorrecaoCampo('cnpj')">Salvar</button>
+    </div>`;
+  } else if(campo.startsWith('destinacao:')){
+    const id = campo.split(':')[1];
+    const linha = p.linhas.find(l=>l.id===id);
+    area.innerHTML = `<div class="card-section" style="max-width:400px">
+      <div class="form-group"><label class="form-label">Destinação de "${linha.tipo}"</label>
+        <select class="form-select" id="corrigir-input">
+          <option value="">— Selecione —</option>
+          ${DESTINACOES_PADRAO.map(d=>`<option${linha.destinacao===d?' selected':''}>${d}</option>`).join('')}
+        </select></div>
+      <button class="btn btn-primary btn-sm" onclick="resSalvarCorrecaoCampo('${campo}')">Salvar</button>
+    </div>`;
+  } else if(campo.startsWith('volume:')){
+    const id = campo.split(':')[1];
+    const linha = p.linhas.find(l=>l.id===id);
+    area.innerHTML = `<div class="card-section" style="max-width:400px">
+      <div class="form-group"><label class="form-label">Volume de "${linha.tipo}" (kg)</label>
+        <input type="number" step="0.01" class="form-input" id="corrigir-input" value="${linha.volume||''}"/></div>
+      <button class="btn btn-primary btn-sm" onclick="resSalvarCorrecaoCampo('${campo}')">Salvar</button>
+    </div>`;
+  } else if(campo==='linhas'){
+    area.innerHTML = `<div class="card-section" style="max-width:500px">
+      <div class="form-group"><label class="form-label">Tipo de Resíduo</label>
+        <select class="form-select" id="corrigir-tipo"><option value="">— Selecione —</option>
+          ${TIPOS_RESIDUO_PADRAO.map(t=>`<option>${t}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Volume (kg)</label>
+        <input type="number" step="0.01" class="form-input" id="corrigir-volume"/></div>
+      <button class="btn btn-primary btn-sm" onclick="resAdicionarLinhaManual()">Adicionar</button>
+    </div>`;
+  }
+  area.scrollIntoView({behavior:'smooth', block:'center'});
+}
+function resSalvarCorrecaoCampo(campo){
+  const p = _resPreviaAtual;
+  const valor = document.getElementById('corrigir-input').value;
+  if(campo==='mes') p.mesReferencia = valor;
+  else if(campo==='unidade') p.unidade = valor.trim();
+  else if(campo==='cnpj') p.cnpj = valor.trim();
+  else if(campo.startsWith('destinacao:')){
+    const id = campo.split(':')[1];
+    const linha = p.linhas.find(l=>l.id===id);
+    if(linha) linha.destinacao = valor;
+  } else if(campo.startsWith('volume:')){
+    const id = campo.split(':')[1];
+    const linha = p.linhas.find(l=>l.id===id);
+    if(linha) linha.volume = parseFloat(valor)||0;
+  }
+  if(campo==='mes' && p.mesReferencia){
+    const [ano,mes] = p.mesReferencia.split('-');
+    p.mesReferenciaLabel = `${MESES_ABREV_RES[parseInt(mes)-1]}/${ano}`;
+  }
+  renderModContent('residuos','resultadoAnalise');
+}
+function resAdicionarLinhaManual(){
+  const tipo = document.getElementById('corrigir-tipo').value;
+  const volume = parseFloat(document.getElementById('corrigir-volume').value)||0;
+  if(!tipo || volume<=0){ alert('Informe o Tipo de Resíduo e um Volume válido.'); return; }
+  _resPreviaAtual.linhas.push({id:'tmp'+Math.random().toString(36).slice(2), tipo, volume, destinacao:null, coletas:null});
+  renderModContent('residuos','resultadoAnalise');
+}
+
+function resVoltarAoDashboardCancelando(){
+  _resPreviaAtual=null; _resPdfPendenteBase64=null; _resPdfPendenteNome=null;
+  _resSubstituindoCompetencia=null;
+  renderModContent('residuos','dashres');
+}
+
+// ═══════════════════════════════════════════════════════
+// CONFIRMAÇÃO FINAL — grava os registros (com controle de duplicidade
+// por Unidade+CNPJ+Fornecedor+Mês, nunca sobrescrevendo automaticamente)
+// e redireciona ao Dashboard com o mês recém-importado já selecionado.
+// ═══════════════════════════════════════════════════════
+function resConfirmarESalvar(){
+  const p = _resPreviaAtual;
+  if(!p.mesReferencia){
+    alert('Não conseguimos identificar o mês de referência. Use "Corrigir" para informá-lo antes de salvar.');
+    return;
+  }
+  if(!p.linhas.length){
+    alert('Não conseguimos identificar nenhum resíduo no relatório. Use "Corrigir" para adicionar manualmente antes de salvar.');
+    return;
+  }
+  const semVolume = p.linhas.filter(l=>l.volume==null || l.volume<=0);
+  if(semVolume.length){
+    alert(`Não conseguimos identificar o volume de ${semVolume.length} ite${semVolume.length>1?'ns':'m'} do relatório. Revise so${semVolume.length>1?'mente estes itens':'mente este item'} antes de salvar.`);
+    return;
+  }
+
+  // Fluxo de SUBSTITUIÇÃO: verifica se o mês do novo PDF corresponde à
+  // competência que o usuário está tentando substituir. Se não bater,
+  // nunca substitui silenciosamente — oferece cancelar ou importar como
+  // nova competência independente.
+  if(_resSubstituindoCompetencia){
+    const alvo = _resSubstituindoCompetencia;
+    if(p.mesReferencia !== alvo.mesReferencia){
+      const importarComoNova = confirm(
+        `Este relatório pertence a ${p.mesReferenciaLabel || p.mesReferencia}. Ele não corresponde à competência que você está tentando substituir (${_resMesLabel(alvo.mesReferencia)}).\n\n`+
+        `OK = Importar como nova competência (${p.mesReferenciaLabel || p.mesReferencia})\nCancelar = Cancelar esta operação`
+      );
+      _resSubstituindoCompetencia = null;
+      if(!importarComoNova) { renderModContent('residuos','dashres'); return; }
+      // segue o fluxo normal abaixo, tratando como nova competência independente
+    } else {
+      // Mês compatível: remove explicitamente os dados antigos dessa
+      // competência antes de gravar os novos (substituição real).
+      const medicoesSemAntiga = (DB.get('medicoesResiduos')||[]).filter(m=>m.arquivoOrigemId!==alvo.id);
+      DB.set('medicoesResiduos', medicoesSemAntiga);
+      const pdfsSemAntigo = (DB.get('pdfsMedicaoResiduos')||[]).filter(x=>x.id!==alvo.id);
+      DB.set('pdfsMedicaoResiduos', pdfsSemAntigo);
+      _resSubstituindoCompetencia = null;
+    }
+  }
+
+  const medicoesExistentes = DB.get('medicoesResiduos')||[];
+  const jaExiste = medicoesExistentes.some(m=>
+    m.mesReferencia===p.mesReferencia && m.unidade===p.unidade && m.cnpj===p.cnpj && m.fornecedor===p.fornecedor
+  );
+  if(jaExiste){
+    const escolha = confirm('Esta medição já foi importada para esta competência.\n\nOK = Substituir os dados existentes\nCancelar = Cancelar esta importação (nada será alterado)');
+    if(!escolha) return;
+    const restantes = medicoesExistentes.filter(m=>
+      !(m.mesReferencia===p.mesReferencia && m.unidade===p.unidade && m.cnpj===p.cnpj && m.fornecedor===p.fornecedor)
+    );
+    DB.set('medicoesResiduos', restantes);
+  }
+
+  const arquivoOrigemId = uid();
+  const dataImportacao = new Date().toISOString();
+  const medicoesAtualizadas = DB.get('medicoesResiduos')||[];
+  p.linhas.forEach(l=>{
+    medicoesAtualizadas.push({
+      id: uid(),
+      mesReferencia: p.mesReferencia,
+      unidade: p.unidade,
+      cnpj: p.cnpj,
+      fornecedor: p.fornecedor,
+      periodo: p.periodo,
+      tipoResiduo: l.tipo,
+      volumeKg: l.volume,
+      destinacao: l.destinacao||'',
+      qtdColetas: l.coletas||0,
+      arquivoOrigemId,
+      dataImportacao,
+    });
+  });
+  DB.set('medicoesResiduos', medicoesAtualizadas);
+
+  const pdfsOrigem = DB.get('pdfsMedicaoResiduos')||[];
+  pdfsOrigem.push({
+    id: arquivoOrigemId,
+    mesReferencia: p.mesReferencia,
+    unidade: p.unidade,
+    fornecedor: p.fornecedor,
+    nome: _resPdfPendenteNome,
+    conteudoBase64: _resPdfPendenteBase64,
+    dataImportacao,
+  });
+  DB.set('pdfsMedicaoResiduos', pdfsOrigem);
+
+  const mesImportado = p.mesReferencia;
+  _resPreviaAtual=null; _resPdfPendenteBase64=null; _resPdfPendenteNome=null;
+
+  // Redireciona ao Dashboard com o mês recém-importado já selecionado.
+  renderModContent('residuos','dashres');
+  setTimeout(()=>{
+    document.querySelectorAll('.dres-mes-checkbox').forEach(c=>{ c.checked = (c.value===mesImportado); });
+    if(typeof _resAtualizarLabelMesBtn==='function') _resAtualizarLabelMesBtn();
+    atualizarDashboardResiduos();
+  },80);
+}
+
+
+// ═══════════════════════════════════════════════════════
+// HISTÓRICO DE IMPORTAÇÕES — visualizar/baixar o PDF original de cada
+// competência já importada, garantindo rastreabilidade.
+// ═══════════════════════════════════════════════════════
+// Histórico agrupado por COMPETÊNCIA (Unidade+CNPJ+Fornecedor+Mês), não
+// por PDF individual — cada card representa uma medição mensal completa,
+// com o volume total já calculado a partir dos registros reais.
+function renderHistoricoMedicoesResiduos(){
+  const pdfs = (DB.get('pdfsMedicaoResiduos')||[]).sort((a,b)=>b.mesReferencia.localeCompare(a.mesReferencia));
+  if(!pdfs.length) return `<div class="empty-state"><div class="empty-icon">📁</div><div>Nenhuma medição importada ainda.</div></div>`;
+  const medicoes = DB.get('medicoesResiduos')||[];
+  return `<div style="display:flex;flex-direction:column;gap:10px">
+  ${pdfs.map(p=>{
+    const volumeTotal = medicoes
+      .filter(m=>m.arquivoOrigemId===p.id)
+      .reduce((s,m)=>s+(m.volumeKg||0),0);
+    return `<div style="border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+      <div>
+        <div style="font-size:14px;font-weight:800;color:var(--navy)">${_resMesLabel(p.mesReferencia)}</div>
+        <div style="font-size:12px;color:var(--muted)">${p.unidade||'—'} · ${p.fornecedor||'—'}</div>
+        <div style="font-size:11px;color:var(--light)">📄 ${p.nome||'—'} · importado em ${fmtDataHoraBR(p.dataImportacao)}</div>
+        <div style="font-size:13px;font-weight:700;color:#1A73E8;margin-top:4px">${volumeTotal.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="resVisualizarPdfMedicao('${p.id}')">👁️ Visualizar</button>
+        <button class="btn btn-outline btn-sm" onclick="resAbrirSubstituirMedicao('${p.id}')">🔄 Substituir</button>
+        <button class="btn btn-outline btn-sm" onclick="resExcluirMedicao('${p.id}')" style="color:var(--red)">🗑️ Excluir</button>
+      </div>
+    </div>`;
+  }).join('')}
+  </div>`;
+}
+function resVisualizarPdfMedicao(id){
+  const pdfs=DB.get('pdfsMedicaoResiduos')||[];
+  const p=pdfs.find(x=>x.id===id);
+  if(!p||!p.conteudoBase64){ alert('PDF não encontrado.'); return; }
+  const blob=_dataUrlParaBlob(p.conteudoBase64);
+  if(!blob){ window.open(p.conteudoBase64,'_blank'); return; }
+  const url=URL.createObjectURL(blob);
+  const janela=window.open(url,'_blank');
+  if(!janela){ URL.revokeObjectURL(url); alert('Pop-up bloqueado. Permita pop-ups para visualizar o PDF.'); return; }
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+function resBaixarPdfMedicao(id){
+  const pdfs=DB.get('pdfsMedicaoResiduos')||[];
+  const p=pdfs.find(x=>x.id===id);
+  if(!p) return;
+  const a=document.createElement('a');
+  a.href=p.conteudoBase64;
+  a.download=p.nome||'medicao.pdf';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// ═══════════════════════════════════════════════════════
+// SUBSTITUIR MEDIÇÃO — reaproveita o mesmo fluxo de importação normal
+// (análise automática → resultado → confirmação), mas verifica se o mês
+// do novo PDF bate com a competência que está sendo substituída antes
+// de permitir a gravação.
+// ═══════════════════════════════════════════════════════
+let _resSubstituindoCompetencia = null; // {id, mesReferencia, unidade, cnpj, fornecedor, nome} da medição-alvo
+
+function resAbrirSubstituirMedicao(pdfId){
+  const pdfs = DB.get('pdfsMedicaoResiduos')||[];
+  const alvo = pdfs.find(p=>p.id===pdfId);
+  if(!alvo) return;
+  closeModalDirect();
+  openModal('Substituir Medição',`
+    <div style="font-size:13px;margin-bottom:10px">Você está substituindo a medição de <b>${_resMesLabel(alvo.mesReferencia)}</b>.</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px">O relatório atualmente vinculado é:<br><b>${alvo.nome||'—'}</b></div>
+    <div style="font-size:12px;color:#E67700;background:#FFF9E6;border-radius:8px;padding:10px 12px;margin-bottom:14px">
+      Os dados atuais dessa competência serão substituídos pelos dados do novo relatório após a confirmação.
+    </div>`,
+    `<button class="btn btn-outline" onclick="resAbrirHistoricoImportacoes()">Cancelar</button>
+     <button class="btn btn-primary" onclick="resIniciarSelecaoNovoArquivoSubstituicao('${alvo.id}')">Selecionar Novo Relatório</button>`);
+}
+
+function resIniciarSelecaoNovoArquivoSubstituicao(pdfId){
+  const pdfs = DB.get('pdfsMedicaoResiduos')||[];
+  const alvo = pdfs.find(p=>p.id===pdfId);
+  if(!alvo) return;
+  _resSubstituindoCompetencia = alvo;
+  resAbrirImportarMedicao();
+}
+
+// Exclusão de uma competência: remove os registros de medicoesResiduos
+// e o PDF vinculado, sem afetar nenhuma outra competência.
+function resExcluirMedicao(pdfId){
+  const pdfs = DB.get('pdfsMedicaoResiduos')||[];
+  const alvo = pdfs.find(p=>p.id===pdfId);
+  if(!alvo) return;
+  const confirmado = confirm(
+    `Excluir a medição de ${_resMesLabel(alvo.mesReferencia)}?\n\n`+
+    `Os dados dessa competência deixarão de aparecer nos indicadores e gráficos.\n`+
+    `Esta ação não excluirá outras competências.`
+  );
+  if(!confirmado) return;
+
+  const medicoesRestantes = (DB.get('medicoesResiduos')||[]).filter(m=>m.arquivoOrigemId!==pdfId);
+  DB.set('medicoesResiduos', medicoesRestantes);
+  const pdfsRestantes = pdfs.filter(p=>p.id!==pdfId);
+  DB.set('pdfsMedicaoResiduos', pdfsRestantes);
+
+  resAbrirHistoricoImportacoes();
+}
+
+function resAbrirHistoricoImportacoes(){
+  openModal('Histórico de Importações', renderHistoricoMedicoesResiduos(),
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Fechar</button>`, true);
+}
+
 function renderSobDemanda(){
   const sob=DB.get('sobDemanda')||[];
   return `<div class="content-header"><div><div class="content-title">📦 Coletas Sob Demanda</div>
@@ -2299,7 +3622,7 @@ function renderDashboardGerencial(){
   return `<div>
   <div class="content-header">
     <div>
-      <div class="content-title">📊 Dashboard Gerencial — Coletas & NCs</div>
+      <div class="content-title">🚚 Gestão de Coletas</div>
       <div class="content-sub" style="display:flex;align-items:center;gap:8px">
         Base única · ${coletas.length} coletas · ${ncs.length} não conformidades
         <span style="background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">🔗 BASE ÚNICA</span>
