@@ -14,7 +14,6 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;}
 body{font-family:'Inter',-apple-system,sans-serif;background:#F3F6FB;color:#111111;font-size:13px;}
-
 :root{
   --yellow:#FFE600;--black:#111111;--gray:#6B6B6B;--white:#FFFFFF;
   --green:#00A650;--red:#D1242F;--blue:#1A73E8;
@@ -24,147 +23,61 @@ body{font-family:'Inter',-apple-system,sans-serif;background:#F3F6FB;color:#1111
   --shadow:0 2px 12px rgba(0,0,0,.08);--shadow-md:0 8px 32px rgba(0,0,0,.13);
   --m1:#111111;--m2:#00A650;--m3:#1A73E8;--m4:#D1242F;--m5:#E67700;--m6:#7C3AED;--m7:#0891B2;
 }
-
-/* SCREENS */
 .screen{display:none;height:100%;width:100%;}
 .screen.active{display:flex;}
-
-/* ═══ LOGIN ═══ */
-#screen-login{
-  background:var(--black);
-  align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
-}
-#screen-login::before{
-  content:'';position:absolute;inset:0;
-  background-image:radial-gradient(circle at 1px 1px,rgba(255,230,0,.05) 1px,transparent 0);
-  background-size:32px 32px;
-}
-#screen-login::after{
-  content:'';position:absolute;
-  top:-200px;left:50%;transform:translateX(-50%);
-  width:600px;height:600px;
-  background:radial-gradient(circle,rgba(255,230,0,.08) 0%,transparent 70%);
-  pointer-events:none;
-}
-.login-card{
-  background:var(--card);border-radius:20px;
-  padding:48px 52px;width:420px;
-  box-shadow:0 24px 64px rgba(0,0,0,.4);
-  position:relative;z-index:1;
-}
+#screen-login{background:var(--black);align-items:center;justify-content:center;position:relative;overflow:hidden;}
+#screen-login::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,rgba(255,230,0,.05) 1px,transparent 0);background-size:32px 32px;}
+#screen-login::after{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(255,230,0,.08) 0%,transparent 70%);pointer-events:none;}
+.login-card{background:var(--card);border-radius:20px;padding:48px 52px;width:420px;box-shadow:0 24px 64px rgba(0,0,0,.4);position:relative;z-index:1;}
 .login-logo{display:flex;align-items:center;gap:14px;margin-bottom:36px;}
-.login-logo-icon{
-  width:48px;height:48px;border-radius:12px;
-  background:var(--yellow);
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;flex-shrink:0;
-}
+.login-logo-icon{width:48px;height:48px;border-radius:12px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
 .login-logo-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:var(--navy);}
 .login-logo-sub{font-size:11px;color:var(--muted);margin-top:1px;}
 .login-headline{font-family:'Sora',sans-serif;font-size:24px;font-weight:800;color:var(--navy);letter-spacing:-.03em;margin-bottom:6px;}
 .login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.5;}
 .login-label{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px;display:block;}
 .login-field{margin-bottom:16px;}
-.login-input{
-  width:100%;border:1.5px solid var(--line);border-radius:10px;
-  padding:13px 16px;font-size:14px;font-family:'Inter',sans-serif;
-  outline:none;transition:all .15s;background:#F8F8F8;color:var(--navy);
-}
+.login-input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:13px 16px;font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:all .15s;background:#F8F8F8;color:var(--navy);}
 .login-input:focus{border-color:var(--black);background:#fff;box-shadow:0 0 0 3px rgba(17,17,17,.08);}
-.login-btn{
-  width:100%;background:var(--black);
-  color:var(--yellow);border:none;border-radius:10px;padding:14px;
-  font-size:14px;font-weight:700;font-family:'Sora',sans-serif;
-  cursor:pointer;margin-top:4px;transition:all .15s;
-}
+.login-btn{width:100%;background:var(--black);color:var(--yellow);border:none;border-radius:10px;padding:14px;font-size:14px;font-weight:700;font-family:'Sora',sans-serif;cursor:pointer;margin-top:4px;transition:all .15s;}
 .login-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,0,0,.25);background:#222;}
 .login-error{color:var(--red);font-size:12px;margin-top:10px;display:none;text-align:center;}
 .login-error.show{display:block;}
 .login-footer{margin-top:28px;padding-top:20px;border-top:1px solid var(--line);text-align:center;font-size:11px;color:var(--light);}
-
-/* ═══ HOME / PORTAL ═══ */
 #screen-home{flex-direction:column;overflow:hidden;}
-.portal-topbar{
-  height:60px;background:var(--black);
-  display:flex;align-items:center;
-  padding:0 28px;gap:16px;flex-shrink:0;z-index:10;
-}
+.portal-topbar{height:60px;background:var(--black);display:flex;align-items:center;padding:0 28px;gap:16px;flex-shrink:0;z-index:10;}
 .portal-topbar-logo{display:flex;align-items:center;gap:12px;}
-.portal-topbar-icon{
-  width:32px;height:32px;border-radius:8px;
-  background:var(--yellow);
-  display:flex;align-items:center;justify-content:center;font-size:16px;
-}
+.portal-topbar-icon{width:32px;height:32px;border-radius:8px;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:16px;}
 .portal-topbar-name{font-family:'Sora',sans-serif;font-size:14px;font-weight:800;color:#fff;}
 .portal-topbar-sep{width:1px;height:24px;background:rgba(255,255,255,.15);}
 .portal-topbar-site{font-size:11px;color:rgba(255,255,255,.4);}
 .portal-topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
-.topbar-btn{
-  height:34px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);
-  border-radius:8px;padding:0 14px;color:rgba(255,255,255,.8);font-size:12px;font-family:'Inter',sans-serif;
-  cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;
-}
+.topbar-btn{height:34px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:0 14px;color:rgba(255,255,255,.8);font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;}
 .topbar-btn:hover{background:rgba(255,255,255,.14);}
-.topbar-user{
-  display:flex;align-items:center;gap:8px;padding:4px 12px;
-  background:rgba(255,255,255,.06);border-radius:8px;cursor:pointer;
-}
-.topbar-avatar{
-  width:28px;height:28px;border-radius:50%;
-  background:var(--yellow);
-  display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;color:var(--black);
-}
+.topbar-user{display:flex;align-items:center;gap:8px;padding:4px 12px;background:rgba(255,255,255,.06);border-radius:8px;cursor:pointer;}
+.topbar-avatar{width:28px;height:28px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--black);}
 .topbar-username{font-size:12px;color:rgba(255,255,255,.8);font-weight:600;}
-
 .portal-body{flex:1;overflow-y:auto;padding:40px 48px;}
 .portal-welcome{margin-bottom:36px;}
 .portal-welcome-time{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px;}
 .portal-welcome-title{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;color:var(--navy);letter-spacing:-.03em;margin-bottom:6px;}
 .portal-welcome-sub{font-size:14px;color:var(--muted);line-height:1.6;}
-
-/* MODULE CARDS */
 .portal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:1280px;}
-.module-card{
-  background:var(--card);border-radius:var(--radius);
-  border:1px solid var(--line);padding:0;
-  cursor:pointer;position:relative;overflow:hidden;
-  transition:all .2s;height:200px;display:flex;flex-direction:column;
-}
+.module-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--line);padding:0;cursor:pointer;position:relative;overflow:hidden;transition:all .2s;height:200px;display:flex;flex-direction:column;}
 .module-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
 .module-card-accent{height:4px;flex-shrink:0;}
 .module-card-body{flex:1;padding:20px 22px;display:flex;flex-direction:column;}
 .module-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;}
-.module-card-icon{
-  width:40px;height:40px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
-}
-.module-card-badge{
-  font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;
-  letter-spacing:.04em;
-}
+.module-card-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.module-card-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.04em;}
 .module-card-title{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:3px;}
 .module-card-desc{font-size:11px;color:var(--muted);line-height:1.4;flex:1;}
-.module-card-footer{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 22px 16px;flex-shrink:0;
-}
+.module-card-footer{display:flex;align-items:center;justify-content:space-between;padding:0 22px 16px;flex-shrink:0;}
 .module-card-enter{font-size:11px;font-weight:600;display:flex;align-items:center;gap:4px;transition:gap .15s;}
 .module-card:hover .module-card-enter{gap:8px;}
-
-/* ═══ MODULE SCREEN ═══ */
 #screen-module{flex-direction:column;overflow:hidden;}
-.mod-topbar{
-  height:54px;background:var(--black);
-  display:flex;align-items:center;padding:0 20px;gap:14px;
-  flex-shrink:0;z-index:10;
-}
-.mod-back{
-  background:rgba(255,255,255,.08);border:none;border-radius:8px;
-  width:32px;height:32px;cursor:pointer;color:rgba(255,255,255,.7);
-  font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s;
-}
+.mod-topbar{height:54px;background:var(--black);display:flex;align-items:center;padding:0 20px;gap:14px;flex-shrink:0;z-index:10;}
+.mod-back{background:rgba(255,255,255,.08);border:none;border-radius:8px;width:32px;height:32px;cursor:pointer;color:rgba(255,255,255,.7);font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .15s;}
 .mod-back:hover{background:rgba(255,255,255,.15);}
 .mod-topbar-sep{width:1px;height:22px;background:rgba(255,255,255,.12);}
 .mod-topbar-breadcrumb{font-size:11px;color:rgba(255,255,255,.4);}
@@ -173,53 +86,30 @@ body{font-family:'Inter',-apple-system,sans-serif;background:#F3F6FB;color:#1111
 .mod-topbar-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;}
 .mod-topbar-name{font-family:'Sora',sans-serif;font-size:14px;font-weight:800;color:#fff;}
 .mod-topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-
 .mod-layout{flex:1;display:flex;overflow:hidden;}
-.mod-sidebar{
-  width:220px;background:var(--deep);
-  display:flex;flex-direction:column;overflow-y:auto;
-  flex-shrink:0;
-}
+.mod-sidebar{width:220px;background:var(--deep);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;}
 .mod-sidebar-section{padding:20px 14px 8px;}
 .mod-sidebar-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.3);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;padding:0 4px;}
-.mod-nav-item{
-  display:flex;align-items:center;gap:10px;width:100%;
-  background:transparent;border:none;border-radius:8px;
-  padding:9px 10px;cursor:pointer;font-family:'Inter',sans-serif;
-  color:rgba(255,255,255,.55);font-size:12px;font-weight:500;
-  text-align:left;transition:all .15s;margin-bottom:1px;
-}
+.mod-nav-item{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:none;border-radius:8px;padding:9px 10px;cursor:pointer;font-family:'Inter',sans-serif;color:rgba(255,255,255,.55);font-size:12px;font-weight:500;text-align:left;transition:all .15s;margin-bottom:1px;}
 .mod-nav-item:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9);}
 .mod-nav-item.active{color:#fff;font-weight:600;}
 .mod-nav-item .item-icon{font-size:14px;width:18px;text-align:center;flex-shrink:0;}
 .mod-nav-item .item-label{flex:1;}
 .mod-sidebar-footer{margin-top:auto;padding:16px 14px;border-top:1px solid rgba(255,255,255,.06);}
 .mod-sidebar-user{display:flex;align-items:center;gap:10px;}
-.mod-sidebar-avatar{
-  width:30px;height:30px;border-radius:50%;
-  background:var(--yellow);
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:700;color:var(--black);flex-shrink:0;
-}
+.mod-sidebar-avatar{width:30px;height:30px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--black);flex-shrink:0;}
 .mod-sidebar-username{font-size:11px;color:rgba(255,255,255,.55);}
 .mod-sidebar-role{font-size:9px;color:rgba(255,255,255,.25);}
 .mod-content{flex:1;overflow-y:auto;background:var(--bg);padding:28px 32px;}
-
-/* CONTENT COMPONENTS */
 .content-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
 .content-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-.02em;}
 .content-sub{font-size:12px;color:var(--muted);margin-top:3px;}
 .content-actions{display:flex;gap:8px;flex-wrap:wrap;}
-
 .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;}
-.kpi-box{
-  background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);
-  padding:18px 20px;position:relative;overflow:hidden;
-}
+.kpi-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:18px 20px;position:relative;overflow:hidden;}
 .kpi-box-val{font-family:'Sora',sans-serif;font-size:28px;font-weight:800;letter-spacing:-.03em;line-height:1;margin-bottom:4px;}
 .kpi-box-label{font-size:11px;color:var(--muted);font-weight:500;}
 .kpi-box-sub{font-size:10px;color:var(--light);margin-top:2px;}
-
 .data-table-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
 .data-table-head{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);flex-wrap:wrap;gap:10px;}
 .data-table-title{font-size:14px;font-weight:700;color:var(--navy);}
@@ -230,8 +120,6 @@ tbody tr{border-bottom:1px solid #F0F0F0;transition:background .1s;}
 tbody tr:last-child{border-bottom:none;}
 tbody tr:hover{background:#FAFAFA;}
 tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
-
-/* BUTTONS */
 .btn{border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;transition:all .12s;display:inline-flex;align-items:center;gap:6px;}
 .btn-primary{background:var(--black);color:var(--yellow);}
 .btn-primary:hover{background:#333;}
@@ -244,8 +132,7 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
 .btn-yellow{background:var(--yellow);color:var(--black);}
 .btn-yellow:hover{background:#f0d800;}
 .btn-sm{padding:5px 10px;font-size:11px;}
-
-/* BADGES */
+.btn:disabled{opacity:.5;cursor:not-allowed;}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;}
 .badge-green{background:#D1FAE5;color:#065F46;}
 .badge-red{background:#FEE2E2;color:#991B1B;}
@@ -254,8 +141,6 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
 .badge-gray{background:#F1F5F9;color:var(--muted);}
 .badge-orange{background:#FFEDD5;color:#9A3412;}
 .badge-purple{background:#EDE9FE;color:#5B21B6;}
-
-/* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:none;align-items:center;justify-content:center;}
 .modal-overlay.open{display:flex;}
 .modal{background:#fff;border-radius:16px;padding:0;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.25);}
@@ -266,21 +151,13 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
 .modal-close:hover{background:var(--bg);}
 .modal-body{padding:24px;}
 .modal-footer{padding:16px 24px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px;}
-
-/* FORM */
 .form-group{margin-bottom:16px;}
 .form-label{display:block;font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;}
-.form-input,.form-select,.form-textarea{
-  width:100%;border:1.5px solid var(--line);border-radius:8px;
-  padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;
-  outline:none;transition:border-color .15s;background:#fff;color:var(--navy);
-}
+.form-input,.form-select,.form-textarea{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .15s;background:#fff;color:var(--navy);}
 .form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(0,0,0,.06);}
 .form-textarea{resize:vertical;min-height:80px;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
 .form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-
-/* MISC */
 .empty-state{text-align:center;padding:48px 20px;color:var(--muted);}
 .empty-icon{font-size:40px;margin-bottom:12px;opacity:.4;}
 .divider{height:1px;background:var(--line);margin:20px 0;}
@@ -290,26 +167,18 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
 .filter-select{border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12px;font-family:'Inter',sans-serif;outline:none;background:#fff;cursor:pointer;}
 .filter-input{border:1.5px solid var(--line);border-radius:8px;padding:7px 12px;font-size:12px;font-family:'Inter',sans-serif;outline:none;min-width:200px;}
 .filter-input:focus,.filter-select:focus{border-color:var(--black);}
-
-/* INDICATORS */
 .ind-ok{color:var(--green);}
 .ind-warn{color:#E67700;}
 .ind-bad{color:var(--red);}
-
-/* SCROLLBAR */
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:#CCC;border-radius:3px;}
-
-/* RESPONSIVE */
 @media(max-width:1100px){.portal-grid{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:800px){.portal-grid{grid-template-columns:repeat(2,1fr);}.portal-body{padding:20px;}.kpi-row{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:500px){.portal-grid{grid-template-columns:1fr;}.mod-sidebar{display:none;}}
 </style>
 </head>
 <body>
-
-<!-- LOGIN -->
 <div id="screen-login" class="screen active">
   <div class="login-card">
     <div class="login-logo">
@@ -334,8 +203,6 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
     <div class="login-footer">MG02 · v1.0 · Portal de Gestão de Facilities<br><span>Sistema restrito — acesso monitorado</span></div>
   </div>
 </div>
-
-<!-- HOME -->
 <div id="screen-home" class="screen">
   <div class="portal-topbar">
     <div class="portal-topbar-logo">
@@ -361,8 +228,6 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
     <div class="portal-grid" id="portal-grid"></div>
   </div>
 </div>
-
-<!-- MODULE -->
 <div id="screen-module" class="screen">
   <div class="mod-topbar">
     <button class="mod-back" onclick="goHome()">←</button>
@@ -397,8 +262,6 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
     <div class="mod-content" id="mod-content"></div>
   </div>
 </div>
-
-<!-- MODAL CONTAINER -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" id="modal-box" onclick="event.stopPropagation()">
     <div class="modal-head">
@@ -409,23 +272,14 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
     <div class="modal-footer" id="modal-footer"></div>
   </div>
 </div>
-
 <script>
 // ═══════════════════════════════════════════════════════
 // CENTRAL DATA STORE (Firebase Realtime Database — compartilhado)
 // ═══════════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════════
-// DADOS FIXOS DA PLANILHA — Todas as abas importadas
-// ═══════════════════════════════════════════════════════
-const COLETAS_FIXAS_PLANILHA = [{"id": "xl0005", "data": "2026-05-11", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:00", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0006", "data": "2026-05-11", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0007", "data": "2026-05-11", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "", "resp": "", "obs": "A troca da compactadora de resíduos comum que teria que ser trocada NÃO veio.", "semana": 20, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0008", "data": "2026-05-12", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:00", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0009", "data": "2026-05-12", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:30", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0010", "data": "2026-05-12", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "16:00", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0011", "data": "2026-05-13", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:06", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0012", "data": "2026-05-13", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0013", "data": "2026-05-13", "dia": "Quarta-feira", "tipo": "Compactador de Papelão", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "10:00", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0014", "data": "2026-05-13", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:25", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0015", "data": "2026-05-14", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:05", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0016", "data": "2026-05-14", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Cancelamos a coleta da parte da tarde, pois não tem lixo o suficiente para coletar.", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0017", "data": "2026-05-15", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:42", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0018", "data": "2026-05-15", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:20", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0019", "data": "2026-05-15", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:45", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0020", "data": "2026-05-18", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:26", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0021", "data": "2026-05-18", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:38", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0022", "data": "2026-05-18", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0023", "data": "2026-05-19", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:01", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0024", "data": "2026-05-19", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0025", "data": "2026-05-19", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Solicitamos a troca do dia, pois as bombobas não estavam cheias o suficiente (Quinta-Feira 21/05/2026)", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0026", "data": "2026-05-20", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:45", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0027", "data": "2026-05-20", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:23", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0028", "data": "2026-05-20", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "A caçamba foi uma antecipação, realizada no dia 19/05/2026", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0029", "data": "2026-05-21", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:45", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0030", "data": "2026-05-21", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:51", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0031", "data": "2026-05-22", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:20", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0032", "data": "2026-05-22", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Cancelamos a coleta da tarde, pois a caçamba estava vazia, não tinha lixo o suficiente para ocupar os 70%", "semana": 21, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0033", "data": "2026-05-22", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "14:51", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0034", "data": "2026-05-25", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:15", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0035", "data": "2026-05-25", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:44", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0036", "data": "2026-05-25", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "15:43", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0037", "data": "2026-05-26", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:32", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0038", "data": "2026-05-26", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:10", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0039", "data": "2026-05-26", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "16:40", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0040", "data": "2026-05-27", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "12:00", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0041", "data": "2026-05-27", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0042", "data": "2026-05-27", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "16:24", "resp": "Eduarda", "obs": "Foi feito a antecipação no dia 26/05/2026. Tivemos que solicitar uma extra para hoje, devido ao alto fluxo de lixo (Solicitado com a liberação da Natalia)", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0043", "data": "2026-05-28", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "12:06", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0044", "data": "2026-05-28", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:55", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0045", "data": "2026-05-29", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:04", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0046", "data": "2026-05-29", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0047", "data": "2026-05-29", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:50", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0048", "data": "2026-06-01", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:35", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0049", "data": "2026-06-01", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:22", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0050", "data": "2026-06-01", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "13:19", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0051", "data": "2026-06-02", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "12:21", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0052", "data": "2026-06-02", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0053", "data": "2026-06-02", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "17:43", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0054", "data": "2026-06-03", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:00", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0055", "data": "2026-06-03", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:53", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0056", "data": "2026-06-03", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:30", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0057", "data": "2026-06-04", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:30", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0058", "data": "2026-06-04", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:40", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0059", "data": "2026-06-05", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:28", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0060", "data": "2026-06-05", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:16", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0061", "data": "2026-06-05", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:10", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0062", "data": "2026-06-08", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:00", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0063", "data": "2026-06-08", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:10", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0064", "data": "2026-06-08", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:15", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0065", "data": "2026-06-09", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:55", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0066", "data": "2026-06-09", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:10", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0067", "data": "2026-06-09", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "18:19", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0068", "data": "2026-06-10", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:12", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0069", "data": "2026-06-10", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:43", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0070", "data": "2026-06-10", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "12:00", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0071", "data": "2026-06-11", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:00", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0072", "data": "2026-06-11", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:00", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0073", "data": "2026-06-12", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:38", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0074", "data": "2026-06-12", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:50", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0075", "data": "2026-06-12", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "16:07", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0076", "data": "2026-06-15", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:03", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0077", "data": "2026-06-15", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Não fwoi feita a segunda coleta da parte da manhã.", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0078", "data": "2026-06-15", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Foi feita a antecipação no sábado (13/06/2026)", "semana": 25, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0079", "data": "2026-06-16", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:21", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0080", "data": "2026-06-16", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:38", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0081", "data": "2026-06-16", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "16:25", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0082", "data": "2026-06-17", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:40", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0083", "data": "2026-06-17", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:04", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0084", "data": "2026-06-17", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0085", "data": "2026-06-18", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:36", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0086", "data": "2026-06-18", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "12:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0087", "data": "2026-06-19", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:14", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0088", "data": "2026-06-19", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:14", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0089", "data": "2026-06-19", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0090", "data": "2026-06-22", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:26", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0091", "data": "2026-06-22", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:26", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0092", "data": "2026-06-22", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0093", "data": "2026-06-23", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:51", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0094", "data": "2026-06-23", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0095", "data": "2026-06-23", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "17:48", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0096", "data": "2026-06-24", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:36", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0097", "data": "2026-06-24", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "15:46", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0098", "data": "2026-06-24", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:12", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0099", "data": "2026-06-25", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:53", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0100", "data": "2026-06-25", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:53", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0101", "data": "2026-06-26", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:33", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0102", "data": "2026-06-26", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:11", "resp": "Euarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0103", "data": "2026-06-26", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:30", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0104", "data": "2026-06-29", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:31", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0105", "data": "2026-06-29", "dia": "Segunda-feira", "tipo": "Caçamba 5m", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "12:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0106", "data": "2026-06-29", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:42", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0107", "data": "2026-06-30", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "12:31", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0108", "data": "2026-06-30", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "12:31", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0109", "data": "2026-06-30", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "18:30", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0110", "data": "2026-07-01", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:34", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0111", "data": "2026-07-01", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:34", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0112", "data": "2026-07-01", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Ambienys errou o dia da programada e não nos enviou a caçamba no dia correto.", "semana": 27, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0113", "data": "2026-07-02", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0114", "data": "2026-07-02", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0115", "data": "2026-07-03", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:40", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0116", "data": "2026-07-03", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:40", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0117", "data": "2026-07-03", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:51", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0118", "data": "2026-05-15", "dia": "Sexta-feira", "tipo": "Compactador de Papelão", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "10:00", "resp": "Eduarda", "obs": "", "semana": 20, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0119", "data": "2026-05-15", "dia": "Sexta-feira", "tipo": "Recicláveis - Extra", "turno": "Tarde", "status": "⏳ Aguardando", "horaRealizada": "", "resp": "", "obs": "", "semana": 20, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0120", "data": "2026-05-18", "dia": "Segunda-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "12:50", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0121", "data": "2026-05-18", "dia": "Segunda-feira", "tipo": "Compactador de Papelão", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0122", "data": "2026-05-18", "dia": "Segunda-feira", "tipo": "Caçamba apoio caminho.", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:38", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0123", "data": "2026-05-19", "dia": "Terça-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:30", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0124", "data": "2026-05-19", "dia": "Terça-feira", "tipo": "Compactador de Papelão", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:34", "resp": "Eduarda", "obs": "", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0125", "data": "2026-05-19", "dia": "Terça-feira", "tipo": "Orgânico - Caçamba 5m", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "13:00", "resp": "Eduarda", "obs": "Disponibilizado pela Ambiensys", "semana": 21, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0126", "data": "2026-05-25", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Solicitado uma caçamba extra de recicláveis pois a ilha ecologica está com muito lixo. (NÃO VIERAM)", "semana": 22, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0127", "data": "2026-05-25", "dia": "Segunda-feira", "tipo": "Orgânico caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:40", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0128", "data": "2026-05-25", "dia": "Segunda-feira", "tipo": "Compactador de Papelão", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:51", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0129", "data": "2026-05-26", "dia": "Terça-feira", "tipo": "Bombonas — Perigosos", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Ambienys não realizou a troca.", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0130", "data": "2026-05-26", "dia": "Terça-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "13:09", "resp": "Eduarda", "obs": "Foi solicitado a antecipação da caçamba do restaurante devido ao alto volume de lixo na mesma.", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0131", "data": "2026-05-27", "dia": "Quarta-feira", "tipo": "Compactador de Papelão", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:50", "resp": "Eduarda", "obs": "", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0132", "data": "2026-05-28", "dia": "Quinta-feira", "tipo": "bombonas — Perigosos", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "14:30", "resp": "Eduarda", "obs": "(Recolheram 6 bombonas e ficaram de recolher as outras 5 na sexta-feira 29/05/2026)", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0133", "data": "2026-05-29", "dia": "Sexta-feira", "tipo": "bombonas — Perigosos", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:03", "resp": "Eduarda", "obs": "A empresa veio recolher o restante que ficou para trás no dia anterior.", "semana": 22, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0134", "data": "2026-06-01", "dia": "Segunda-feira", "tipo": "Compactador de Papelão", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Ficou marcado para realizar a troca da compactadora de papelão na terça-feira 01/06/2026", "semana": 23, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0135", "data": "2026-06-01", "dia": "Segunda-feira", "tipo": "Caçamba orgânico 5m", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:30", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0136", "data": "2026-06-02", "dia": "Terça-feira", "tipo": "Compactador de Papelão", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "12:26", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0137", "data": "2026-06-02", "dia": "Terça-feira", "tipo": "Caçamba apoio caminho.", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 23, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0138", "data": "2026-06-09", "dia": "Terça-feira", "tipo": "Compactador de Papelão", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "11:29", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0139", "data": "2026-06-10", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:12", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0140", "data": "2026-06-10", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0141", "data": "2026-06-11", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0142", "data": "2026-06-11", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0143", "data": "2026-06-12", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:00", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0144", "data": "2026-06-12", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0145", "data": "2026-06-12", "dia": "Sexta-feira", "tipo": "Caçamba apoio caminho.", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:15", "resp": "Eduarda", "obs": "", "semana": 24, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0146", "data": "2026-06-15", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:12", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0147", "data": "2026-06-15", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:44", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0148", "data": "2026-06-15", "dia": "Segunda-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "13:21", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0149", "data": "2026-06-16", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:10", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0150", "data": "2026-06-16", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0151", "data": "2026-06-17", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0152", "data": "2026-06-17", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0153", "data": "2026-06-18", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:47", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0154", "data": "2026-06-18", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0155", "data": "2026-06-18", "dia": "Quinta-feira", "tipo": "Compactadora de Resíduos", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0156", "data": "2026-06-19", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:37", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0157", "data": "2026-06-19", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:52", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0158", "data": "2026-06-19", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 25, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0159", "data": "2026-06-22", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:00", "resp": "Eduada", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0160", "data": "2026-06-22", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:50", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0161", "data": "2026-06-22", "dia": "Segunda-feira", "tipo": "Caçamba Restaurante", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "09:20", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0162", "data": "2026-06-23", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:25", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0163", "data": "2026-06-23", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0164", "data": "2026-06-24", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "13:57", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0165", "data": "2026-06-24", "dia": "Quarta-feira", "tipo": "Caçamba 5m", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "13:57", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0166", "data": "2026-06-25", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:47", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0167", "data": "2026-06-25", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:47", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0168", "data": "2026-06-25", "dia": "Quinta-feira", "tipo": "bombonas — Perigosos", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:49", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0169", "data": "2026-06-25", "dia": "Quinta-feira", "tipo": "bombonas — Restaurante", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:22", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0170", "data": "2026-06-26", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:00", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0171", "data": "2026-06-26", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:54", "resp": "Eduarda", "obs": "", "semana": 26, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0172", "data": "2026-06-29", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0173", "data": "2026-06-29", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0174", "data": "2026-06-30", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "", "resp": "", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0175", "data": "2026-06-30", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "", "resp": "", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0176", "data": "2026-06-30", "dia": "Terça-feira", "tipo": "Caçamba Restaurante", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "14:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0177", "data": "2026-07-01", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0178", "data": "2026-07-01", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0179", "data": "2026-07-01", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0180", "data": "2026-07-01", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0181", "data": "2026-07-02", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "11:35", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0182", "data": "2026-07-02", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:20", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0183", "data": "2026-07-02", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:20", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0184", "data": "2026-07-02", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Cancelamos a troca pois não houve necessidade de vir a sexta caçamba", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0185", "data": "2026-07-02", "dia": "Quinta-feira", "tipo": "Caçamba 5m", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:15", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0186", "data": "2026-07-03", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0187", "data": "2026-07-03", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0188", "data": "2026-07-03", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Solicitamos o cancelamento pois não houve necessidade de troca .", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0189", "data": "2026-07-03", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Solicitamos o cancelamento pois não houve necessidade de troca .", "semana": 27, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0190", "data": "2026-07-06", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:16", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0191", "data": "2026-07-06", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Solicitamos o cancelamento pois não tinha volume o suficiente para enchererm as caçambas", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0192", "data": "2026-07-06", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Solicitamos o cancelamento pois não tinha volume o suficiente para enchererm as caçambas", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0193", "data": "2026-07-06", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0194", "data": "2026-07-06", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0195", "data": "2026-07-06", "dia": "Segunda-feira", "tipo": "Compactadora de Resíduos", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "15:43", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0196", "data": "2026-07-06", "dia": "Segunda-feira", "tipo": "Caçamba 5m", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:30", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0197", "data": "2026-07-07", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:33", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0198", "data": "2026-07-07", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Cancelamos devido a caçmaba não ter volume o suficiente para ser levado.", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0199", "data": "2026-07-07", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:20", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0200", "data": "2026-07-07", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0201", "data": "2026-07-07", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:45", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0202", "data": "2026-07-08", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:00", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0203", "data": "2026-07-08", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "07:52", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0204", "data": "2026-07-08", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Segundo a Ana da Ambienys teve um imprevisto com o destinador.", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0205", "data": "2026-07-08", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:42", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0206", "data": "2026-07-08", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:24", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0207", "data": "2026-07-09", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:53", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0208", "data": "2026-07-09", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:53", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0209", "data": "2026-07-09", "dia": "Quinta-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0210", "data": "2026-07-10", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:50", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0211", "data": "2026-07-10", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:16", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0212", "data": "2026-07-10", "dia": "Sexta-feira", "tipo": "Caçamba 5m", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:29", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0213", "data": "2026-07-10", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:29", "resp": "Eduarda", "obs": "", "semana": 28, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0214", "data": "2026-07-13", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:50", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0215", "data": "2026-07-13", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Cancelamos pois não havia lixo (plástico) o suficiente para fazer a coleta.", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0216", "data": "2026-07-13", "dia": "Segunda-feira", "tipo": "Compactadora de Resíduos", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:37", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0217", "data": "2026-07-13", "dia": "Segunda-feira", "tipo": "Caçamba 5m", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:14", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0218", "data": "2026-07-13", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0219", "data": "2026-07-13", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0220", "data": "2026-07-14", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:30", "resp": "Tatiane", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0221", "data": "2026-07-14", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:30", "resp": "Tatiane", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0222", "data": "2026-07-14", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:30", "resp": "Tatiane", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0223", "data": "2026-07-14", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:30", "resp": "Tatiane", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0224", "data": "2026-07-14", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Tatiane", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0225", "data": "2026-07-14", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Tatiane", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0226", "data": "2026-07-15", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:05", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0227", "data": "2026-07-15", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:05", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0228", "data": "2026-07-15", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:47", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0229", "data": "2026-07-15", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0230", "data": "2026-07-15", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:00", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0231", "data": "2026-07-15", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:00", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0232", "data": "2026-07-17", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:02", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0233", "data": "2026-07-17", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:56", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0234", "data": "2026-07-17", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:18", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0235", "data": "2026-07-17", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:18", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0236", "data": "2026-07-17", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Não houve volume suficiente para coletar, solicitei o cancelamento.", "semana": 29, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0237", "data": "2026-07-17", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "13:30", "resp": "Eduarda", "obs": "", "semana": 29, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0238", "data": "2026-07-20", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:00", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0239", "data": "2026-07-20", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:28", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0240", "data": "2026-07-20", "dia": "Segunda-feira", "tipo": "Compactadora de Resíduos", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "15:00", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0241", "data": "2026-07-20", "dia": "Segunda-feira", "tipo": "Caçamba 5m", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:46", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0242", "data": "2026-07-20", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "16:00", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0243", "data": "2026-07-21", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:12", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0244", "data": "2026-07-21", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:55", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0245", "data": "2026-07-21", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:06", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0246", "data": "2026-07-22", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:30", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0247", "data": "2026-07-22", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:10", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0248", "data": "2026-07-22", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:40", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0249", "data": "2026-07-22", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "16:10", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0250", "data": "2026-07-23", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:40", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0251", "data": "2026-07-23", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:30", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0252", "data": "2026-07-23", "dia": "Quinta-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Tivemos que pedir para retornarem por causa da obra do restaurante.", "semana": 30, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0253", "data": "2026-07-23", "dia": "Quinta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:56", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0254", "data": "2026-07-24", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:22", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0255", "data": "2026-07-24", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:42", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0256", "data": "2026-07-24", "dia": "Sexta-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "16:00", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0257", "data": "2026-07-24", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "16:37", "resp": "Eduarda", "obs": "", "semana": 30, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0258", "data": "2026-07-27", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:16", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0259", "data": "2026-07-27", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:00", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0260", "data": "2026-07-27", "dia": "Segunda-feira", "tipo": "Compactadora de Resíduos", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Foi pedido a antecipação da troca no sabado dia 25/07/2026, pois já não comportava mais o alto volume de lixo.", "semana": 31, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0261", "data": "2026-07-27", "dia": "Segunda-feira", "tipo": "Caçamba 5m", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:20", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0262", "data": "2026-07-27", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:37", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0263", "data": "2026-07-27", "dia": "Segunda-feira", "tipo": "Compactadora de Papelão", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:36", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0264", "data": "2026-07-27", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:32", "resp": "Eduarda", "obs": "Solicitação EXTRA. (OS: 158364)", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0265", "data": "2026-07-28", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:43", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0266", "data": "2026-07-28", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:46", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0267", "data": "2026-07-28", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "15:45", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0268", "data": "2026-07-28", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:26", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0269", "data": "2026-07-28", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0270", "data": "2026-07-29", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:57", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0271", "data": "2026-07-29", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:57", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0272", "data": "2026-07-29", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "13:20", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0273", "data": "2026-07-29", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:30", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0274", "data": "2026-07-29", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0275", "data": "2026-07-30", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:20", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0276", "data": "2026-07-30", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:20", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0277", "data": "2026-07-30", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:12", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0278", "data": "2026-07-31", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:19", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0279", "data": "2026-07-31", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:20", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0280", "data": "2026-07-31", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:40", "resp": "Eduarda", "obs": "", "semana": 31, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0281", "data": "2026-07-27", "dia": "Segunda-feira", "tipo": "Compactadora de Resíduos", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Foi pedido a antecipação da troca no sabado dia 01/08/2026, pois já não comportava mais o alto volume de lixo.", "semana": 32, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0283", "data": "2026-08-03", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:25", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0284", "data": "2026-08-03", "dia": "Segunda-feira", "tipo": "Compactadora de Papelão", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:48", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0285", "data": "2026-08-03", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:23", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0286", "data": "2026-08-04", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:40", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0287", "data": "2026-08-04", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "18:00", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0288", "data": "2026-08-04", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "❌ Não realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Solicitei o cancelamento pois não houve volume de lixo o suficiente para recolher, caçamba de plástico pela metade, outra caçamba está vazia!", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0289", "data": "2026-08-04", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:40", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0290", "data": "2026-08-05", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "14:38", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0291", "data": "2026-08-05", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:42", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0292", "data": "2026-08-05", "dia": "Quarta-feira", "tipo": "Caçamba 5m", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:50", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0293", "data": "2026-08-06", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:54", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0294", "data": "2026-08-06", "dia": "Quinta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:58", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0295", "data": "2026-08-07", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "09:45", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0296", "data": "2026-08-07", "dia": "Sexta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "14:00", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0297", "data": "2026-08-07", "dia": "Sexta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "07:50", "resp": "Eduarda", "obs": "", "semana": 32, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0298", "data": "2026-08-10", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:31", "resp": "Eduarda", "obs": "", "semana": 33, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0299", "data": "2026-08-10", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "13:02", "resp": "Eduarda", "obs": "", "semana": 33, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0300", "data": "2026-08-10", "dia": "Segunda-feira", "tipo": "Orgânico — Compactadora", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "-", "resp": "Eduarda", "obs": "Foi solicitado a antecipação da troca no sabado dia 08/08/2026, pois já não comportava mais o alto volume de lixo.", "semana": 33, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0301", "data": "2026-08-10", "dia": "Segunda-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "08:10", "resp": "Eduarda", "obs": "", "semana": 33, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0302", "data": "2026-08-10", "dia": "Segunda-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "17:03", "resp": "Eduarda", "obs": "", "semana": 33, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0303", "data": "2026-08-11", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "11:15", "resp": "Eduarda", "obs": "", "semana": 33, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0304", "data": "2026-08-11", "dia": "Terça-feira", "tipo": "Orgânico — Bombonas", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "10:06", "resp": "Eduarda", "obs": "", "semana": 33, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0305", "data": "2026-08-11", "dia": "Terça-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "✅ Realizada", "horaRealizada": "15:09", "resp": "Eduarda", "obs": "", "semana": 33, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0306", "data": "2026-08-11", "dia": "Terça-feira", "tipo": "Compactadora de Papelão", "turno": "Manhã", "status": "✅ Realizada", "horaRealizada": "10:56", "resp": "Eduarda", "obs": "", "semana": 33, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0307", "data": "2026-08-12", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "⏳ Aguardando", "horaRealizada": "", "resp": "", "obs": "", "semana": 33, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0308", "data": "2026-08-12", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Tarde", "status": "⏳ Aguardando", "horaRealizada": "", "resp": "", "obs": "", "semana": 33, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}, {"id": "xl0309", "data": "2026-08-12", "dia": "Quarta-feira", "tipo": "Orgânico — Caçamba 5m²", "turno": "Manhã", "status": "⏳ Aguardando", "horaRealizada": "", "resp": "", "obs": "", "semana": 33, "local": "", "periodicidade": "Semanal", "fonte": "planilha"}, {"id": "xl0310", "data": "2026-08-12", "dia": "Quarta-feira", "tipo": "Recicláveis", "turno": "Manhã", "status": "⏳ Aguardando", "horaRealizada": "", "resp": "", "obs": "", "semana": 33, "local": "", "periodicidade": "Diária (Seg–Sex)", "fonte": "planilha"}];
-const SOB_DEMANDA_PLANILHA = [{"id": "sd001", "dataSolic": "2026-05-12", "dataPrevista": "2026-05-13", "dataRealiz": "2026-05-13", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd002", "dataSolic": "2026-05-15", "dataPrevista": "2026-05-15", "dataRealiz": "2026-05-15", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd003", "dataSolic": "2026-05-15", "dataPrevista": "2026-05-16", "dataRealiz": "2026-05-16", "tipo": "Compactadora Organico", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd004", "dataSolic": "2026-05-15", "dataPrevista": "2026-05-16", "dataRealiz": "-", "tipo": "Compactador Organico", "volume": "", "status": "❌ Não Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd005", "dataSolic": "2026-05-15", "dataPrevista": "2026-05-16", "dataRealiz": "2026-05-16", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd006", "dataSolic": "2026-06-25", "dataPrevista": "2026-06-25", "dataRealiz": "2026-06-25", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd007", "dataSolic": "2026-06-25", "dataPrevista": "2026-05-26", "dataRealiz": "28 e 29/05/2026", "tipo": "Bombonas - Perigosos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd008", "dataSolic": "2026-05-27", "dataPrevista": "2026-05-27", "dataRealiz": "2026-05-27", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd009", "dataSolic": "2026-06-01", "dataPrevista": "2026-06-01", "dataRealiz": "2026-06-02", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd010", "dataSolic": "2026-06-02", "dataPrevista": "2026-06-02", "dataRealiz": "2026-06-02", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd011", "dataSolic": "2026-06-08", "dataPrevista": "2026-06-08", "dataRealiz": "2026-06-09", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd012", "dataSolic": "2026-06-12", "dataPrevista": "2026-06-12", "dataRealiz": "2026-06-12", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd013", "dataSolic": "2026-06-16", "dataPrevista": "2026-06-16", "dataRealiz": "2026-06-18", "tipo": "Compactadora Resíduos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd014", "dataSolic": "2026-06-18", "dataPrevista": "2026-06-18", "dataRealiz": "2026-06-19", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd015", "dataSolic": "2026-06-22", "dataPrevista": "2026-06-22", "dataRealiz": "2026-06-25", "tipo": "Bombonas - Perigosos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd016", "dataSolic": "2026-06-24", "dataPrevista": "2026-06-24", "dataRealiz": "2026-06-25", "tipo": "Bombonas - Restaurante", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd017", "dataSolic": "2026-06-25", "dataPrevista": "2026-06-25", "dataRealiz": "2026-06-26", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd025", "dataSolic": "2026-07-03", "dataPrevista": "2026-07-03", "dataRealiz": "2026-07-03", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd026", "dataSolic": "2026-07-07", "dataPrevista": "2026-07-07", "dataRealiz": "2026-07-09", "tipo": "Bombonas Restaurante", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd027", "dataSolic": "2026-07-08", "dataPrevista": "2026-07-08", "dataRealiz": "2026-07-13", "tipo": "Caçamba Metal (doca10)", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd028", "dataSolic": "2026-07-13", "dataPrevista": "2026-07-13", "dataRealiz": "2026-07-14", "tipo": "Bombonas Perigosos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd029", "dataSolic": "2026-07-21", "dataPrevista": "2026-07-21", "dataRealiz": "2026-07-24", "tipo": "Bombonas Restaurante", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd030", "dataSolic": "2026-07-21", "dataPrevista": "2026-07-21", "dataRealiz": "2026-07-21", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd031", "dataSolic": "2026-07-21", "dataPrevista": "2026-07-21", "dataRealiz": "2026-07-22", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd032", "dataSolic": "2026-07-27", "dataPrevista": "2026-07-27", "dataRealiz": "2026-07-27", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd033", "dataSolic": "2026-07-27", "dataPrevista": "2026-07-27", "dataRealiz": "2026-07-27", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd034", "dataSolic": "2026-07-30", "dataPrevista": "2026-07-30", "dataRealiz": "2026-08-01", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd035", "dataSolic": "2026-08-03", "dataPrevista": "2026-08-03", "dataRealiz": "2026-08-05", "tipo": "Bombonas Perigosos", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd036", "dataSolic": "2026-08-07", "dataPrevista": "2026-08-07", "dataRealiz": "2026-08-07", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd037", "dataSolic": "2026-08-07", "dataPrevista": "2026-08-07", "dataRealiz": "-", "tipo": "Bombonas Restaurante", "volume": "", "status": "❌ Não Realizada", "resp": "Eduarda", "obs": "(Demanda que solicitamos antecipção e não foi realizada no dia combinado)"}, {"id": "sd038", "dataSolic": "2026-08-10", "dataPrevista": "2026-08-10", "dataRealiz": "2026-08-11", "tipo": "Compactadora Papelão", "volume": "", "status": "✅ Realizada", "resp": "Eduarda", "obs": ""}, {"id": "sd039", "dataSolic": "2026-08-11", "dataPrevista": "2026-08-11", "dataRealiz": "", "tipo": "Caçamba apoio caminho.", "volume": "", "status": "🔄 Solicitada", "resp": "", "obs": ""}];
-const NAO_CONFORMIDADES_PLANILHA = [{"id": "nc01", "data": "2026-05-11", "tipoColeta": "Orgânico - Resíduos", "tipoNC": "Coleta não realizada", "descricao": "Coleta não realizada", "acao": "", "prazo": "", "resp": "", "status": "🟢 Encerrada"}, {"id": "nc02", "data": "2026-05-18", "tipoColeta": "Caçamba apoio cami.", "tipoNC": "Coleta não realizada", "descricao": "Coleta não realizada", "acao": "", "prazo": "", "resp": "", "status": "🟢 Encerrada"}, {"id": "nc03", "data": "2026-05-18", "tipoColeta": "Compactadora Resíduos", "tipoNC": "Coleta não realizada", "descricao": "Atraso na coleta", "acao": "A Ambiensys disponibilizou uma caçamba extra de resíduos comum, devido a coleta não realizada no dia 18/05/2026", "prazo": "2026-05-19", "resp": "Sonali", "status": "🟢 Encerrada"}, {"id": "nc04", "data": "2026-05-19", "tipoColeta": "Orgânico - Caçamba 5m", "tipoNC": "Outro", "descricao": "Aguardando ", "acao": "A Ambiensys disponibilizou a troca extra pelo motivo citado acima", "prazo": "2026-05-19", "resp": "Ana Silva ", "status": "🟢 Encerrada"}, {"id": "nc05", "data": "2026-05-25", "tipoColeta": "Bombonas Perigosos ", "tipoNC": "Atraso na coleta", "descricao": "Aguardando ", "acao": "Foi solicitado a troca das bombonas de perigosos (Que seriam trocadas no dia 26/05/2026) O que não veio, segundo a Ana da Ambienys foi o ''segundo atraso pontual'' ", "prazo": "", "resp": "Ana Silva ", "status": "🟢 Encerrada"}, {"id": "nc06", "data": "2026-07-01", "tipoColeta": "Compactadora Resíduos", "tipoNC": "Falha operacional interna ", "descricao": "", "acao": "No dia 01/07/2026 (quarta-feira) enviaram a compactadora de resíduos comum para troca sem a nossa solicitação. Registrando o desvio para compensar na medição.", "prazo": "", "resp": "", "status": "🟢 Encerrada"}, {"id": "nc07", "data": "2026-07-31", "tipoColeta": "Caçamba Extra Restaurante", "tipoNC": "Coleta não realizada", "descricao": "Coleta não realizada", "acao": "Solicitamos no dia 31/07/2026 (sexta-feira) uma coleta extra para o restaurante que seria realizada no sabádo dia 01/08/2026 porém não tinham janela de encaixe para o dia.", "prazo": "", "resp": "", "status": "🟢 Encerrada"}, {"id": "nc08", "data": "2026-08-11", "tipoColeta": "Caçamba Extra Restaurante", "tipoNC": "Coleta não realizada", "descricao": "Coleta não realizada", "acao": "Solicitamos no dia 07/08/2026 (sexta-feira) uma coleta extra para o restaurente na segunda-feira (10/08/2026) pois na sexta já existia um alto volume de lixo organico a ser descartado. A Ambiensys GARANTIU que atenderia o cliente na segunda-feira no primeiro horário. Eles não vieram realizar a coleta solicitada na segunda-feira.", "prazo": "", "resp": "", "status": "🔴 Aberta"}];
+const COLETAS_FIXAS_PLANILHA = [];
+const SOB_DEMANDA_PLANILHA = [];
+const NAO_CONFORMIDADES_PLANILHA = [];
 
-/* ===================== PERSISTÊNCIA COMPARTILHADA (Firebase) =====================
-   Todos os usuários que abrirem este link se conectam ao mesmo banco de dados
-   na nuvem (Firebase Realtime Database), então qualquer alteração feita por
-   uma pessoa (novo bebedouro, checklist preenchido, medição lançada etc.)
-   aparece automaticamente para todos os outros, em tempo real. */
 const firebaseConfig = {
   apiKey: "AIzaSyDGyxkynuZ-CUHxKa5Nao21lhlVID0yr2k",
   authDomain: "sistema-de-limpeza-betim.firebaseapp.com",
@@ -437,13 +291,8 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const fbRoot = firebase.database().ref('portal_facilities');
-// Firebase Storage — usa o mesmo bucket já configurado em firebaseConfig.storageBucket
-// (usado para os PDFs do Check List Fácil; ver seção "MODULE: CHECKLIST — PDFs")
 const fbStorage = firebase.storage();
 
-// DB mantém a mesma interface síncrona (get/set) que o resto do arquivo já usa —
-// por baixo dos panos, get() lê de um cache em memória (populado a partir do
-// Firebase) e set() atualiza esse cache na hora (otimista) e grava na nuvem.
 const DB_CACHE = {};
 let dbReady = false;
 const DB = {
@@ -458,10 +307,6 @@ const DB = {
   init(key,def){ if(DB.get(key)===null || DB.get(key)===undefined) DB.set(key,def); return DB.get(key); }
 };
 
-// ─── INIT DEFAULT DATA ───
-// Tudo isto só pode rodar DEPOIS que os dados iniciais chegarem do Firebase
-// (senão sobrescreveríamos dados já existentes na nuvem com estes padrões).
-// Por isso vira uma função, chamada pelo boot() lá no fim do arquivo.
 function seedDefaults(){
   DB.init('fornecedores',[
     {id:'f1',nome:'Sapore',cnpj:'',servico:'Alimentação',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
@@ -511,32 +356,24 @@ function seedDefaults(){
   DB.init('medicoes',[]);
   DB.init('reunioes',[]);
 
-  // ═══ CARGA INICIAL — BASE ÚNICA ═══════════════════════════
-  // Versão dos dados da planilha — incrementar ao reimportar
   const VERSAO_CARGA = '2026-08-12-v1';
   const versaoSalva = DB.get('versaoCarga');
 
-  // ── residuosColetas ──
   const existing = DB.get('residuosColetas');
   if(!existing || !existing.length || versaoSalva !== VERSAO_CARGA){
-    // Primeira abertura OU nova carga: merge inteligente
     const base = existing && existing.length ? [...existing] : [];
     for(const r of COLETAS_FIXAS_PLANILHA){
       const chave = r.data+'|'+(r.tipo||'').toLowerCase()+'|'+(r.turno||'').toLowerCase();
       const idx = base.findIndex(c=>(c.data+'|'+(c.tipo||'').toLowerCase()+'|'+(c.turno||'').toLowerCase())===chave);
       if(idx < 0){
-        // Novo registro da planilha — adiciona
         base.push(r);
       } else if(base[idx].fonte === 'planilha' || !base[idx].fonte){
-        // Atualiza apenas registros que vieram da planilha (preserva edições manuais)
         base[idx] = {...r, ...Object.fromEntries(Object.entries(base[idx]).filter(([k,v])=>v!==''&&v!=null&&k!=='id'&&k!=='fonte'))};
       }
-      // Se fonte='manual': preserva sem alterar
     }
     DB.set('residuosColetas', base);
   }
 
-  // ── sobDemanda ──
   if(!DB.get('sobDemanda') || versaoSalva !== VERSAO_CARGA){
     const baseS = [...(DB.get('sobDemanda')||[])];
     for(const r of SOB_DEMANDA_PLANILHA){
@@ -545,7 +382,6 @@ function seedDefaults(){
     DB.set('sobDemanda', baseS);
   }
 
-  // ── naoConformidades ──
   if(!DB.get('naoConformidades') || versaoSalva !== VERSAO_CARGA){
     const baseN = [...(DB.get('naoConformidades')||[])];
     for(const r of NAO_CONFORMIDADES_PLANILHA){
@@ -558,21 +394,16 @@ function seedDefaults(){
   DB.init('estoque',[]);
 }
 
-
 // ═══════════════════════════════════════════════════════
 // AUTH — sessão persiste 8 horas no localStorage
 // ═══════════════════════════════════════════════════════
 const USERS = [{user:'admin',pw:'2026',nome:'Administrador'},{user:'gestor',pw:'2026',nome:'Gestor MG02'},{user:'facilities',pw:'1234',nome:'Facilities'}];
 const SESSION_KEY = 'fac_session';
-const SESSION_TTL = 8 * 60 * 60 * 1000; // 8 horas em ms
+const SESSION_TTL = 8 * 60 * 60 * 1000;
 let currentUser = null;
 
-function salvarSessao(user){
-  localStorage.setItem(SESSION_KEY, JSON.stringify({user, ts: Date.now()}));
-}
-function limparSessao(){
-  localStorage.removeItem(SESSION_KEY);
-}
+function salvarSessao(user){ localStorage.setItem(SESSION_KEY, JSON.stringify({user, ts: Date.now()})); }
+function limparSessao(){ localStorage.removeItem(SESSION_KEY); }
 function recuperarSessao(){
   try{
     const raw = localStorage.getItem(SESSION_KEY);
@@ -616,9 +447,6 @@ function doLogout(){
   document.getElementById('login-user').focus();
 }
 
-// Chamado toda vez que os dados mudam na nuvem (por qualquer usuário, incluindo
-// a própria aba). Re-renderiza só a tela visível agora, sem mexer em modais abertos
-// (para não atrapalhar alguém no meio do preenchimento de um formulário).
 function refreshCurrentView(){
   const modalAberto = document.getElementById('modal-overlay').classList.contains('open');
   if(modalAberto) return;
@@ -638,9 +466,6 @@ function updateUserUI(){
   if(su) su.textContent=currentUser.nome;
 }
 
-// ═══════════════════════════════════════════════════════
-// SCREEN NAVIGATION
-// ═══════════════════════════════════════════════════════
 function showScreen(name){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
@@ -652,9 +477,6 @@ function initHomeGreeting(){
   document.getElementById('home-greeting').textContent = g + (currentUser?', '+currentUser.nome:'');
 }
 
-// ═══════════════════════════════════════════════════════
-// PORTAL CARDS
-// ═══════════════════════════════════════════════════════
 const MODULES = [
   {id:'bebedouros',icon:'🥤',color:'#1A73E8',label:'Gestão de Bebedouros',desc:'Equipamentos, filtros, manutenções e histórico de problemas.',badge:()=>{const d=DB.get('bebedouros')||[];return d.filter(b=>b.status==='Em manutenção').length||null;},badgeLabel:'Em manutenção'},
   {id:'residuos',icon:'♻️',color:'#00A650',label:'Gestão de Resíduos',desc:'Controle de coletas, não conformidades e procedimentos.',badge:()=>{const d=DB.get('residuosColetas')||[];return d.filter(r=>r.status==='❌ Não realizada').length||null;},badgeLabel:'Não realizadas'},
@@ -690,9 +512,6 @@ function renderPortalGrid(){
   }).join('');
 }
 
-// ═══════════════════════════════════════════════════════
-// MODULE NAVIGATION
-// ═══════════════════════════════════════════════════════
 const MODULE_MENUS = {
   bebedouros:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'equipamentos',icon:'🥤',label:'Equipamentos'},{key:'filtros',icon:'🔄',label:'Controle de Filtros'},{key:'historico',icon:'📋',label:'Histórico de Problemas'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
   residuos:[{key:'dashboard',icon:'📅',label:'Programação do Dia'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'dash2',icon:'📊',label:'Dashboard Gerencial'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'procedimentos',icon:'📁',label:'Procedimentos'},{key:'novo',icon:'➕',label:'Nova Coleta'}],
@@ -769,9 +588,6 @@ function renderModContent(id,page){
   else c.innerHTML=`<div class="empty-state"><div class="empty-icon">🚧</div><div style="font-size:13px">Em construção</div></div>`;
 }
 
-// ═══════════════════════════════════════════════════════
-// MODAL HELPERS
-// ═══════════════════════════════════════════════════════
 function openModal(title,body,footer,large){
   document.getElementById('modal-title').textContent=title;
   document.getElementById('modal-body').innerHTML=body;
@@ -786,9 +602,6 @@ function closeModal(e){
 }
 function closeModalDirect(){ document.getElementById('modal-overlay').classList.remove('open'); }
 
-// ═══════════════════════════════════════════════════════
-// UTILITIES
-// ═══════════════════════════════════════════════════════
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
 function fmtDate(d){ if(!d) return '—'; return new Date(d+'T12:00').toLocaleDateString('pt-BR'); }
 function fmtMes(m){ const ms=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']; return ms[m-1]||''; }
@@ -804,7 +617,6 @@ function exportCSV(data,filename){
   a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
   a.download=filename;a.click();
 }
-
 // ═══════════════════════════════════════════════════════
 // MODULE: BEBEDOUROS
 // ═══════════════════════════════════════════════════════
@@ -874,7 +686,6 @@ function renderBebedouros(page){
         }).join('')}</tbody></table></div>`}`;
   }
   if(page==='historico'){
-    // Filtro por equipamento
     const equipList=[...new Set(hist.map(h=>h.equipamento).filter(Boolean))];
     return `<div class="content-header"><div><div class="content-title">Histórico de Ocorrências</div><div class="content-sub">Problemas e manutenções vinculados a cada equipamento</div></div>
       <div class="content-actions">
@@ -1003,7 +814,6 @@ function salvarBebedouro(id){
 }
 function excluirBebedouro(id){if(!confirm('Excluir este bebedouro?')) return;const b=DB.get('bebedouros')||[];DB.set('bebedouros',b.filter(x=>x.id!==id));renderModContent('bebedouros','equipamentos');}
 
-// Histórico vinculado ao equipamento — tipo de ocorrência: Problema / Manutenção / Preventiva
 function abrirFormHistoricoBeb(equipId){
   const bebs=DB.get('bebedouros')||[];
   const tipos=(DB.get('tiposProblema')||[]).filter(t=>t.modulo==='bebedouro'&&t.status==='Ativo');
@@ -1047,7 +857,6 @@ function salvarHistoricoBeb(){
   DB.set('historicoBeb',hist);closeModalDirect();renderModContent('bebedouros','historico');
 }
 
-// ─── IMPORTAÇÃO FLEXÍVEL DE BEBEDOUROS ───
 function importarBebedouros(){
   openModal('Importar Planilha — Bebedouros',`
     <div style="margin-bottom:14px;font-size:12px;color:var(--muted)">
@@ -1088,7 +897,6 @@ function lerArquivoBeb(input){
   }
 }
 
-// Mapeamento flexível: aceita variações de nome de coluna
 const BEB_FIELD_MAP={
   identificacao:['identificacao','id','identificação','equip','equipamento','codigo','código'],
   tipo:['tipo','tipo de equipamento','tipo_equipamento','tipoequipamento'],
@@ -1152,7 +960,6 @@ function confirmarImportBeb(){
     if(!r.identificacao) return;
     const idx=bebs.findIndex(b=>b.identificacao&&b.identificacao.toLowerCase()===r.identificacao.toLowerCase());
     if(idx>=0){
-      // Preservar campos existentes que não vieram na planilha
       bebs[idx]={...bebs[idx],...Object.fromEntries(Object.entries(r).filter(([,v])=>v!==''))};
       atualizados++;
     } else {
@@ -1166,7 +973,6 @@ function confirmarImportBeb(){
   renderModContent('bebedouros','equipamentos');
 }
 
-// Importação flexível de resíduos
 const RES_FIELD_MAP={
   data:['data','date'],
   dia:['dia','dia da semana','diasemana'],
@@ -1344,7 +1150,6 @@ function csvParseRobust(text){
   return lines.slice(1).map(l=>{ const v=parseLine(l),o={}; headers.forEach((h,i)=>{o[h]=v[i]||'';}); return o; })
     .filter(r=>Object.values(r).some(v=>v));
 }
-
 // ═══════════════════════════════════════════════════════
 // RESIDUOS — constantes e helpers
 // ═══════════════════════════════════════════════════════
@@ -1353,18 +1158,15 @@ const DIAS_SEMANA_PT=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Q
 const DIAS_SEMANA_CURTO=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
 
 function diasNoMes(mes,ano){ return new Date(ano,mes,0).getDate(); }
-
 function calcDiaSemana(dtStr){
   if(!dtStr) return '';
   return DIAS_SEMANA_PT[new Date(dtStr+'T12:00').getDay()]||'';
 }
-
 function fmtDataBR(dtStr){
   if(!dtStr) return '—';
   const [y,m,d]=dtStr.split('-');
   return `${d}/${m}/${y}`;
 }
-
 function fmtDataLong(dtStr){
   if(!dtStr) return '';
   const d=new Date(dtStr+'T12:00');
@@ -1374,12 +1176,10 @@ function fmtDataLong(dtStr){
   const yyyy=d.getFullYear();
   return `${dia}, ${dd}/${mm}/${yyyy}`;
 }
-
 function dtNavState(){
   const el=document.getElementById('res-nav-data');
   return el?el.value:new Date().toISOString().slice(0,10);
 }
-
 function statusBadgeRes(s){
   const m={
     '✅ Realizada':'badge-green','Realizada':'badge-green',
@@ -1394,9 +1194,6 @@ function statusBadgeRes(s){
 
 const STATUS_OPTIONS=['⏳ Aguardando','Programada','✅ Realizada','❌ Não realizada','⚠️ Parcial','Em andamento','Reprogramada','Cancelada'];
 
-// ═══════════════════════════════════════════════════════
-// RENDER RESÍDUOS
-// ═══════════════════════════════════════════════════════
 function renderResiduos(page){
   const coletas=DB.get('residuosColetas')||[];
   const sob=DB.get('sobDemanda')||[];
@@ -1413,15 +1210,10 @@ function renderResiduos(page){
   return '<div class="empty-state"><div class="empty-icon">🚧</div></div>';
 }
 
-// ─────────────────────────────────────────────
-// TELA PRINCIPAL: PROGRAMAÇÃO DO DIA
-// ─────────────────────────────────────────────
 function renderProgramacaoDia(){
   const hoje=new Date().toISOString().slice(0,10);
   return `
 <div style="display:flex;flex-direction:column;height:100%;gap:0">
-
-  <!-- HEADER -->
   <div style="background:#fff;border-bottom:1px solid var(--line);padding:16px 24px;flex-shrink:0">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
       <div>
@@ -1442,11 +1234,7 @@ function renderProgramacaoDia(){
       </div>
     </div>
   </div>
-
-  <!-- KPIs -->
   <div id="res-kpis" style="padding:12px 24px;background:#FAFAFA;border-bottom:1px solid var(--line);flex-shrink:0"></div>
-
-  <!-- FILTROS ADICIONAIS -->
   <div style="padding:10px 24px;background:#fff;border-bottom:1px solid var(--line);flex-shrink:0;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
     <select class="filter-select" id="filt-dia-tipo" onchange="renderTabelaDia()" style="font-size:12px">
       <option value="">Todos os tipos</option>
@@ -1462,10 +1250,7 @@ function renderProgramacaoDia(){
     </select>
     <span id="res-count-label" style="font-size:12px;color:var(--muted);margin-left:auto"></span>
   </div>
-
-  <!-- TABELA -->
   <div style="flex:1;overflow-y:auto;padding:16px 24px" id="res-tabela-dia"></div>
-
 </div>
 <script>
 (function(){
@@ -1488,30 +1273,24 @@ function navHoje(){
   el.value=new Date().toISOString().slice(0,10);
   atualizarProgramacao();
 }
-
 function atualizarProgramacao(){
   const dt=dtNavState();
-  // Atualizar título
   const titulo=document.getElementById('res-titulo-dia');
   if(titulo) titulo.textContent=fmtDataLong(dt);
   renderKpisDia(dt);
   renderTabelaDia();
 }
-
 function getColetasDia(dt){
   const coletas=DB.get('residuosColetas')||[];
   return coletas.filter(c=>{
     if(!c.data) return false;
     const d=String(c.data).trim();
-    // YYYY-MM-DD
     if(d===dt||d.startsWith(dt)) return true;
-    // DD/MM/YYYY
     const p=d.split('/');
     if(p.length===3) return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`===dt;
     return false;
   });
 }
-
 function renderKpisDia(dt){
   const el=document.getElementById('res-kpis');
   if(!el) return;
@@ -1533,33 +1312,25 @@ function renderKpisDia(dt){
     </div>`).join('')}
   </div>`;
 }
-
 function renderTabelaDia(){
   const dt=dtNavState();
   const todas=getColetasDia(dt);
-
-  // Aplicar filtros adicionais
   const ft=document.getElementById('filt-dia-tipo')?.value||'';
   const fs=document.getElementById('filt-dia-status')?.value||'';
   const ftu=document.getElementById('filt-dia-turno')?.value||'';
   const filtradas=todas.filter(c=>
     (!ft||c.tipo===ft)&&(!fs||c.status===fs)&&(!ftu||c.turno===ftu)
   );
-
-  // Ordenar: Manhã primeiro, depois Tarde, depois pela hora
   const ordemTurno={Manhã:0,Tarde:1,Noite:2};
   filtradas.sort((a,b)=>{
     const ta=ordemTurno[a.turno]??9, tb=ordemTurno[b.turno]??9;
     if(ta!==tb) return ta-tb;
     return (a.tipo||'').localeCompare(b.tipo||'');
   });
-
   const cnt=document.getElementById('res-count-label');
   if(cnt) cnt.textContent=`${filtradas.length} coleta${filtradas.length!==1?'s':''} exibida${filtradas.length!==1?'s':''}`;
-
   const el=document.getElementById('res-tabela-dia');
   if(!el) return;
-
   if(!filtradas.length){
     el.innerHTML=`<div style="text-align:center;padding:48px 20px;color:var(--muted)">
       <div style="font-size:40px;opacity:.3;margin-bottom:12px">📭</div>
@@ -1569,7 +1340,6 @@ function renderTabelaDia(){
     </div>`;
     return;
   }
-
   el.innerHTML=`<div class="data-table-wrap">
     <table>
       <thead><tr>
@@ -1607,15 +1377,12 @@ function renderTabelaDia(){
     </table>
   </div>`;
 }
-
 function salvarStatusInline(id, novoStatus){
   const coletas=DB.get('residuosColetas')||[];
   const i=coletas.findIndex(c=>c.id===id);
   if(i>=0){ coletas[i].status=novoStatus; DB.set('residuosColetas',coletas); }
-  // Atualizar KPIs sem re-renderizar tudo
   renderKpisDia(dtNavState());
 }
-
 function excluirColetaDia(id){
   if(!confirm('Excluir esta coleta?')) return;
   const coletas=DB.get('residuosColetas')||[];
@@ -1623,7 +1390,6 @@ function excluirColetaDia(id){
   renderTabelaDia();
   renderKpisDia(dtNavState());
 }
-
 function editarColetaModal(id){
   const coletas=DB.get('residuosColetas')||[];
   const c=coletas.find(x=>x.id===id); if(!c) return;
@@ -1659,7 +1425,6 @@ function editarColetaModal(id){
     `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
      <button class="btn btn-primary" onclick="salvarEdicaoColeta('${id}')">Salvar</button>`);
 }
-
 function salvarEdicaoColeta(id){
   const coletas=DB.get('residuosColetas')||[];
   const i=coletas.findIndex(x=>x.id===id); if(i<0) return;
@@ -1680,10 +1445,6 @@ function salvarEdicaoColeta(id){
   renderTabelaDia();
   renderKpisDia(dtNavState());
 }
-
-// ─────────────────────────────────────────────
-// NOVA COLETA
-// ─────────────────────────────────────────────
 function renderNovaColeta(){
   const coletas=DB.get('residuosColetas')||[];
   const dtAtual=dtNavState();
@@ -1746,7 +1507,6 @@ function renderNovaColeta(){
       </div>
     </div>`;
 }
-
 function salvarNovaColeta(){
   const dt=document.getElementById('nc-data').value;
   if(!dt){alert('Data obrigatória.');return;}
@@ -1767,19 +1527,13 @@ function salvarNovaColeta(){
     fonte:'manual'
   });
   DB.set('residuosColetas',coletas);
-  // Registro salvo na base única — aparece automaticamente nas duas telas
   renderModContent('residuos','dashboard');
   setTimeout(()=>{
     const el=document.getElementById('res-nav-data');
     if(el){ el.value=dt; atualizarProgramacao(); }
   },100);
 }
-
-// ─────────────────────────────────────────────
-// HISTÓRICO COMPLETO
-// ─────────────────────────────────────────────
 function renderHistoricoColetas(){
-  // BASE ÚNICA — mesmos dados da Programação do Dia
   const coletas=DB.get('residuosColetas')||[];
   const hoje=new Date();
   const anoMes=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
@@ -1797,8 +1551,6 @@ function renderHistoricoColetas(){
       <button class="btn btn-outline" onclick="exportCSV(DB.get('residuosColetas')||[],'coletas.csv')">↓ Exportar</button>
       <button class="btn btn-primary" onclick="renderModContent('residuos','novo')">+ Nova Coleta</button>
     </div></div>
-
-  <!-- FILTROS CONTROLE GERAL -->
   <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px">
     <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em">Filtros de Busca</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
@@ -1840,7 +1592,6 @@ function renderHistoricoColetas(){
       <button class="btn btn-outline" onclick="limparFiltrosHist()" style="align-self:flex-end">Limpar</button>
     </div>
   </div>
-
   <div id="hist-summary" style="margin-bottom:8px"></div>
   <div id="hist-table">${renderTabelaHistorico(getColetasFiltradas())}</div>`;
 }
@@ -1853,7 +1604,6 @@ function getColetasFiltradas(){
   const tp    =(document.getElementById('filt-hist-tipo')?.value||'');
   const bk    =(document.getElementById('filt-hist-busca')?.value||'').toLowerCase();
   return coletas.filter(c=>{
-    // data específica tem prioridade sobre mês
     const dataOk = data ? c.data===data : (!mes || c.data.startsWith(mes));
     const diaOk  = !dia || (c.dia||'')===dia;
     const stOk   = !st  || c.status===st;
@@ -1866,12 +1616,10 @@ function getColetasFiltradas(){
     return dataOk&&diaOk&&stOk&&tpOk&&bkOk;
   }).sort((a,b)=>b.data.localeCompare(a.data)||((a.turno||'').localeCompare(b.turno||'')));
 }
-
 function filtrarHistorico(){
   const resultado=getColetasFiltradas();
   const el=document.getElementById('hist-table');
   if(el) el.innerHTML=renderTabelaHistorico(resultado);
-  // Atualizar resumo
   const sm=document.getElementById('hist-summary');
   if(sm){
     const exec=resultado.filter(c=>c.status==='✅ Realizada'||c.status==='Realizada'||c.status==='Executada').length;
@@ -1881,7 +1629,6 @@ function filtrarHistorico(){
     </div>`;
   }
 }
-
 function limparFiltrosHist(){
   const hoje=new Date();
   const el=id=>document.getElementById(id);
@@ -1893,7 +1640,6 @@ function limparFiltrosHist(){
   if(el('filt-hist-busca')) el('filt-hist-busca').value='';
   filtrarHistorico();
 }
-
 function renderTabelaHistorico(data){
   if(!data.length) return `<div class="empty-state"><div class="empty-icon">♻️</div>
     <div>Nenhuma coleta encontrada com esses filtros.</div></div>`;
@@ -1926,36 +1672,25 @@ function renderTabelaHistorico(data){
   </tr>`).join('')}
   </tbody></table></div>`;
 }
-
-// Salva status inline no Controle Geral — mesmo efeito que salvarStatusInline da Programação do Dia
 function salvarStatusControlGeral(id, novoStatus){
   const coletas=DB.get('residuosColetas')||[];
   const i=coletas.findIndex(c=>c.id===id);
   if(i>=0){ coletas[i].status=novoStatus; DB.set('residuosColetas',coletas); }
-  // Atualiza summary sem re-renderizar tudo
   filtrarHistorico();
 }
-
-// Navega para a Programação do Dia com a data selecionada
 function irParaDia(data){
-  // Abre o módulo na tela de Programação do Dia com a data
   renderModContent('residuos','dashboard');
   setTimeout(()=>{
     const el=document.getElementById('res-nav-data');
     if(el){ el.value=data; atualizarProgramacao(); }
   },100);
 }
-
 function excluirColetaHist(id){
   if(!confirm('Excluir este registro da base? Ele deixará de aparecer tanto no Controle Geral quanto na Programação do Dia.')) return;
   const c=DB.get('residuosColetas')||[];
   DB.set('residuosColetas',c.filter(x=>x.id!==id));
   filtrarHistorico();
 }
-
-// ─────────────────────────────────────────────
-// SOB DEMANDA
-// ─────────────────────────────────────────────
 function renderSobDemanda(){
   const sob=DB.get('sobDemanda')||[];
   return `<div class="content-header"><div><div class="content-title">📦 Coletas Sob Demanda</div>
@@ -1988,7 +1723,6 @@ function renderSobDemanda(){
     </tr>`).join('')}
     </tbody></table></div>`;
 }
-
 function abrirFormSobDemanda(id){
   const sob=DB.get('sobDemanda')||[];
   const s=id?sob.find(x=>x.id===id):{};
@@ -2027,20 +1761,15 @@ function salvarSobDemanda(id){
 }
 function excluirSobDemanda(id){if(!confirm('Excluir?'))return;const s=DB.get('sobDemanda')||[];DB.set('sobDemanda',s.filter(x=>x.id!==id));renderModContent('residuos','sobdemanda');}
 
-// ─────────────────────────────────────────────
-// NÃO CONFORMIDADES
-// ─────────────────────────────────────────────
 function renderNaoConformidades(_filtros){
   const ncs=DB.get('naoConformidades')||[];
   const coletas=DB.get('residuosColetas')||[];
-  // Pre-fill filtros se vieram do dashboard
   const pf = _filtros||{};
   const hoje=new Date();
   const anoMes=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
   const tiposNC=[...new Set(ncs.map(n=>n.tipoNC).filter(Boolean))].sort();
   const tiposColeta=[...new Set(ncs.map(n=>n.tipoColeta).filter(Boolean))].sort();
   const statusOpts=['🔴 Aberta','🟡 Em tratamento','🟢 Encerrada'];
-
   return `<div class="content-header">
     <div>
       <div class="content-title">🚨 Não Conformidades</div>
@@ -2050,8 +1779,6 @@ function renderNaoConformidades(_filtros){
       <button class="btn btn-outline" onclick="exportCSV(DB.get('naoConformidades')||[],'nao_conformidades.csv')">↓ Exportar</button>
       <button class="btn btn-primary" onclick="abrirFormNC()">+ Registrar NC</button>
     </div></div>
-
-  <!-- FILTROS NC -->
   <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px">
     <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em">Filtros</div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
@@ -2100,13 +1827,10 @@ function renderNaoConformidades(_filtros){
       <button class="btn btn-outline" onclick="limparFiltrosNC()" style="align-self:flex-end">Limpar</button>
     </div>
   </div>
-
-  <!-- KPIs NC -->
   <div id="nc-kpis" style="margin-bottom:16px"></div>
   <div id="nc-table"></div>
   <script>setTimeout(()=>filtrarNCs(),60);<\/script>`;
 }
-
 function getNcsFiltradas(){
   const ncs=DB.get('naoConformidades')||[];
   const mes    =(document.getElementById('filt-nc-mes')?.value||'');
@@ -2130,10 +1854,8 @@ function getNcsFiltradas(){
     return dataOk&&diaOk&&tipoOk&&tncOk&&stOk&&bkOk;
   }).sort((a,b)=>b.data.localeCompare(a.data));
 }
-
 function filtrarNCs(){
   const resultado=getNcsFiltradas();
-  // KPIs
   const kpiEl=document.getElementById('nc-kpis');
   if(kpiEl){
     const abertas=resultado.filter(n=>n.status&&n.status.includes('Aberta')).length;
@@ -2150,7 +1872,6 @@ function filtrarNCs(){
       </div>`).join('')}
     </div>`;
   }
-  // Tabela
   const el=document.getElementById('nc-table');
   if(!el) return;
   if(!resultado.length){
@@ -2176,7 +1897,6 @@ function filtrarNCs(){
   </tr>`).join('')}
   </tbody></table></div>`;
 }
-
 function limparFiltrosNC(){
   ['filt-nc-mes','filt-nc-data','filt-nc-dia','filt-nc-tipo','filt-nc-tiponc','filt-nc-status','filt-nc-busca']
     .forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
@@ -2216,9 +1936,6 @@ function salvarNC(id){
 }
 function excluirNC(id){if(!confirm('Excluir NC?'))return;const n=DB.get('naoConformidades')||[];DB.set('naoConformidades',n.filter(x=>x.id!==id));renderModContent('residuos','ncs');}
 
-// ─────────────────────────────────────────────
-// GRÁFICO / PROCEDIMENTOS
-// ─────────────────────────────────────────────
 function renderGraficoTipos(coletas){
   const m={};coletas.forEach(c=>{m[c.tipo]=(m[c.tipo]||0)+1;});
   const s=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,8);
@@ -2231,7 +1948,6 @@ function renderGraficoTipos(coletas){
       <div style="width:28px;font-size:11px;font-weight:700">${n}</div>
     </div>`).join('')}</div>`;
 }
-
 function renderProcedimentos(){
   const procs=DB.get('procedimentos')||[];
   if(!procs.length) return `<div class="empty-state"><div class="empty-icon">📁</div><div>Nenhum documento.</div></div>`;
@@ -2258,13 +1974,8 @@ function salvarProcedimento(){
   DB.set('procedimentos',procs);closeModalDirect();renderModContent('residuos','procedimentos');
 }
 function excluirProcedimento(id){if(!confirm('Excluir?'))return;const p=DB.get('procedimentos')||[];DB.set('procedimentos',p.filter(x=>x.id!==id));renderModContent('residuos','procedimentos');}
-
-
-
-
 // ═══════════════════════════════════════════════════════
 // DASHBOARD GERENCIAL — RESÍDUOS
-// Base única: mesma fonte do Controle Geral e Programação do Dia
 // ═══════════════════════════════════════════════════════
 function renderDashboardGerencial(){
   const coletas=DB.get('residuosColetas')||[];
@@ -2272,9 +1983,7 @@ function renderDashboardGerencial(){
   const tipos=[...new Set(coletas.map(c=>c.tipo).filter(Boolean))].sort();
   const hoje=new Date();
   const anoMes=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
-
   return `<div>
-  <!-- CABEÇALHO -->
   <div class="content-header">
     <div>
       <div class="content-title">📊 Dashboard Gerencial — Coletas & NCs</div>
@@ -2288,8 +1997,6 @@ function renderDashboardGerencial(){
       <button class="btn btn-outline btn-sm" onclick="renderModContent('residuos','ncs')">🚨 Não Conformidades</button>
     </div>
   </div>
-
-  <!-- FILTROS DASHBOARD -->
   <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:16px">
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
       <div>
@@ -2324,11 +2031,7 @@ function renderDashboardGerencial(){
       <button class="btn btn-outline" onclick="limparDash()" style="align-self:flex-end">Limpar</button>
     </div>
   </div>
-
-  <!-- KPIs -->
   <div id="dash-kpis" style="margin-bottom:18px"></div>
-
-  <!-- GRÁFICOS linha 1: Mensal + Por Tipo -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
     <div class="card-section" style="margin:0">
       <div class="card-section-title">📅 Coletas por Mês <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
@@ -2339,8 +2042,6 @@ function renderDashboardGerencial(){
       <div id="dash-chart-tipo" style="padding:8px 0"></div>
     </div>
   </div>
-
-  <!-- GRÁFICOS linha 2: NC por Tipo + NC por Turno -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
     <div class="card-section" style="margin:0">
       <div class="card-section-title">🚨 NCs por Tipo de Resíduo <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
@@ -2351,8 +2052,6 @@ function renderDashboardGerencial(){
       <div id="dash-chart-nc-turno" style="padding:8px 0"></div>
     </div>
   </div>
-
-  <!-- GRÁFICOS linha 3: NC por Dia da Semana + Heatmap -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
     <div class="card-section" style="margin:0">
       <div class="card-section-title">📆 NCs por Dia da Semana <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
@@ -2363,12 +2062,10 @@ function renderDashboardGerencial(){
       <div id="dash-heatmap" style="padding:8px 0"></div>
     </div>
   </div>
-
   </div>
   <script>setTimeout(()=>atualizarDash(),80);<\/script>`;
 }
 
-// ─── Filtros do Dashboard ───
 function getDashFiltros(){
   return {
     mes:   document.getElementById('dash-mes')?.value||'',
@@ -2378,7 +2075,6 @@ function getDashFiltros(){
     tipo:  document.getElementById('dash-tipo')?.value||'',
   };
 }
-
 function aplicarFiltroColetas(coletas, f){
   return coletas.filter(c=>{
     const dataOk = f.data ? c.data===f.data : (!f.mes || c.data.startsWith(f.mes));
@@ -2388,32 +2084,26 @@ function aplicarFiltroColetas(coletas, f){
     return dataOk&&diaOk&&turnoOk&&tipoOk;
   });
 }
-
 function aplicarFiltroNCs(ncs, f){
   return ncs.filter(n=>{
     const dataOk = f.data ? n.data===f.data : (!f.mes || n.data.startsWith(f.mes));
     const diaOk  = !f.dia   || calcDiaSemana(n.data)===f.dia;
     const tipoOk = !f.tipo  || (n.tipoColeta||'')===f.tipo;
-    // NC não tem turno próprio — associa ao turno da coleta do mesmo dia/tipo
     return dataOk&&diaOk&&tipoOk;
   });
 }
-
 function limparDash(){
   ['dash-mes','dash-data','dash-dia','dash-turno','dash-tipo'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });
   atualizarDash();
 }
-
-// ─── Renderização completa do Dashboard ───
 function atualizarDash(){
   const coletas=DB.get('residuosColetas')||[];
   const ncs=DB.get('naoConformidades')||[];
   const f=getDashFiltros();
   const coletasFilt=aplicarFiltroColetas(coletas,f);
   const ncsFilt=aplicarFiltroNCs(ncs,f);
-
   renderDashKPIs(coletasFilt, ncsFilt);
   renderChartMensal(coletasFilt, f);
   renderChartTipo(coletasFilt, f);
@@ -2422,26 +2112,20 @@ function atualizarDash(){
   renderChartNcDia(ncsFilt, f);
   renderHeatmap(coletasFilt, ncsFilt, f);
 }
-
-// ─── KPIs ───
 function renderDashKPIs(coletas, ncs){
   const el=document.getElementById('dash-kpis'); if(!el) return;
   const pct=coletas.length>0?((ncs.length/coletas.length)*100).toFixed(1):0;
-  // Tipo com mais coletas
   const tipoMap={};
   coletas.forEach(c=>{ tipoMap[c.tipo]=(tipoMap[c.tipo]||0)+1; });
   const topTipo=Object.entries(tipoMap).sort((a,b)=>b[1]-a[1])[0];
-  // Turno com mais NCs — mapeia turno da coleta no mesmo dia/tipo
   const coletasTodas=DB.get('residuosColetas')||[];
   const turnoNcMap={};
   ncs.forEach(n=>{
-    // Encontra turno na coleta do mesmo dia e tipo
     const c=coletasTodas.find(c=>c.data===n.data&&(c.tipo||'').toLowerCase().includes((n.tipoColeta||'').toLowerCase().slice(0,8)));
     const t=(c&&c.turno)||'—';
     turnoNcMap[t]=(turnoNcMap[t]||0)+1;
   });
   const topTurno=Object.entries(turnoNcMap).sort((a,b)=>b[1]-a[1])[0];
-
   el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
     ${[
       {label:'Total de Coletas',val:coletas.length,cor:'#1A73E8',sub:'no período filtrado'},
@@ -2456,8 +2140,6 @@ function renderDashKPIs(coletas, ncs){
     </div>`).join('')}
   </div>`;
 }
-
-// ─── Gráfico de barras genérico (clicável) ───
 function renderBarChart(containerId, data, colorFn, onClickFn, maxBars){
   const el=document.getElementById(containerId); if(!el) return;
   const items=data.slice(0,maxBars||12);
@@ -2476,11 +2158,8 @@ function renderBarChart(containerId, data, colorFn, onClickFn, maxBars){
       </div>`).join('')}
   </div>`;
 }
-
-// ─── Gráfico mensal ───
 function renderChartMensal(coletas, f){
   const MESES_ABR=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  // Agrupar por mês
   const map={};
   coletas.forEach(c=>{
     const m=c.data?c.data.slice(0,7):'';
@@ -2505,17 +2184,13 @@ function renderChartMensal(coletas, f){
       </div>`).join('')}
   </div>`;
 }
-
 function dashClickMes(mes){
-  // Filtra Controle Geral por esse mês
   renderModContent('residuos','coletas');
   setTimeout(()=>{
     const el=document.getElementById('filt-hist-mes');
     if(el){ el.value=mes; filtrarHistorico(); }
   },100);
 }
-
-// ─── Coletas por Tipo ───
 function renderChartTipo(coletas, f){
   const map={};
   coletas.forEach(c=>{ map[c.tipo]=(map[c.tipo]||0)+1; });
@@ -2525,7 +2200,6 @@ function renderChartTipo(coletas, f){
     (i)=>CORES[i%CORES.length],
     'dashClickTipoColeta', 10);
 }
-
 function dashClickTipoColeta(tipo){
   const f=getDashFiltros();
   renderModContent('residuos','coletas');
@@ -2535,8 +2209,6 @@ function dashClickTipoColeta(tipo){
     filtrarHistorico();
   },100);
 }
-
-// ─── NCs por Tipo de Resíduo ───
 function renderChartNcTipo(ncs, f){
   const map={};
   ncs.forEach(n=>{ const k=n.tipoColeta||'Sem tipo'; map[k]=(map[k]||0)+1; });
@@ -2545,15 +2217,11 @@ function renderChartNcTipo(ncs, f){
     (i)=>['#D1242F','#E67700','#7C3AED','#0891B2','#6B6B6B'][i%5],
     'dashClickNcTipo', 8);
 }
-
 function dashClickNcTipo(tipo){
   const f=getDashFiltros();
   abrirNcFiltrado({mes:f.mes,data:f.data,dia:f.dia,tipo});
 }
-
-// ─── NCs por Turno ───
 function renderChartNcTurno(coletas, ncs, f){
-  // Associa cada NC ao turno da coleta do mesmo dia/tipo
   const map={};
   ncs.forEach(n=>{
     const c=coletas.find(c=>c.data===n.data);
@@ -2565,13 +2233,10 @@ function renderChartNcTurno(coletas, ncs, f){
     (i)=>['#E67700','#1A73E8','#D1242F'][i%3],
     'dashClickNcTurno', 6);
 }
-
 function dashClickNcTurno(turno){
   const f=getDashFiltros();
   abrirNcFiltrado({mes:f.mes,data:f.data,dia:f.dia,tipo:f.tipo});
 }
-
-// ─── NCs por Dia da Semana ───
 function renderChartNcDia(ncs, f){
   const ORDEM=['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado','Domingo'];
   const map={};
@@ -2586,36 +2251,26 @@ function renderChartNcDia(ncs, f){
     },
     'dashClickNcDia', 7);
 }
-
 function dashClickNcDia(dia){
   const f=getDashFiltros();
   abrirNcFiltrado({mes:f.mes,data:f.data,dia,tipo:f.tipo});
 }
-
-// ─── Heatmap: Dia da Semana × Turno ───
 function renderHeatmap(coletas, ncs, f){
   const el=document.getElementById('dash-heatmap'); if(!el) return;
   const DIAS=['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
   const DIAS_CURTO=['Seg','Ter','Qua','Qui','Sex','Sáb'];
   const TURNOS=['Manhã','Tarde'];
-
-  // Matriz de NCs cruzando dia × turno
-  // NC não tem turno próprio; usa o turno da coleta correspondente
   const matrix={};
   DIAS.forEach(d=>{ matrix[d]={}; TURNOS.forEach(t=>{ matrix[d][t]=0; }); });
-
   ncs.forEach(n=>{
     const dia=calcDiaSemana(n.data);
     if(!matrix[dia]) return;
-    // Tenta associar ao turno pela coleta do mesmo dia
     const c=coletas.find(c=>c.data===n.data);
     const turno=(c&&c.turno&&TURNOS.includes(c.turno))?c.turno:'Manhã';
     matrix[dia][turno]++;
   });
-
   const vals=DIAS.flatMap(d=>TURNOS.map(t=>matrix[d][t]));
   const maxVal=Math.max(...vals,1);
-
   const heatColor=(v)=>{
     if(v===0) return '#F5F5F5';
     const pct=v/maxVal;
@@ -2624,7 +2279,6 @@ function renderHeatmap(coletas, ncs, f){
     if(pct<0.75) return '#F97316';
     return '#DC2626';
   };
-
   el.innerHTML=`<div style="overflow-x:auto">
     <table style="border-collapse:separate;border-spacing:4px;width:100%">
       <thead><tr>
@@ -2654,13 +2308,10 @@ function renderHeatmap(coletas, ncs, f){
     </div>
   </div>`;
 }
-
 function dashClickHeatmap(dia, turno){
   const f=getDashFiltros();
   abrirNcFiltrado({mes:f.mes,data:f.data,dia,tipo:f.tipo});
 }
-
-// ─── Navega para NCs com filtros pré-aplicados ───
 function abrirNcFiltrado(filtros){
   renderModContent('residuos','ncs');
   setTimeout(()=>{
@@ -2673,8 +2324,6 @@ function abrirNcFiltrado(filtros){
     filtrarNCs();
   },120);
 }
-
-
 // ═══════════════════════════════════════════════════════
 // MODULE: ESTOQUE
 // ═══════════════════════════════════════════════════════
@@ -2801,7 +2450,7 @@ function renderChecklist(page){
         <td><b>${c.fornecedor}</b></td>
         <td>${c.semana||'—'}</td>
         <td><b style="color:${c.resultado>=90?'var(--green)':c.resultado>=70?'#E67700':'var(--red)'}">${c.resultado}%</b></td>
-        <td>${c.pdfUrl?`<button class="btn btn-outline btn-sm" onclick="visualizarPdfChecklist('${c.id}')">📄 Ver PDF</button>`:'<span style="color:var(--light)">—</span>'}</td>
+        <td>${c.pdfAnexo?`<button class="btn btn-outline btn-sm" onclick="visualizarPdfChecklist('${c.id}')">📄 Ver PDF</button>`:'<span style="color:var(--light)">—</span>'}</td>
         <td>
           <button class="btn btn-outline btn-sm" onclick="abrirFormChecklistModal('${c.id}',{afterSave:()=>renderModContent('checklist','listagem')})" title="Editar">✏️</button>
           <button class="btn btn-outline btn-sm" onclick="excluirChecklist('${c.id}',()=>renderModContent('checklist','listagem'))" title="Excluir">🗑️</button>
@@ -2822,11 +2471,6 @@ function salvarChecklist(){
     obs:document.getElementById('cl-obs').value});
   DB.set('checklistData',d);alert('Checklist salvo!');renderModContent('checklist','painel');
 }
-
-// ─── CRIAR/EDITAR/EXCLUIR CHECK LIST (modal) ───
-// Mesma fonte de dados (checklistData) usada pelo formulário "Novo Lançamento";
-// isto apenas dá acesso a criar/editar/excluir a partir da listagem e do
-// detalhamento mensal, sem duplicar a estrutura de dados.
 let _checklistModalCtx=null;
 function abrirFormChecklistModal(id,opts){
   opts=opts||{};
@@ -2878,9 +2522,6 @@ function excluirChecklist(id,afterDelete){
   DB.set('checklistData',d.filter(c=>c.id!==id));
   if(afterDelete) afterDelete();
 }
-// Reaplica a página atual do módulo Check List (recalcula Painel Mensal / Listagem
-// automaticamente a partir de checklistData) e, opcionalmente, reabre o
-// detalhamento semanal com os dados já atualizados.
 function _refreshChecklistView(reopenDetalhe){
   if(currentModId==='checklist'){ renderModContent('checklist',currentPage); }
   if(reopenDetalhe) reopenDetalhe();
@@ -2901,10 +2542,15 @@ function adicionarChecklistNaSemana(fornecedor,mes,ano){
 }
 
 // ─── DETALHAMENTO SEMANAL + PDF DO CHECK LIST ───
-// Reaproveita checklistData (nota já é armazenada por semana) e o Storage do
-// mesmo projeto Firebase (firebaseConfig.storageBucket). Não cria nova fonte
-// de dados: cada registro semanal existente ganha, opcionalmente, pdfUrl/pdfPath.
+// ANEXO DE PDF — Base64 dentro do Realtime Database (sem Firebase Storage).
+// Motivo: o plano do projeto Firebase é Spark (gratuito), e o Storage exige
+// o plano Blaze. Para não depender de Storage nem mudar de plano, o PDF é
+// convertido para uma string Base64 no próprio navegador e salvo dentro do
+// registro do checklist, no campo `pdfAnexo` (nome, tamanho, data, conteúdo).
+const PDF_MAX_BYTES = 2 * 1024 * 1024; // limite de 2 MB por arquivo
 let _pdfUploadRecordId=null;
+let _pdfUploadEmAndamento=false;
+
 function abrirDetalheSemanal(fornecedor,mes,ano){
   const data=DB.get('checklistData')||[];
   const regs=data.filter(c=>c.fornecedor===fornecedor&&c.mes===mes&&c.ano===ano)
@@ -2920,15 +2566,17 @@ function abrirDetalheSemanal(fornecedor,mes,ano){
     </div>
     ${regs.length===0?`<div class="empty-state"><div class="empty-icon">📋</div><div>Nenhuma nota lançada neste mês.</div></div>`:
     regs.map(r=>`
-      <div class="card-section" style="margin-bottom:10px;padding:14px 16px">
+      <div class="card-section" style="margin-bottom:10px;padding:14px 16px" id="checklist-card-${r.id}">
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
           <div>
             <div style="font-weight:700;font-size:13px">Semana ${r.semana||'—'}</div>
             <div style="font-size:12px;color:var(--muted);margin-top:2px">Nota: <b style="color:${r.resultado>=90?'var(--green)':r.resultado>=70?'#E67700':'var(--red)'}">${r.resultado}%</b></div>
+            ${r.pdfAnexo?`<div style="font-size:11px;color:var(--muted);margin-top:4px">📄 ${r.pdfAnexo.nome} · ${(r.pdfAnexo.tamanho/1024).toFixed(0)} KB · anexado em ${fmtDataHoraBR(r.pdfAnexo.dataUpload)}</div>`:''}
           </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            ${r.pdfUrl?`<button class="btn btn-outline btn-sm" onclick="visualizarPdfChecklist('${r.id}')">👁️ Visualizar PDF</button>`:''}
-            <button class="btn btn-outline btn-sm" onclick="prepararUploadPdfChecklist('${r.id}')">${r.pdfUrl?'🔄 Substituir PDF':'📎 Anexar PDF'}</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap" id="pdf-actions-${r.id}">
+            ${r.pdfAnexo?`<button class="btn btn-outline btn-sm" onclick="visualizarPdfChecklist('${r.id}')">👁️ Visualizar PDF</button>
+            <button class="btn btn-outline btn-sm" onclick="baixarPdfChecklist('${r.id}')">⬇️ Baixar PDF</button>`:''}
+            <button class="btn btn-outline btn-sm" id="btn-anexar-${r.id}" onclick="prepararUploadPdfChecklist('${r.id}')">${r.pdfAnexo?'🔄 Substituir PDF':'📎 Anexar PDF'}</button>
             <button class="btn btn-outline btn-sm" onclick="editarChecklistNaSemana('${r.id}','${fornEsc}',${mes},${ano})" title="Editar">✏️ Editar</button>
             <button class="btn btn-outline btn-sm" onclick="excluirChecklistNaSemana('${r.id}','${fornEsc}',${mes},${ano})" title="Excluir">🗑️ Excluir</button>
           </div>
@@ -2941,51 +2589,176 @@ function abrirDetalheSemanal(fornecedor,mes,ano){
   `;
   openModal('Detalhamento Semanal',body,`<button class="btn btn-outline" onclick="closeModalDirect()">Fechar</button>`,true);
 }
+
+function fmtDataHoraBR(isoStr){
+  if(!isoStr) return '—';
+  try{
+    const d=new Date(isoStr);
+    return d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  }catch{ return '—'; }
+}
+
 function prepararUploadPdfChecklist(recordId){
+  if(_pdfUploadEmAndamento){
+    alert('Aguarde a conclusão do envio em andamento antes de iniciar outro.');
+    return;
+  }
   _pdfUploadRecordId=recordId;
   document.getElementById('pdf-upload-input').click();
 }
+function _setPdfStatus(recordId, html){
+  const st=document.getElementById('pdf-status-'+recordId);
+  if(st) st.innerHTML=html;
+}
+function _setBotaoAnexarHabilitado(recordId, habilitado, texto){
+  const btn=document.getElementById('btn-anexar-'+recordId);
+  if(btn){ btn.disabled=!habilitado; if(texto) btn.textContent=texto; }
+}
+
+// Lê o arquivo como Base64 (Data URL) usando FileReader — 100% no navegador,
+// sem nenhum upload de rede para Storage.
+function _lerArquivoComoBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result); // já vem como "data:application/pdf;base64,...."
+    reader.onerror=()=>reject(new Error('Falha ao ler o arquivo no navegador.'));
+    reader.readAsDataURL(file);
+  });
+}
+
 function onPdfFileSelected(event){
   const file=event.target.files[0];
   event.target.value='';
   const id=_pdfUploadRecordId;
-  const statusEl=id?document.getElementById('pdf-status-'+id):null;
-  if(!file) return;
+  if(!file || !id) return;
+
+  // Validação: tipo
   if(file.type!=='application/pdf'){
-    if(statusEl) statusEl.innerHTML='<span style="color:var(--red)">Apenas arquivos PDF são aceitos.</span>';
-    else alert('Apenas arquivos PDF são aceitos.');
+    _setPdfStatus(id, '<span style="color:var(--red)">❌ Apenas arquivos PDF são aceitos.</span>');
     return;
   }
+  // Validação: tamanho (2 MB)
+  if(file.size>PDF_MAX_BYTES){
+    const tamanhoMB=(file.size/1024/1024).toFixed(2);
+    _setPdfStatus(id, `<span style="color:var(--red)">❌ Arquivo muito grande (${tamanhoMB} MB). O limite é 2 MB.</span>`);
+    return;
+  }
+
   const data=DB.get('checklistData')||[];
   const rec=data.find(c=>c.id===id);
-  if(!rec){ alert('Registro não encontrado.'); return; }
-  if(statusEl) statusEl.innerHTML='<span style="color:var(--blue)">Enviando PDF…</span>';
-  const fornSlug=String(rec.fornecedor||'fornecedor').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9]+/g,'_');
-  const mesFmt=String(rec.mes).padStart(2,'0');
-  const semanaFmt=rec.semana||0;
-  const path=`checklists/${rec.ano}/${fornSlug}/${mesFmt}/semana-${semanaFmt}/checklist.pdf`;
-  fbStorage.ref(path).put(file).then(snap=>snap.ref.getDownloadURL()).then(url=>{
-    const d2=DB.get('checklistData')||[];
-    const i=d2.findIndex(c=>c.id===id);
-    if(i>=0){ d2[i]={...d2[i],pdfUrl:url,pdfPath:path}; DB.set('checklistData',d2); }
-    abrirDetalheSemanal(rec.fornecedor,rec.mes,rec.ano);
-    setTimeout(()=>{
-      const st=document.getElementById('pdf-status-'+id);
-      if(st) st.innerHTML='<span style="color:var(--green)">PDF anexado com sucesso.</span>';
-    },0);
-  }).catch(err=>{
-    console.error('Erro ao enviar PDF do checklist',err);
-    const st=document.getElementById('pdf-status-'+id);
-    if(st) st.innerHTML='<span style="color:var(--red)">Falha ao enviar o PDF. Verifique sua conexão e tente novamente.</span>';
-    else alert('Falha ao enviar o PDF. Verifique sua conexão e tente novamente.');
-  });
+  if(!rec){ _setPdfStatus(id, '<span style="color:var(--red)">Registro não encontrado. Feche e reabra o detalhamento.</span>'); return; }
+
+  _pdfUploadEmAndamento=true;
+  _setBotaoAnexarHabilitado(id,false,'Processando…');
+  _setPdfStatus(id, '<span style="color:var(--blue)">⏳ 1/2 Convertendo arquivo…</span>');
+
+  _lerArquivoComoBase64(file)
+    .then(base64DataUrl=>{
+      _setPdfStatus(id, '<span style="color:var(--blue)">⏳ 2/2 Salvando no banco de dados…</span>');
+
+      const pdfAnexo={
+        nome: file.name,
+        tamanho: file.size,
+        dataUpload: new Date().toISOString(),
+        conteudoBase64: base64DataUrl
+      };
+
+      // Transação atômica no nó 'checklistData': parte sempre do valor mais
+      // recente confirmado no servidor (evita perder o anexo se outra
+      // escrita concorrente acontecer no meio do processo).
+      return fbRoot.child('checklistData').transaction(currentArray=>{
+        const arr = Array.isArray(currentArray) ? currentArray.slice() : [];
+        const idx = arr.findIndex(c=>c && c.id===id);
+        if(idx>=0){
+          arr[idx] = {...arr[idx], pdfAnexo};
+        }
+        return arr;
+      });
+    })
+    .then(txResult=>{
+      _pdfUploadEmAndamento=false;
+      if(!txResult.committed){
+        _setPdfStatus(id, '<span style="color:var(--red)">❌ Não foi possível confirmar o salvamento. Tente novamente.</span>');
+        _setBotaoAnexarHabilitado(id,true,'📎 Tentar novamente');
+        return;
+      }
+      const arrConfirmado = txResult.snapshot.val();
+      if(Array.isArray(arrConfirmado)) DB_CACHE['checklistData']=arrConfirmado;
+
+      _setPdfStatus(id, '<span style="color:var(--green)">✅ PDF anexado e salvo com sucesso.</span>');
+
+      // Reabre o detalhamento para já refletir os novos botões (Visualizar/Baixar/Substituir)
+      if(rec){
+        setTimeout(()=>abrirDetalheSemanal(rec.fornecedor, rec.mes, rec.ano), 400);
+      }
+    })
+    .catch(err=>{
+      _pdfUploadEmAndamento=false;
+      console.error('Erro ao salvar PDF do checklist',err);
+      _setPdfStatus(id, '<span style="color:var(--red)">❌ Falha ao processar/salvar o PDF. Tente novamente.</span>');
+      _setBotaoAnexarHabilitado(id,true,'📎 Tentar novamente');
+    });
 }
+
+// Converte uma Data URL "data:application/pdf;base64,XXXX" em um Blob real.
+// Necessário porque window.open() com uma string data: muito longa é
+// bloqueado/ignorado silenciosamente por vários navegadores (tela branca),
+// enquanto um Blob URL (via URL.createObjectURL) abre normalmente no
+// visualizador de PDF nativo do navegador.
+function _dataUrlParaBlob(dataUrl){
+  const partes=String(dataUrl||'').split(',');
+  if(partes.length<2||!partes[0].includes('base64')) return null;
+  try{
+    const bin=atob(partes[1]);
+    const bytes=new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i]=bin.charCodeAt(i);
+    return new Blob([bytes],{type:'application/pdf'});
+  }catch(e){
+    console.error('Falha ao decodificar PDF Base64:',e);
+    return null;
+  }
+}
+
 function visualizarPdfChecklist(recordId){
   const data=DB.get('checklistData')||[];
   const rec=data.find(c=>c.id===recordId);
-  if(rec&&rec.pdfUrl) window.open(rec.pdfUrl,'_blank');
-}
+  const conteudo=rec&&rec.pdfAnexo&&rec.pdfAnexo.conteudoBase64;
 
+  if(!conteudo){
+    alert('❌ Não foi possível localizar o PDF deste registro. Tente recarregar a página.');
+    return;
+  }
+
+  const blob=_dataUrlParaBlob(conteudo);
+  if(!blob||blob.size===0){
+    alert('❌ O arquivo PDF está corrompido ou em um formato inválido e não pode ser visualizado. Tente substituir o PDF.');
+    return;
+  }
+
+  const blobUrl=URL.createObjectURL(blob);
+  const janela=window.open(blobUrl,'_blank');
+
+  if(!janela){
+    // Pop-up bloqueado pelo navegador
+    URL.revokeObjectURL(blobUrl);
+    alert('❌ O navegador bloqueou a abertura da nova aba. Permita pop-ups para este site e tente novamente.');
+    return;
+  }
+
+  // Libera a memória do Blob depois que a aba já teve tempo de carregar o PDF.
+  setTimeout(()=>URL.revokeObjectURL(blobUrl), 60000);
+}
+function baixarPdfChecklist(recordId){
+  const data=DB.get('checklistData')||[];
+  const rec=data.find(c=>c.id===recordId);
+  if(!rec||!rec.pdfAnexo||!rec.pdfAnexo.conteudoBase64) return;
+  const a=document.createElement('a');
+  a.href=rec.pdfAnexo.conteudoBase64;
+  a.download=rec.pdfAnexo.nome||'checklist.pdf';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
 // ═══════════════════════════════════════════════════════
 // MODULE: GRANCOFFEE
 // ═══════════════════════════════════════════════════════
@@ -3473,13 +3246,68 @@ function toggleTipoEquip(id){
   const tipos=DB.get('tiposEquipamento')||[];const i=tipos.findIndex(t=>t.id===id);
   if(i>=0){tipos[i].status=tipos[i].status==='Ativo'?'Inativo':'Ativo';DB.set('tiposEquipamento',tipos);renderModContent('config','tiposequip');}
 }
+// ═══════════════════════════════════════════════════════
+// TIPOS DE PROBLEMA — genérico (usado em Bebedouros e GranCoffee)
+// ═══════════════════════════════════════════════════════
+function addTipoProblema(modulo){
+  openModal('Novo Tipo de Problema',`
+    <div class="form-group"><label class="form-label">Nome</label><input class="form-input" id="tp-nome"/></div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
+     <button class="btn btn-primary" onclick="salvarTipoProblema('${modulo}')">Salvar</button>`);
+}
+function salvarTipoProblema(modulo){
+  const nome=document.getElementById('tp-nome').value.trim();
+  if(!nome) return;
+  const tipos=DB.get('tiposProblema')||[];
+  tipos.push({id:uid(),nome,modulo,status:'Ativo'});
+  DB.set('tiposProblema',tipos);
+  closeModalDirect();
+  renderModContent(modulo==='bebedouro'?'bebedouros':'grancoffee','tipos');
+}
+function toggleTipoStatus(id){
+  const tipos=DB.get('tiposProblema')||[];
+  const i=tipos.findIndex(t=>t.id===id);
+  if(i>=0){
+    tipos[i].status=tipos[i].status==='Ativo'?'Inativo':'Ativo';
+    DB.set('tiposProblema',tipos);
+    renderModContent(currentModId,currentPage);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// HISTÓRICO DE BEBEDOUROS — tabela e filtro
+// ═══════════════════════════════════════════════════════
+function renderTabelaHistBeb(hist){
+  const equipF=document.getElementById('filt-hist-equip')?.value||'';
+  const tipoF=document.getElementById('filt-hist-tipo')?.value||'';
+  const statusF=document.getElementById('filt-hist-status')?.value||'';
+  const filtered=hist.filter(h=>
+    (!equipF||h.equipamento===equipF)&&(!tipoF||h.tipoOcorrencia===tipoF)&&(!statusF||h.status===statusF)
+  );
+  if(!filtered.length) return `<div class="empty-state"><div class="empty-icon">📋</div><div>Nenhuma ocorrência registrada.</div></div>`;
+  return `<div class="data-table-wrap"><table><thead><tr>
+    <th>Data</th><th>Equipamento</th><th>Ocorrência</th><th>Tipo</th><th>Descrição</th><th>Responsável</th><th>Status</th>
+  </tr></thead><tbody>
+  ${[...filtered].reverse().map(h=>`<tr>
+    <td>${fmtDate(h.data)}</td>
+    <td><b>${h.equipamento||'—'}</b></td>
+    <td><span class="badge badge-blue">${h.tipoOcorrencia||'—'}</span></td>
+    <td>${h.tipo||'—'}</td>
+    <td style="max-width:200px;font-size:11px">${h.descricao||'—'}</td>
+    <td style="font-size:11px">${h.responsavel||'—'}</td>
+    <td><span class="badge ${h.status==='Concluído'||h.status==='Resolvido'?'badge-green':h.status==='Em andamento'?'badge-yellow':'badge-red'}">${h.status||'—'}</span></td>
+  </tr>`).join('')}
+  </tbody></table></div>`;
+}
+function filtrarHistoricoBeb(){
+  const hist=DB.get('historicoBeb')||[];
+  const el=document.getElementById('hist-beb-table');
+  if(el) el.innerHTML=renderTabelaHistBeb(hist);
+}
 
 // ═══════════════════════════════════════════════════════
 // INIT — conecta ao Firebase, carrega os dados compartilhados
 // e só então restaura sessão (se ainda válida, < 8h) ou mostra o login.
-// fbRoot.on('value', ...) dispara imediatamente com o estado atual
-// (equivalente ao primeiro carregamento) e depois a cada mudança feita
-// por qualquer usuário — é assim que a tela de todo mundo se atualiza sozinha.
 // ═══════════════════════════════════════════════════════
 const loginBtn = document.querySelector('#screen-login .login-btn');
 const loginBtnTextoOriginal = loginBtn ? loginBtn.textContent : '';
@@ -3490,7 +3318,6 @@ fbRoot.on('value', (snapshot) => {
   Object.keys(dados).forEach(k => { DB_CACHE[k] = dados[k]; });
 
   if(!dbReady){
-    // Primeiro carregamento
     dbReady = true;
     seedDefaults();
     if(loginBtn){ loginBtn.disabled = false; loginBtn.textContent = loginBtnTextoOriginal; loginBtn.style.opacity = ''; }
@@ -3507,7 +3334,6 @@ fbRoot.on('value', (snapshot) => {
       document.getElementById('login-user').focus();
     }
   } else {
-    // Atualização vinda de outro usuário (ou eco da nossa própria gravação)
     refreshCurrentView();
   }
 }, (error) => {
