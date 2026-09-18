@@ -309,11 +309,25 @@ const DB = {
 
 function seedDefaults(){
   DB.init('fornecedores',[
-    {id:'f1',nome:'Sapore',cnpj:'',servico:'Alimentação',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
-    {id:'f2',nome:'Rentokil',cnpj:'',servico:'Controle de Pragas',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
-    {id:'f3',nome:'Ambiensys',cnpj:'',servico:'Gestão de Resíduos',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
-    {id:'f4',nome:'GranCoffee',cnpj:'',servico:'Máquinas de Café',responsavel:'',email:'',tel:'',status:'Ativo',obs:''},
+    {id:'f1',nome:'Sapore',cnpj:'',servico:'Alimentação',responsavel:'',email:'',tel:'',status:'Ativo',obs:'',meta:90,periodicidade:'semanal'},
+    {id:'f2',nome:'Rentokil',cnpj:'',servico:'Controle de Pragas',responsavel:'',email:'',tel:'',status:'Ativo',obs:'',meta:90,periodicidade:'quinzenal'},
+    {id:'f3',nome:'Ambiensys',cnpj:'',servico:'Gestão de Resíduos',responsavel:'',email:'',tel:'',status:'Ativo',obs:'',meta:90,periodicidade:'semanal'},
+    {id:'f4',nome:'GranCoffee',cnpj:'',servico:'Máquinas de Café',responsavel:'',email:'',tel:'',status:'Ativo',obs:'',meta:90,periodicidade:'semanal'},
   ]);
+  // Migração leve: fornecedores já existentes no banco (criados antes deste
+  // campo existir) recebem meta/periodicidade padrão, sem apagar nada que
+  // já tenham preenchido.
+  (function _migrarMetaFornecedores(){
+    const fornAtuais=DB.get('fornecedores')||[];
+    let mudou=false;
+    const migrados=fornAtuais.map(f=>{
+      const novo={...f};
+      if(novo.meta==null){ novo.meta=90; mudou=true; }
+      if(!novo.periodicidade){ novo.periodicidade=(novo.nome==='Rentokil')?'quinzenal':'semanal'; mudou=true; }
+      return novo;
+    });
+    if(mudou) DB.set('fornecedores',migrados);
+  })();
   DB.init('localizacoes',[
     {id:'l1',nome:'Térreo',status:'Ativo'},
     {id:'l2',nome:'1º Andar',status:'Ativo'},
@@ -516,7 +530,7 @@ const MODULE_MENUS = {
   bebedouros:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'equipamentos',icon:'🥤',label:'Equipamentos'},{key:'filtros',icon:'🔄',label:'Controle de Filtros'},{key:'historico',icon:'📋',label:'Histórico de Problemas'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
   residuos:[{key:'dashboard',icon:'📅',label:'Programação do Dia'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'dash2',icon:'📊',label:'Dashboard Gerencial'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'procedimentos',icon:'📁',label:'Procedimentos'},{key:'novo',icon:'➕',label:'Nova Coleta'}],
   estoque:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'itens',icon:'📦',label:'Itens do Estoque'},{key:'movimentos',icon:'🔄',label:'Movimentos'}],
-  checklist:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'lancamento',icon:'➕',label:'Novo Lançamento'},{key:'painel',icon:'📋',label:'Painel Mensal'},{key:'listagem',icon:'📄',label:'Check Lists'}],
+  checklist:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'lancamento',icon:'➕',label:'Novo Lançamento'},{key:'painel',icon:'📋',label:'Painel Mensal'}],
   grancoffee:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'maquinas',icon:'☕',label:'Máquinas'},{key:'chamados',icon:'🔔',label:'Chamados'},{key:'doses',icon:'📊',label:'Controle de Doses'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
   medicao:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'registros',icon:'📋',label:'Registros'},{key:'novo',icon:'➕',label:'Nova Medição'},{key:'visao',icon:'📅',label:'Visão Anual'}],
   reunioes:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'calendario',icon:'📅',label:'Calendário'},{key:'lista',icon:'📋',label:'Lista de Reuniões'},{key:'nova',icon:'➕',label:'Nova Reunião'}],
@@ -586,6 +600,21 @@ function renderModContent(id,page){
   };
   if(renderers[id]) c.innerHTML=renderers[id](page);
   else c.innerHTML=`<div class="empty-state"><div class="empty-icon">🚧</div><div style="font-size:13px">Em construção</div></div>`;
+
+  // NOTA IMPORTANTE: tags <script> inseridas via innerHTML NÃO são
+  // executadas pelo navegador (limitação do DOM). Por isso, telas que
+  // precisam popular seus dados assim que abrem (Dashboard do Check List,
+  // NCs, Medição etc.) não podem depender de um <script>setTimeout(...)
+  // embutido no HTML retornado — isso deixava a tela em branco.
+  // A chamada de inicialização de cada tela é feita aqui, diretamente em
+  // JS, garantindo execução real independente do navegador/timing.
+  const initPosRender={
+    'checklist:dashboard': atualizarChecklistDashboard,
+    'residuos:ncs': filtrarNCs,
+    'residuos:dash2': atualizarDash,
+  };
+  const initFn=initPosRender[id+':'+page];
+  if(initFn) initFn();
 }
 
 function openModal(title,body,footer,large){
@@ -1828,8 +1857,7 @@ function renderNaoConformidades(_filtros){
     </div>
   </div>
   <div id="nc-kpis" style="margin-bottom:16px"></div>
-  <div id="nc-table"></div>
-  <script>setTimeout(()=>filtrarNCs(),60);<\/script>`;
+  <div id="nc-table"></div>`;
 }
 function getNcsFiltradas(){
   const ncs=DB.get('naoConformidades')||[];
@@ -2062,8 +2090,7 @@ function renderDashboardGerencial(){
       <div id="dash-heatmap" style="padding:8px 0"></div>
     </div>
   </div>
-  </div>
-  <script>setTimeout(()=>atualizarDash(),80);<\/script>`;
+  </div>`;
 }
 
 function getDashFiltros(){
@@ -2392,33 +2419,22 @@ function renderChecklist(page){
   const mesAtual=hoje.getMonth()+1, anoAtual=hoje.getFullYear();
   const doMes=data.filter(c=>c.mes===mesAtual&&c.ano===anoAtual);
   if(page==='dashboard'){
-    return `<div class="content-header"><div><div class="content-title">✅ Check List Fácil</div><div class="content-sub">Auditorias semanais e médias mensais</div></div>
-      <div class="content-actions"><button class="btn btn-primary" onclick="renderModContent('checklist','lancamento')">+ Novo Lançamento</button></div></div>
-      <div class="kpi-row">
-        <div class="kpi-box"><div class="kpi-box-val">${data.length}</div><div class="kpi-box-label">Total de Registros</div></div>
-        <div class="kpi-box"><div class="kpi-box-val">${doMes.length}</div><div class="kpi-box-label">Este Mês</div></div>
-        <div class="kpi-box"><div class="kpi-box-val">${forn.length}</div><div class="kpi-box-label">Fornecedores</div></div>
-        <div class="kpi-box"><div class="kpi-box-val">${doMes.length?Math.round(doMes.reduce((s,c)=>s+(c.resultado||0),0)/doMes.length)+'%':'—'}</div><div class="kpi-box-label">Média do Mês</div></div>
-      </div>
-      ${data.length===0?`<div class="empty-state"><div class="empty-icon">✅</div><div>Nenhum checklist registrado ainda.</div></div>`
-      :`<div class="card-section"><div class="card-section-title">Últimos lançamentos</div>
-        <table><thead><tr><th>Data</th><th>Fornecedor</th><th>Resultado</th><th>Obs.</th></tr></thead>
-        <tbody>${[...data].reverse().slice(0,10).map(c=>`<tr><td>${fmtDate(c.data)}</td><td>${c.fornecedor}</td>
-          <td><b style="color:${c.resultado>=90?'#00A650':c.resultado>=70?'#E67700':'#D1242F'}">${c.resultado}%</b></td>
-          <td style="font-size:11px">${c.obs||'—'}</td></tr>`).join('')}</tbody></table></div>`}`;
+    return renderChecklistDashboardGerencial(_cldashFiltroPreservado);
   }
   if(page==='lancamento'){
     return `<div class="content-header"><div><div class="content-title">Novo Lançamento — Check List</div></div></div>
-      <div class="card-section" style="max-width:550px">
+      <div class="card-section" style="max-width:640px">
         <div class="form-row"><div class="form-group"><label class="form-label">Data *</label><input type="date" class="form-input" id="cl-data" value="${hoje.toISOString().slice(0,10)}"/></div>
         <div class="form-group"><label class="form-label">Fornecedor *</label><select class="form-select" id="cl-forn">
           ${forn.map(f=>`<option>${f.nome}</option>`).join('')}</select></div></div>
         <div class="form-row"><div class="form-group"><label class="form-label">Resultado (0–100%)</label><input type="number" class="form-input" id="cl-res" min="0" max="100" placeholder="85"/></div>
         <div class="form-group"><label class="form-label">Semana nº</label><input type="number" class="form-input" id="cl-sem"/></div></div>
         <div class="form-group"><label class="form-label">Observações</label><textarea class="form-textarea" id="cl-obs"></textarea></div>
-        <div style="display:flex;gap:10px;justify-content:flex-end">
-          <button class="btn btn-outline" onclick="renderModContent('checklist','dashboard')">Cancelar</button>
-          <button class="btn btn-primary" onclick="salvarChecklist()">Salvar</button></div></div>`;
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;max-width:640px">
+        <button class="btn btn-outline" onclick="renderModContent('checklist','dashboard')">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarChecklist()">Salvar</button></div>`;
   }
   if(page==='painel'){
     const meses=[1,2,3,4,5,6,7,8,9,10,11,12];
@@ -2427,10 +2443,10 @@ function renderChecklist(page){
       <div class="content-actions"><button class="btn btn-outline" onclick="exportCSV(DB.get('checklistData')||[],'checklist.csv')">↓ Exportar</button></div></div>
       <div class="data-table-wrap" style="overflow-x:auto"><table><thead><tr><th>Fornecedor</th>${mNomes.map(m=>`<th>${m}</th>`).join('')}<th>Média</th></tr></thead>
       <tbody>${forn.map(f=>{
-        const medias=meses.map(m=>{
-          const regs=data.filter(c=>c.fornecedor===f.nome&&c.mes===m&&c.ano===anoAtual);
-          return regs.length?Math.round(regs.reduce((s,r)=>s+(r.resultado||0),0)/regs.length):null;
-        });
+        // Usa a MESMA função central (getNotaDoMes) usada pelo Dashboard,
+        // pelo Ranking e pelo Detalhamento — fonte única de cálculo,
+        // conforme exigido: Painel Mensal e Dashboard nunca podem divergir.
+        const medias=meses.map(m=>getNotaDoMes(data,f.nome,m,anoAtual));
         const vals=medias.filter(v=>v!==null);
         const media=vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):'—';
         const fornEsc=f.nome.replace(/'/g,"\\'");
@@ -2438,6 +2454,9 @@ function renderChecklist(page){
           ${medias.map((m,idx)=>m!==null?`<td style="font-weight:600;color:${m>=90?'#00A650':m>=70?'#E67700':'#D1242F'};cursor:pointer;text-decoration:underline;text-decoration-style:dotted" title="Ver detalhamento semanal" onclick="abrirDetalheSemanal('${fornEsc}',${meses[idx]},${anoAtual})">${m}%</td>`:'<td style="color:var(--light)">—</td>').join('')}
           <td><b style="color:${typeof media==='number'?(media>=90?'#00A650':media>=70?'#E67700':'#D1242F'):'var(--muted)'}">${typeof media==='number'?media+'%':media}</b></td></tr>`;
       }).join('')}</tbody></table></div>`;
+  }
+  if(page==='detalheFornMes'){
+    return _renderDetalheFornecedorMesHTML();
   }
   if(page==='listagem'){
     const rows=[...data].sort((a,b)=>(b.data||'').localeCompare(a.data||'')||((b.semana||0)-(a.semana||0)));
@@ -2459,17 +2478,708 @@ function renderChecklist(page){
   }
   return '<div class="empty-state"><div class="empty-icon">🚧</div></div>';
 }
+// ═══════════════════════════════════════════════════════
+// DASHBOARD GERENCIAL — CHECK LIST FÁCIL
+// Reutiliza integralmente os dados existentes:
+//   - checklistData: {id,data,mes,ano,fornecedor,resultado,semana,obs,pdfAnexo}
+//   - fornecedores: {nome,status,meta,periodicidade}
+// Nenhuma nota/meta/regra é inventada: tudo vem de DB.get('checklistData')
+// e DB.get('fornecedores'). meta/periodicidade têm padrão (90%, semanal)
+// apenas quando o cadastro do fornecedor não define isso explicitamente —
+// e podem ser editados em Configurações → Fornecedores.
+// ═══════════════════════════════════════════════════════
+
+const MESES_ABREV_CL=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+function _clFornecedores(){
+  return (DB.get('fornecedores')||[]).filter(f=>f.status==='Ativo');
+}
+function _clMeta(forn){ return forn.meta!=null?forn.meta:90; }
+
+// ─── Tabela oficial de faixas de nota do Check List Fácil ───
+// Fonte: tabela de classificação/penalização fornecida pela operação.
+// Aplica-se a todos os fornecedores (não depende de cadastro individual).
+//   ≥ 90        → Excelência na prestação dos serviços
+//   80 a 89,9   → Nível satisfatório, com ressalvas
+//   70 a 79,9   → Multa de 5% do faturamento mensal + plano de ação quinzenal
+//   60 a 69,9   → Multa de 10% do faturamento mensal + plano de ação quinzenal
+//   < 60        → Multa de 15% do faturamento mensal + plano de ação quinzenal
+function _clFaixa(nota){
+  if(nota==null) return null;
+  if(nota>=90) return {label:'Excelência',desc:'Excelência na prestação dos serviços',multa:0,cor:'#00A650',badge:'badge-green',planoAcao:false};
+  if(nota>=80) return {label:'Satisfatório',desc:'Nível satisfatório na prestação de serviços, com ressalvas',multa:0,cor:'#1A73E8',badge:'badge-blue',planoAcao:false};
+  if(nota>=70) return {label:'Multa 5%',desc:'Multa de 5% do faturamento mensal da unidade. Desenvolver plano de ação, com acompanhamento quinzenal',multa:5,cor:'#E67700',badge:'badge-yellow',planoAcao:true};
+  if(nota>=60) return {label:'Multa 10%',desc:'Multa de 10% do faturamento mensal da unidade. Desenvolver plano de ação, com acompanhamento quinzenal',multa:10,cor:'#D1242F',badge:'badge-red',planoAcao:true};
+  return {label:'Multa 15%',desc:'Multa de 15% do faturamento mensal da unidade. Desenvolver plano de ação, com acompanhamento quinzenal',multa:15,cor:'#D1242F',badge:'badge-red',planoAcao:true};
+}
+function _clPeriodicidade(forn){ return forn.periodicidade||'semanal'; }
+
+// ═══════════════════════════════════════════════════════
+// GESTÃO DA MEDIÇÃO E PAGAMENTO — vinculada a Fornecedor + Competência
+// Reutiliza a MESMA entidade 'medicoes' já existente no sistema
+// ═══════════════════════════════════════════════════════
+// FONTE ÚNICA DA NOTA DO MÊS — usada por TODO o sistema
+// (Painel Mensal, Dashboard, Ranking, Gráfico, Detalhamento).
+// Esta é a MESMA fórmula que sempre foi usada no Painel Mensal:
+// média simples dos resultados do fornecedor naquele mês/ano,
+// arredondada para número inteiro com Math.round() — exatamente
+// como o Painel Mensal sempre exibiu. Nenhum outro lugar do sistema
+// deve reimplementar este cálculo; todos devem chamar esta função,
+// para garantir que Painel Mensal e Dashboard NUNCA divirjam.
+// Retorna null quando não há nenhum Check List do fornecedor naquele
+// mês/ano (ausência de dado ≠ nota 0%).
+// ═══════════════════════════════════════════════════════
+function getNotaDoMes(data,fornecedorNome,mes,ano){
+  const regs=data.filter(c=>c.fornecedor===fornecedorNome&&c.mes===mes&&c.ano===ano);
+  if(!regs.length) return null;
+  return Math.round(regs.reduce((s,r)=>s+(r.resultado||0),0)/regs.length);
+}
+// Alias mantido por compatibilidade com o restante do código do Dashboard
+// (mesma função, mesmo resultado — não há duas fórmulas).
+function _clNotaMes(data,fornecedorNome,mes,ano){
+  return getNotaDoMes(data,fornecedorNome,mes,ano);
+}
+
+// Lista de {mes,ano} dos últimos N meses terminando no mês atual — usada
+// apenas como fallback do gráfico de evolução quando não há nenhum
+// histórico de Check List ainda lançado no sistema.
+function _clUltimosMeses(n){
+  const hoje=new Date();
+  const out=[];
+  for(let i=n-1;i>=0;i--){
+    const d=new Date(hoje.getFullYear(),hoje.getMonth()-i,1);
+    out.push({mes:d.getMonth()+1,ano:d.getFullYear()});
+  }
+  return out;
+}
+
+function renderChecklistDashboardGerencial(filtrosIniciais){
+  const anosDisponiveis=_clAnosDisponiveis();
+  return `
+  <div class="content-header">
+    <div>
+      <div class="content-title">📊 Dashboard de Check Lists Fácil</div>
+      <div class="content-sub">Acompanhe o desempenho dos fornecedores através dos resultados dos Check Lists.</div>
+    </div>
+  </div>
+
+  <div style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:20px">
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end">
+      <div>
+        <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px">Ano</label>
+        <select class="filter-select" id="cldash-ano" onchange="atualizarChecklistDashboard()" style="min-width:120px;font-size:13px">
+          <option value="">Todos os anos</option>
+          ${anosDisponiveis.map(a=>`<option value="${a}"${(filtrosIniciais&&filtrosIniciais.ano===a&&!filtrosIniciais.mes)?' selected':''}>${a}</option>`).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px">Mês</label>
+        <select class="filter-select" id="cldash-mes" onchange="atualizarChecklistDashboard()" style="min-width:150px;font-size:13px">
+          <option value="">Todos os meses</option>
+          ${MESES_ABREV_CL.map((nome,i)=>{
+            const mesNum=i+1;
+            const sel=(filtrosIniciais&&filtrosIniciais.mes===mesNum)?' selected':'';
+            return `<option value="${mesNum}"${sel}>${nome}</option>`;
+          }).join('')}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:6px">Fornecedor</label>
+        <select class="filter-select" id="cldash-forn" onchange="atualizarChecklistDashboard()" style="min-width:190px;font-size:13px">
+          <option value="">Todos os fornecedores</option>
+          ${_clFornecedores().map(f=>`<option value="${f.nome}"${(filtrosIniciais&&filtrosIniciais.fornecedor===f.nome)?' selected':''}>${f.nome}</option>`).join('')}
+        </select>
+      </div>
+      <button class="btn btn-primary" onclick="limparFiltrosChecklistDashboard()" style="height:38px">↺ Limpar Filtros</button>
+    </div>
+  </div>
+
+  <div id="cldash-body"></div>`;
+}
+
+// Anos disponíveis para o filtro — a partir de 2026 (ano de início do
+// Check List Fácil), incluindo qualquer ano futuro que já tenha dados
+// lançados no sistema.
+function _clAnosDisponiveis(){
+  const data=DB.get('checklistData')||[];
+  const anoBase=2026;
+  const anosComDados=[...new Set(data.map(c=>c.ano))].filter(a=>a>=anoBase);
+  const anoAtual=new Date().getFullYear();
+  const anos=new Set([anoBase, anoAtual, ...anosComDados]);
+  return [...anos].filter(a=>a>=anoBase).sort((a,b)=>a-b);
+}
+
+function limparFiltrosChecklistDashboard(){
+  const anoEl=document.getElementById('cldash-ano');
+  const mesEl=document.getElementById('cldash-mes');
+  const fornEl=document.getElementById('cldash-forn');
+  if(anoEl) anoEl.value='';
+  if(mesEl) mesEl.value='';
+  if(fornEl) fornEl.value='';
+  _cldashFiltroPreservado=null;
+  atualizarChecklistDashboard();
+}
+
+// Preserva o filtro do Dashboard (Ano/Mês/Fornecedor) ao navegar para o
+// detalhamento, para que "← Voltar ao Dashboard" restaure exatamente o
+// que estava selecionado antes do clique. null = sem filtro (padrão).
+let _cldashFiltroPreservado=null;
+
+function _clFiltrosAtuais(){
+  const anoVal=document.getElementById('cldash-ano')?.value||'';
+  const mesVal=document.getElementById('cldash-mes')?.value||'';
+  const fornVal=document.getElementById('cldash-forn')?.value||'';
+  const mes=mesVal?parseInt(mesVal):null;
+  const ano=anoVal?parseInt(anoVal):null;
+  return {mes, ano, fornecedor:fornVal};
+}
+
+function atualizarChecklistDashboard(){
+  const el=document.getElementById('cldash-body');
+  if(!el) return;
+  const data=DB.get('checklistData')||[];
+  const fornecedoresTodos=_clFornecedores();
+  const f=_clFiltrosAtuais();
+
+  if(!fornecedoresTodos.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">👥</div><div>Nenhum fornecedor ativo cadastrado. Cadastre fornecedores em Configurações.</div></div>`;
+    return;
+  }
+  if(!data.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">📋</div><div>Nenhum Check List lançado ainda.<br><button class="btn btn-primary" style="margin-top:12px" onclick="renderModContent('checklist','lancamento')">+ Novo Lançamento</button></div></div>`;
+    return;
+  }
+
+  // Fornecedores considerados no recorte atual (filtro de fornecedor, se houver)
+  const fornecedoresFiltrados = f.fornecedor ? fornecedoresTodos.filter(x=>x.nome===f.fornecedor) : fornecedoresTodos;
+
+  // Registros no recorte de Ano/Mês (independentes) e Fornecedor.
+  const registrosFiltrados = data.filter(c=>{
+    const okAno = f.ano ? c.ano===f.ano : true;
+    const okMes = f.mes ? c.mes===f.mes : true;
+    const okForn = f.fornecedor ? c.fornecedor===f.fornecedor : true;
+    return okAno && okMes && okForn;
+  });
+
+  if(!registrosFiltrados.length){
+    el.innerHTML=`<div class="empty-state"><div class="empty-icon">🔍</div><div>Não existem avaliações para os filtros selecionados.</div></div>`;
+    return;
+  }
+
+  // Mês de referência para "Nota do Mês por Fornecedor" / Ranking / KPIs /
+  // Gráfico: usa o mês filtrado, se houver. O Ano de referência é resolvido
+  // assim:
+  //  - se o usuário filtrou um Ano específico, usa ele;
+  //  - se filtrou só o Mês (sem Ano), busca o ano mais recente que tenha
+  //    Check List real naquele mês (dentro do recorte de Fornecedor já
+  //    aplicado) — nunca assume um ano fixo nem deixa anoRef como null,
+  //    o que faria toda consulta de Nota do Mês não encontrar nada.
+  //  - sem filtro de Mês nem Ano, usa a competência mais recente com dados.
+  let mesRef=f.mes, anoRef=f.ano;
+  if(mesRef && !anoRef){
+    const baseAno = f.fornecedor ? data.filter(c=>c.fornecedor===f.fornecedor) : data;
+    const anosComEsseMes=[...new Set(baseAno.filter(c=>c.mes===mesRef).map(c=>c.ano))].sort((a,b)=>b-a);
+    anoRef = anosComEsseMes[0] ?? new Date().getFullYear();
+  } else if(!mesRef){
+    const baseOrdenacao = f.ano ? data.filter(c=>c.ano===f.ano) : data;
+    const ordenado=[...baseOrdenacao].sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+    if(ordenado[0]){ mesRef=ordenado[0].mes; anoRef=ordenado[0].ano; }
+  }
+
+  el.innerHTML =
+    _clRenderKPIs(data, registrosFiltrados, fornecedoresFiltrados, f, mesRef, anoRef) +
+    `<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px" id="cldash-grid-main"></div>` +
+    `<div style="display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;margin-bottom:16px" id="cldash-grid-lower"></div>` +
+    `<div id="cldash-tabela-desempenho"></div>`;
+
+  document.getElementById('cldash-grid-main').innerHTML =
+    _clRenderGraficoEvolucao(data, fornecedoresFiltrados, f) +
+    _clRenderNotaMesPorFornecedor(data, fornecedoresFiltrados, mesRef, anoRef);
+
+  document.getElementById('cldash-grid-lower').innerHTML =
+    _clRenderRanking(data, fornecedoresFiltrados, mesRef, anoRef) +
+    _clRenderFrequencia(data, fornecedoresFiltrados, mesRef, anoRef) +
+    _clRenderInsights(data, fornecedoresTodos, mesRef, anoRef);
+
+  document.getElementById('cldash-tabela-desempenho').innerHTML =
+    _clRenderTabelaDesempenho(data, fornecedoresFiltrados, f, mesRef, anoRef);
+}
+
+// ─── Helper: meses a considerar na Tabela de Desempenho. Respeita o
+// filtro de Mês (combinado com Ano) e o filtro de Ano isolado; sem
+// nenhum dos dois, usa todos os meses com Check List lançado. ───
+function _clMesesConsiderados(data,f,mesRef,anoRef){
+  if(f.mes) return [{mes:f.mes,ano:f.ano||anoRef}];
+  const base = f.ano ? data.filter(c=>c.ano===f.ano) : data;
+  return [...new Set(base.map(c=>`${c.ano}-${c.mes}`))].map(k=>{
+    const [a,m]=k.split('-'); return {mes:parseInt(m),ano:parseInt(a)};
+  });
+}
+
+// ─── Seção 10 do requisito: "Desempenho dos Fornecedores" ───
+// Somente dados operacionais: Fornecedor, Competência, Nota do Mês,
+// Classificação, Desconto %. Nenhum dado financeiro (medição, NF,
+// retenção, valor líquido, pagamento) aparece aqui — o Dashboard do
+// Check List Fácil é exclusivamente gerencial de desempenho.
+// Cada linha é clicável e leva ao detalhamento (Fornecedor + Competência).
+function _clRenderTabelaDesempenho(data, fornecedoresFiltrados, f, mesRef, anoRef){
+  const mesesConsiderados=_clMesesConsiderados(data,f,mesRef,anoRef).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+
+  const linhas=[];
+  fornecedoresFiltrados.forEach(fo=>{
+    mesesConsiderados.forEach(({mes,ano})=>{
+      const notaMes=_clNotaMes(data,fo.nome,mes,ano);
+      if(notaMes==null) return; // só lista competências com avaliação real
+      const faixa=_clFaixa(notaMes);
+      linhas.push({fornecedor:fo.nome,mes,ano,notaMes,faixa});
+    });
+  });
+  linhas.sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes)||a.fornecedor.localeCompare(b.fornecedor));
+
+  return `<div class="card-section">
+    <div class="card-section-title">📋 Desempenho dos Fornecedores <span style="font-size:10px;color:var(--muted);font-weight:400">(clique em uma linha para ver o detalhamento)</span></div>
+    ${linhas.length===0?`<div class="empty-state" style="padding:24px"><div>Nenhuma competência avaliada no período filtrado.</div></div>` :
+    `<div class="data-table-wrap" style="overflow-x:auto"><table style="font-size:12px"><thead><tr>
+      <th>Fornecedor</th><th>Competência</th><th>Nota do Mês</th><th>Classificação</th><th>Desconto %</th>
+    </tr></thead><tbody>
+    ${linhas.map(l=>{
+      const fornEsc=l.fornecedor.replace(/'/g,"\\'");
+      return `<tr style="cursor:pointer" onclick="irParaDetalheFornecedorMes('${fornEsc}',${l.mes},${l.ano})" title="Ver detalhamento">
+        <td><b>${l.fornecedor}</b></td>
+        <td>${MESES_ABREV_CL[l.mes-1]}/${l.ano}</td>
+        <td><b style="color:${l.faixa?l.faixa.cor:'var(--muted)'}">${l.notaMes}%</b></td>
+        <td><span class="badge ${l.faixa?l.faixa.badge:'badge-gray'}">${l.faixa?l.faixa.label:'—'}</span></td>
+        <td>${l.faixa?l.faixa.multa+'%':'—'}</td>
+      </tr>`;
+    }).join('')}
+    </tbody></table></div>`}
+  </div>`;
+}
+
+// ─── KPIs principais ───
+function _clRenderKPIs(dataTodos, registrosFiltrados, fornecedoresFiltrados, f, mesRef, anoRef){
+  const totalRegistros = registrosFiltrados.length;
+  const semanasDistintas = new Set(registrosFiltrados.map(r=>`${r.ano}-${r.mes}-${r.semana||0}`)).size;
+
+  // Média geral do mês de referência (todos os fornecedores filtrados) —
+  // calculada a partir da mesma Nota do Mês (getNotaDoMes) de cada
+  // fornecedor, idêntica à exibida no Painel Mensal.
+  const notasMesRef = fornecedoresFiltrados
+    .map(fo=>getNotaDoMes(dataTodos, fo.nome, mesRef, anoRef))
+    .filter(v=>v!=null);
+  const mediaGeral = notasMesRef.length ? notasMesRef.reduce((a,b)=>a+b,0)/notasMesRef.length : null;
+
+  // Média geral do mês anterior, para variação em p.p.
+  let mesAnt=mesRef-1, anoAnt=anoRef;
+  if(mesAnt<1){ mesAnt=12; anoAnt=anoRef-1; }
+  const notasMesAnt = fornecedoresFiltrados
+    .map(fo=>getNotaDoMes(dataTodos, fo.nome, mesAnt, anoAnt))
+    .filter(v=>v!=null);
+  const mediaAnt = notasMesAnt.length ? notasMesAnt.reduce((a,b)=>a+b,0)/notasMesAnt.length : null;
+  const variacao = (mediaGeral!=null && mediaAnt!=null) ? (mediaGeral-mediaAnt) : null;
+
+  // COUNT(DISTINCT fornecedor) somente dentro dos dados filtrados —
+  // um fornecedor só conta como "avaliado" se tiver ao menos um Check
+  // List no período; ausência de dado nunca é tratada como nota 0%.
+  const fornecedoresAvaliados = fornecedoresFiltrados.filter(fo=>getNotaDoMes(dataTodos,fo.nome,mesRef,anoRef)!=null).length;
+
+  const variacaoHtml = variacao==null ? '' :
+    `<span style="font-size:11px;font-weight:700;color:${variacao>=0?'#00A650':'#D1242F'}">${variacao>=0?'↑':'↓'} ${Math.abs(variacao).toFixed(1)} p.p.</span> <span style="font-size:11px;color:var(--muted)">vs. mês anterior</span>`;
+
+  return `<div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi-box">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:18px">📋</span><span class="kpi-box-label" style="font-size:11px;font-weight:700;text-transform:uppercase">Check Lists Realizados</span>
+      </div>
+      <div class="kpi-box-val" style="color:#1A73E8">${totalRegistros}</div>
+      <div class="kpi-box-sub">${semanasDistintas} semana(s)/período(s) distintos</div>
+    </div>
+    <div class="kpi-box">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:18px">👥</span><span class="kpi-box-label" style="font-size:11px;font-weight:700;text-transform:uppercase">Fornecedores Avaliados</span>
+      </div>
+      <div class="kpi-box-val" style="color:#7C3AED">${fornecedoresAvaliados}<span style="font-size:14px;color:var(--muted)">/${fornecedoresFiltrados.length}</span></div>
+      <div class="kpi-box-sub">com nota lançada em ${MESES_ABREV_CL[mesRef-1]}/${anoRef}</div>
+    </div>
+    <div class="kpi-box">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:18px">🎯</span><span class="kpi-box-label" style="font-size:11px;font-weight:700;text-transform:uppercase">Nota do Mês (Indicador de Avaliação)</span>
+      </div>
+      <div class="kpi-box-val" style="color:${mediaGeral==null?'var(--muted)':(mediaGeral>=90?'#00A650':mediaGeral>=70?'#E67700':'#D1242F')}">${mediaGeral!=null?mediaGeral.toFixed(1)+'%':'—'}</div>
+      <div class="kpi-box-sub">${MESES_ABREV_CL[mesRef-1]}/${anoRef} · usada para penalização</div>
+    </div>
+    <div class="kpi-box">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:18px">📈</span><span class="kpi-box-label" style="font-size:11px;font-weight:700;text-transform:uppercase">Média Geral do Mês</span>
+      </div>
+      <div class="kpi-box-val" style="color:${mediaGeral==null?'var(--muted)':(mediaGeral>=90?'#00A650':mediaGeral>=70?'#E67700':'#D1242F')}">${mediaGeral!=null?mediaGeral.toFixed(1)+'%':'—'}</div>
+      <div class="kpi-box-sub">${variacaoHtml||'Sem mês anterior para comparar'}</div>
+    </div>
+  </div>`;
+}
+
+// ─── Gráfico de evolução (linhas, últimos 12 meses ou todo histórico) ───
+function _clRenderGraficoEvolucao(dataTodos, fornecedoresFiltrados, f){
+  // Eixo X fixo: Janeiro do ano filtrado (ou do ano-base 2026, se nenhum
+  // Ano estiver selecionado) até o mês atual — mesmo sem dados lançados
+  // ainda em todos os meses, para o gráfico já "esperar" os lançamentos
+  // futuros em vez de só mostrar os meses que já têm Check List.
+  const ANO_BASE=2026;
+  const hoje=new Date();
+  const anoAtual=hoje.getFullYear(), mesAtual=hoje.getMonth()+1;
+  let meses;
+  if(f.ano){
+    // Ano específico filtrado: mostra Jan–Dez daquele ano (ou até o mês
+    // atual, se for o ano corrente, para não desenhar meses futuros).
+    const ultimoMes = f.ano===anoAtual ? mesAtual : 12;
+    meses = Array.from({length:ultimoMes},(_,i)=>({ano:f.ano,mes:i+1}));
+  } else {
+    // Sem filtro de Ano: Jan/2026 até o mês atual (todos os anos entre
+    // o ano-base e o ano corrente).
+    meses=[];
+    for(let ano=ANO_BASE; ano<=anoAtual; ano++){
+      const ultimoMes = ano===anoAtual ? mesAtual : 12;
+      for(let mes=1; mes<=ultimoMes; mes++) meses.push({ano,mes});
+    }
+  }
+
+  const CORES_FORN={
+    'Sapore':'#1A73E8','Rentokil':'#D1242F','Ambiensys':'#00A650','GranCoffee':'#E67700'
+  };
+  const outrasCores=['#7C3AED','#0891B2','#059669','#BE123C'];
+  let corIdx=0;
+
+  const series = fornecedoresFiltrados.map(fo=>{
+    const cor = CORES_FORN[fo.nome] || outrasCores[corIdx++ % outrasCores.length];
+    const pontos = meses.map(({mes,ano})=>getNotaDoMes(dataTodos,fo.nome,mes,ano));
+    return {nome:fo.nome, cor, pontos};
+  });
+
+  const todosValores = series.flatMap(s=>s.pontos).filter(v=>v!=null);
+  const maxVal = todosValores.length ? Math.max(100, ...todosValores) : 100;
+  const minVal = todosValores.length ? Math.min(50, ...todosValores) : 50;
+  const faixa = maxVal-minVal || 1;
+
+  const W=560, H=200, padL=36, padB=24, padT=10, padR=10;
+  const plotW=W-padL-padR, plotH=H-padT-padB;
+  const xStep = meses.length>1 ? plotW/(meses.length-1) : 0;
+
+  const linhasSVG = series.map(s=>{
+    const pathPts = s.pontos.map((v,i)=>{
+      if(v==null) return null;
+      const x = padL + i*xStep;
+      const y = padT + plotH - ((v-minVal)/faixa)*plotH;
+      // Referência explícita aos dados de origem — cada ponto carrega
+      // fornecedorNome + mes + ano + nota, nunca inferidos do texto visual.
+      return {x,y,v,mes:meses[i].mes,ano:meses[i].ano};
+    });
+    const validSegs=[];
+    let cur=[];
+    pathPts.forEach(p=>{
+      if(p){ cur.push(p); } else { if(cur.length>1) validSegs.push(cur); cur=[]; }
+    });
+    if(cur.length>1) validSegs.push(cur);
+
+    const path = validSegs.map(seg=>'M'+seg.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L')).join(' ');
+    // Cada círculo é clicável: chama irParaDetalheFornecedorMes com a
+    // referência explícita do ponto (fornecedor+mes+ano), não com texto.
+    const circles = pathPts.filter(Boolean).map(p=>
+      `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5" fill="${s.cor}" stroke="#fff" stroke-width="1.5"
+        style="cursor:pointer" class="cldash-ponto-clicavel"
+        onclick="irParaDetalheFornecedorMes('${s.nome.replace(/'/g,"\\'")}',${p.mes},${p.ano})"
+        onmouseover="this.setAttribute('r','7')" onmouseout="this.setAttribute('r','5')">
+        <title>${s.nome} — ${MESES_ABREV_CL[p.mes-1]}/${p.ano} — ${p.v}% (clique para ver os Check Lists)</title>
+      </circle>`
+    ).join('');
+    return `<path d="${path}" fill="none" stroke="${s.cor}" stroke-width="2.5"/>${circles}`;
+  }).join('');
+
+  const gridLines = [0,25,50,75,100].map(pct=>{
+    const y = padT + plotH - ((pct-minVal)/faixa)*plotH;
+    if(y<padT-2||y>H-padB+2) return '';
+    return `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${W-padR}" y2="${y.toFixed(1)}" stroke="#EEE" stroke-width="1"/>
+      <text x="${padL-6}" y="${(y+3).toFixed(1)}" font-size="9" fill="#999" text-anchor="end">${pct}%</text>`;
+  }).join('');
+
+  const xLabels = meses.map((m,i)=>{
+    const x = padL + i*xStep;
+    const label = `${MESES_ABREV_CL[m.mes-1]}/${String(m.ano).slice(2)}`;
+    // Com muitos meses no eixo (vários anos acumulados), evita sobrepor
+    // rótulos: mostra 1 a cada N conforme a quantidade total de pontos.
+    const passo = meses.length>18 ? 3 : meses.length>12 ? 2 : 1;
+    if(i%passo!==0 && i!==meses.length-1) return '';
+    return `<text x="${x.toFixed(1)}" y="${H-4}" font-size="8" fill="#999" text-anchor="middle">${label}</text>`;
+  }).join('');
+
+  const legenda = series.map(s=>`<span style="display:inline-flex;align-items:center;gap:5px;margin-right:14px;font-size:11px;color:var(--muted)">
+    <span style="width:10px;height:10px;border-radius:50%;background:${s.cor};display:inline-block"></span>${s.nome}</span>`).join('');
+
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">📈 Evolução da Nota por Fornecedor <span style="font-size:10px;color:var(--muted);font-weight:400">(${meses.length} ${meses.length===1?'mês':'meses'})</span></div>
+    ${series.every(s=>s.pontos.every(v=>v==null)) ?
+      `<div style="text-align:center;padding:30px;color:var(--muted);font-size:12px">Sem dados suficientes para traçar a evolução.</div>` :
+      `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;max-height:220px">${gridLines}${linhasSVG}${xLabels}</svg>
+      <div style="margin-top:8px">${legenda}</div>`
+    }
+  </div>`;
+}
+
+// ─── Nota do Mês por Fornecedor (barras + classificação por faixa) ───
+function _clRenderNotaMesPorFornecedor(dataTodos, fornecedoresFiltrados, mesRef, anoRef){
+  const linhas = fornecedoresFiltrados.map(fo=>{
+    const nota=getNotaDoMes(dataTodos,fo.nome,mesRef,anoRef);
+    const faixa=_clFaixa(nota);
+    const cor = faixa?faixa.cor:'#CCC';
+    const pct = nota==null?0:Math.min(100,nota);
+    const fornEsc=fo.nome.replace(/'/g,"\\'");
+    return `<div style="margin-bottom:14px;cursor:pointer" onclick="irParaDetalheFornecedorMes('${fornEsc}',${mesRef},${anoRef})" title="Ver Check Lists de ${fo.nome}">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+        <span style="font-size:12px;font-weight:700;color:var(--navy)">${fo.nome}</span>
+        <span style="font-size:14px;font-weight:800;color:${cor}">${nota!=null?nota+'%':'—'}</span>
+      </div>
+      <div style="background:#F0F0F0;border-radius:6px;height:10px;overflow:hidden;position:relative">
+        <div style="height:100%;width:${pct}%;background:${cor};border-radius:6px;transition:width .4s"></div>
+        <div style="position:absolute;top:0;left:90%;width:2px;height:10px;background:#333" title="Limite de Excelência (90%)"></div>
+        <div style="position:absolute;top:0;left:80%;width:2px;height:10px;background:#999" title="Limite de Satisfatório (80%)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:3px">
+        <span style="font-size:10px;color:var(--muted)">${faixa?faixa.desc:'Sem dados no período'}</span>
+        <span class="badge ${faixa?faixa.badge:'badge-gray'}" style="font-size:9px;white-space:nowrap;margin-left:8px">${faixa?faixa.label:'Sem dados'}</span>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">🎯 Nota do Mês por Fornecedor <span style="font-size:10px;color:var(--muted);font-weight:400">${MESES_ABREV_CL[mesRef-1]}/${anoRef}</span></div>
+    ${linhas || `<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem fornecedores para exibir.</div>`}
+    <div style="font-size:10px;color:var(--muted);margin-top:4px;padding-top:10px;border-top:1px solid var(--line)">
+      ℹ️ ≥90% Excelência · 80–89,9% Satisfatório · 70–79,9% multa de 5% · 60–69,9% multa de 10% · &lt;60% multa de 15% (faturamento mensal da unidade).
+    </div>
+  </div>`;
+}
+
+// ─── Ranking gerencial ───
+function _clRenderRanking(dataTodos, fornecedoresFiltrados, mesRef, anoRef){
+  const linhas = fornecedoresFiltrados.map(fo=>{
+    const nota=getNotaDoMes(dataTodos,fo.nome,mesRef,anoRef);
+    const faixa=_clFaixa(nota);
+    return {nome:fo.nome, nota, faixa};
+  }).sort((a,b)=>{
+    if(a.nota==null) return 1;
+    if(b.nota==null) return -1;
+    return b.nota-a.nota;
+  });
+
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">🏆 Desempenho dos Fornecedores <span style="font-size:10px;color:var(--muted);font-weight:400">(clique na linha para ver detalhes)</span></div>
+    ${linhas.length ? `<div style="overflow-x:auto"><table style="font-size:11px"><thead><tr>
+      <th>Fornecedor</th><th>Nota do Mês</th><th>Classificação</th><th>Multa</th><th>Plano de Ação</th>
+    </tr></thead><tbody>
+    ${linhas.map(l=>`<tr style="cursor:pointer" onclick="irParaDetalheFornecedorMes('${l.nome.replace(/'/g,"\\'")}',${mesRef},${anoRef})" title="Ver Check Lists de ${l.nome} — ${MESES_ABREV_CL[mesRef-1]}/${anoRef}">
+      <td><b>${l.nome}</b></td>
+      <td><b style="color:${l.faixa?l.faixa.cor:'var(--muted)'}">${l.nota!=null?l.nota+'%':'—'}</b></td>
+      <td><span class="badge ${l.faixa?l.faixa.badge:'badge-gray'}">${l.faixa?l.faixa.label:'Sem dados'}</span></td>
+      <td style="color:${l.faixa&&l.faixa.multa>0?'#D1242F':'var(--muted)'}">${l.faixa?(l.faixa.multa>0?l.faixa.multa+'%':'—'):'—'}</td>
+      <td>${l.faixa&&l.faixa.planoAcao?'<span class="badge badge-orange">Quinzenal</span>':'<span style="color:var(--light)">—</span>'}</td>
+    </tr>`).join('')}
+    </tbody></table></div>` : `<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem dados.</div>`}
+  </div>`;
+}
+
+// ─── Desempenho por Frequência (semanal x quinzenal) ───
+function _clRenderFrequencia(dataTodos, fornecedoresFiltrados, mesRef, anoRef){
+  const diasNoMesRef=new Date(anoRef,mesRef,0).getDate();
+  const linhas = fornecedoresFiltrados.map(fo=>{
+    const periodicidade=_clPeriodicidade(fo);
+    const esperado = periodicidade==='quinzenal' ? Math.max(1,Math.round(diasNoMesRef/15)) : Math.max(1,Math.round(diasNoMesRef/7));
+    const realizado = dataTodos.filter(c=>c.fornecedor===fo.nome&&c.mes===mesRef&&c.ano===anoRef).length;
+    const pct = esperado>0 ? Math.min(100,Math.round((realizado/esperado)*100)) : 0;
+    return {nome:fo.nome, periodicidade, esperado, realizado, pct};
+  });
+
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">📆 Desempenho por Frequência</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${linhas.map(l=>`<div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:700">${l.nome}</span>
+          <span style="font-size:10px;color:var(--muted)">${l.periodicidade==='quinzenal'?'Quinzenal':'Semanal'} · ${l.realizado}/${l.esperado} esperado(s)</span>
+        </div>
+        <div style="background:#F0F0F0;border-radius:6px;height:8px;overflow:hidden">
+          <div style="height:100%;width:${l.pct}%;background:${l.pct>=90?'#00A650':l.pct>=60?'#E67700':'#D1242F'};border-radius:6px"></div>
+        </div>
+      </div>`).join('')}
+    </div>
+    <div style="font-size:10px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--line)">
+      ℹ️ Queda na quantidade de avaliações pode indicar problema operacional, mesmo com nota boa.
+    </div>
+  </div>`;
+}
+
+// ─── Insights gerenciais (gerados a partir dos dados reais) ───
+function _clRenderInsights(dataTodos, fornecedoresTodos, mesRef, anoRef){
+  let mesAnt=mesRef-1, anoAnt=anoRef;
+  if(mesAnt<1){ mesAnt=12; anoAnt=anoRef-1; }
+  const insights=[];
+
+  fornecedoresTodos.forEach(fo=>{
+    const notaAtual=getNotaDoMes(dataTodos,fo.nome,mesRef,anoRef);
+    const notaAnt=getNotaDoMes(dataTodos,fo.nome,mesAnt,anoAnt);
+    const faixaAtual=_clFaixa(notaAtual);
+
+    if(faixaAtual && faixaAtual.multa>0){
+      insights.push({icone:'⚠️',cor:'#D1242F',texto:`<b>${fo.nome}</b> está na faixa de multa de ${faixaAtual.multa}% no mês atual (nota ${notaAtual}%) — plano de ação com acompanhamento quinzenal.`});
+    } else if(faixaAtual && faixaAtual.label==='Satisfatório'){
+      insights.push({icone:'ℹ️',cor:'#1A73E8',texto:`<b>${fo.nome}</b> está em nível satisfatório, com ressalvas (nota ${notaAtual}%).`});
+    }
+    if(notaAtual!=null && notaAnt!=null){
+      const diff=notaAtual-notaAnt;
+      if(diff>=3){
+        insights.push({icone:'📈',cor:'#00A650',texto:`<b>${fo.nome}</b> apresentou evolução de ${diff} pontos percentuais em relação ao mês anterior.`});
+      } else if(diff<=-3){
+        insights.push({icone:'📉',cor:'#D1242F',texto:`<b>${fo.nome}</b> apresentou queda de ${Math.abs(diff)} pontos percentuais em relação ao mês anterior.`});
+      }
+    }
+    // Estabilidade nos últimos 3 meses
+    const meses3=[0,1,2].map(i=>{ let m=mesRef-i,a=anoRef; while(m<1){m+=12;a--;} return getNotaDoMes(dataTodos,fo.nome,m,a); }).filter(v=>v!=null);
+    if(meses3.length===3){
+      const max=Math.max(...meses3), min=Math.min(...meses3);
+      if(max-min<=3){
+        insights.push({icone:'✅',cor:'#1A73E8',texto:`<b>${fo.nome}</b> mantém estabilidade nos últimos 3 meses (variação ≤ 3 p.p.).`});
+      }
+    }
+  });
+
+  // Ranking líder
+  const notasAtuais = fornecedoresTodos.map(fo=>({nome:fo.nome,nota:getNotaDoMes(dataTodos,fo.nome,mesRef,anoRef)})).filter(x=>x.nota!=null);
+  if(notasAtuais.length){
+    const lider=[...notasAtuais].sort((a,b)=>b.nota-a.nota)[0];
+    insights.push({icone:'🏆',cor:'#7C3AED',texto:`<b>${lider.nome}</b> lidera o ranking com ${lider.nota}% no mês.`});
+  }
+
+  return `<div class="card-section" style="margin:0">
+    <div class="card-section-title">💡 Principais Insights</div>
+    ${insights.length ? `<div style="display:flex;flex-direction:column;gap:10px">
+      ${insights.slice(0,6).map(i=>`<div style="display:flex;gap:8px;align-items:flex-start">
+        <span style="font-size:14px;flex-shrink:0">${i.icone}</span>
+        <span style="font-size:11px;color:var(--txt);line-height:1.4">${i.texto}</span>
+      </div>`).join('')}
+    </div>` : `<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem insights suficientes ainda — lance mais Check Lists para gerar análises.</div>`}
+  </div>`;
+}
+
+
+// ═══════════════════════════════════════════════════════
+// DETALHAMENTO FORNECEDOR + MÊS
+// Tela de destino ao clicar em qualquer ponto do gráfico, linha do ranking
+// ou linha da tabela gerencial. Mostra:
+//   - Check Lists individuais do período (origem da Nota do Mês)
+//   - Nota do Mês (mesma _clNotaMes já usada em todo o Dashboard)
+//   - Classificação e % de desconto (mesma _clFaixa)
+//   - Toda a Gestão da Medição vinculada (valor, desconto R$, retenção,
+//     líquido, PO, NF, anexo, status de pagamento) — dados reais, ou
+//     estado vazio explícito se a medição ainda não foi cadastrada.
+// Navega usando o próprio sistema de rotas existente (renderModContent),
+// sem criar página nem entidade nova.
+// ═══════════════════════════════════════════════════════
+
+function irParaDetalheFornecedorMes(fornecedorNome, mes, ano){
+  // Preserva o filtro atual do Dashboard (se existir) para restaurar ao voltar.
+  const fAtual=_clFiltrosAtuais();
+  _cldashFiltroPreservado = (fAtual.mes||fAtual.fornecedor) ? fAtual : null;
+  _detFornMesAtual={fornecedor:fornecedorNome,mes,ano};
+  renderModContent('checklist','detalheFornMes');
+}
+
+let _detFornMesAtual=null;
+
+// Tela de detalhamento (Fornecedor + Competência). Mostra somente
+// informação operacional: os Check Lists reais do período, a Nota do Mês
+// calculada a partir deles (mesma _clNotaMes usada em todo o Dashboard),
+// a Classificação e o Desconto % — nenhum dado financeiro (medição, NF,
+// retenção, valor líquido, pagamento) é exibido aqui.
+function _renderDetalheFornecedorMesHTML(){
+  const ctx=_detFornMesAtual;
+  if(!ctx) return `<div class="empty-state"><div class="empty-icon">📊</div><div>Nenhum fornecedor/mês selecionado. Volte ao Dashboard e clique em um ponto do gráfico, uma linha do ranking ou da tabela.</div></div>`;
+
+  const {fornecedor,mes,ano}=ctx;
+  const checklistData=DB.get('checklistData')||[];
+  const registrosPeriodo=checklistData
+    .filter(c=>c.fornecedor===fornecedor&&c.mes===mes&&c.ano===ano)
+    .sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+
+  const notaMes=getNotaDoMes(checklistData,fornecedor,mes,ano);
+  const faixa=_clFaixa(notaMes);
+
+  return `
+  <div class="content-header">
+    <div class="content-actions" style="order:-1;width:100%">
+      <button class="btn btn-outline" onclick="_voltarAoDashboardChecklist()">← Voltar ao Dashboard</button>
+    </div>
+    <div>
+      <div class="content-title" style="margin-top:12px">${fornecedor} — ${MESES_ABREV_CL[mes-1]}/${ano}</div>
+      <div class="content-sub">Check Lists do período e origem da Nota do Mês (idêntica à do Painel Mensal).</div>
+    </div>
+  </div>
+
+  <div class="kpi-row" style="grid-template-columns:repeat(3,1fr)">
+    <div class="kpi-box">
+      <div class="kpi-box-label">Nota do Mês</div>
+      <div class="kpi-box-val" style="color:${faixa?faixa.cor:'var(--muted)'}">${notaMes!=null?notaMes+'%':'—'}</div>
+      <div class="kpi-box-sub">${registrosPeriodo.length} Check List(s) neste período</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-box-label">Classificação</div>
+      <div class="kpi-box-val" style="font-size:16px;color:${faixa?faixa.cor:'var(--muted)'}">${faixa?faixa.label:'—'}</div>
+      <div class="kpi-box-sub">${faixa?faixa.desc:'Sem dados suficientes'}</div>
+    </div>
+    <div class="kpi-box">
+      <div class="kpi-box-label">Desconto</div>
+      <div class="kpi-box-val" style="color:${faixa&&faixa.multa>0?'#D1242F':'#00A650'}">${faixa?faixa.multa+'%':'—'}</div>
+      <div class="kpi-box-sub">${faixa&&faixa.planoAcao?'Plano de ação':'Sem penalização'}</div>
+    </div>
+  </div>
+
+  <div class="card-section">
+    <div class="card-section-title">✅ Check Lists do Período — origem da Nota do Mês</div>
+    ${registrosPeriodo.length===0 ? `<div class="empty-state"><div class="empty-icon">📋</div><div>Nenhum Check List lançado para ${fornecedor} em ${MESES_ABREV_CL[mes-1]}/${ano}.</div></div>` :
+    `<div class="data-table-wrap"><table><thead><tr><th>Data</th><th>Semana</th><th>Resultado</th><th>PDF</th><th>Observações</th></tr></thead>
+    <tbody>${registrosPeriodo.map(c=>`<tr>
+      <td>${fmtDate(c.data)}</td>
+      <td>${c.semana||'—'}</td>
+      <td><b style="color:${c.resultado>=90?'var(--green)':c.resultado>=70?'#E67700':'var(--red)'}">${c.resultado}%</b></td>
+      <td>${c.pdfAnexo?`<button class="btn btn-outline btn-sm" onclick="visualizarPdfChecklist('${c.id}')">📄 Ver</button>`:'<span style="color:var(--light)">—</span>'}</td>
+      <td style="font-size:11px">${c.obs||'—'}</td>
+    </tr>`).join('')}</tbody></table></div>
+    <div style="text-align:right;margin-top:10px;font-size:12px;color:var(--muted)">
+      Nota do Mês (${registrosPeriodo.length} Check List(s)) = <b>${notaMes!=null?notaMes+'%':'—'}</b>
+    </div>`}
+  </div>`;
+}
+
+// Volta ao Dashboard restaurando o filtro que estava ativo antes do clique
+// (ou sem filtro, se o usuário tinha entrado sem filtro nenhum).
+function _voltarAoDashboardChecklist(){
+  renderModContent('checklist','dashboard');
+}
+
 function salvarChecklist(){
   const d=DB.get('checklistData')||[];
   const dt=document.getElementById('cl-data').value;
   if(!dt){alert('Data obrigatória.');return;}
   const dObj=new Date(dt+'T12:00');
-  d.push({id:uid(),data:dt,mes:dObj.getMonth()+1,ano:dObj.getFullYear(),
-    fornecedor:document.getElementById('cl-forn').value,
-    resultado:parseFloat(document.getElementById('cl-res').value)||0,
+  const mes=dObj.getMonth()+1, ano=dObj.getFullYear();
+  const fornecedor=document.getElementById('cl-forn').value;
+  const resultado=parseFloat(document.getElementById('cl-res').value)||0;
+
+  d.push({id:uid(),data:dt,mes,ano,
+    fornecedor,
+    resultado,
     semana:parseInt(document.getElementById('cl-sem').value)||0,
     obs:document.getElementById('cl-obs').value});
-  DB.set('checklistData',d);alert('Checklist salvo!');renderModContent('checklist','painel');
+  DB.set('checklistData',d);
+
+  alert('Checklist salvo!');
+  renderModContent('checklist','painel');
 }
 let _checklistModalCtx=null;
 function abrirFormChecklistModal(id,opts){
@@ -2577,8 +3287,9 @@ function abrirDetalheSemanal(fornecedor,mes,ano){
             ${r.pdfAnexo?`<button class="btn btn-outline btn-sm" onclick="visualizarPdfChecklist('${r.id}')">👁️ Visualizar PDF</button>
             <button class="btn btn-outline btn-sm" onclick="baixarPdfChecklist('${r.id}')">⬇️ Baixar PDF</button>`:''}
             <button class="btn btn-outline btn-sm" id="btn-anexar-${r.id}" onclick="prepararUploadPdfChecklist('${r.id}')">${r.pdfAnexo?'🔄 Substituir PDF':'📎 Anexar PDF'}</button>
+            ${r.pdfAnexo?`<button class="btn btn-outline btn-sm" onclick="excluirPdfChecklist('${r.id}')" title="Excluir apenas o PDF, mantendo o lançamento">🗑️ Excluir PDF</button>`:''}
             <button class="btn btn-outline btn-sm" onclick="editarChecklistNaSemana('${r.id}','${fornEsc}',${mes},${ano})" title="Editar">✏️ Editar</button>
-            <button class="btn btn-outline btn-sm" onclick="excluirChecklistNaSemana('${r.id}','${fornEsc}',${mes},${ano})" title="Excluir">🗑️ Excluir</button>
+            <button class="btn btn-outline btn-sm" onclick="excluirChecklistNaSemana('${r.id}','${fornEsc}',${mes},${ano})" title="Excluir todo o lançamento (nota, semana e PDF)">🗑️ Excluir Lançamento</button>
           </div>
         </div>
         <div id="pdf-status-${r.id}" style="font-size:11px;margin-top:8px"></div>
@@ -2758,6 +3469,40 @@ function baixarPdfChecklist(recordId){
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}
+
+// Exclui apenas o PDF anexado a um lançamento de Check List, mantendo o
+// lançamento (data, resultado, semana, obs) intacto. Usa a mesma transação
+// atômica do Realtime Database já usada no upload, para não perder dados
+// em caso de escrita concorrente de outra aba/usuário.
+function excluirPdfChecklist(recordId){
+  const data=DB.get('checklistData')||[];
+  const rec=data.find(c=>c.id===recordId);
+  if(!rec||!rec.pdfAnexo){ return; }
+  if(!confirm('Excluir o PDF anexado a este lançamento? O lançamento (nota, semana, observações) será mantido.')) return;
+
+  _setPdfStatus(recordId, '<span style="color:var(--blue)">⏳ Excluindo PDF…</span>');
+
+  fbRoot.child('checklistData').transaction(currentArray=>{
+    const arr = Array.isArray(currentArray) ? currentArray.slice() : [];
+    const idx = arr.findIndex(c=>c && c.id===recordId);
+    if(idx>=0){
+      const { pdfAnexo, ...semAnexo } = arr[idx];
+      arr[idx] = semAnexo;
+    }
+    return arr;
+  }).then(txResult=>{
+    if(!txResult.committed){
+      _setPdfStatus(recordId, '<span style="color:var(--red)">❌ Não foi possível excluir o PDF. Tente novamente.</span>');
+      return;
+    }
+    const arrConfirmado = txResult.snapshot.val();
+    if(Array.isArray(arrConfirmado)) DB_CACHE['checklistData']=arrConfirmado;
+    setTimeout(()=>abrirDetalheSemanal(rec.fornecedor, rec.mes, rec.ano), 200);
+  }).catch(err=>{
+    console.error('Erro ao excluir PDF do checklist',err);
+    _setPdfStatus(recordId, '<span style="color:var(--red)">❌ Falha ao excluir o PDF. Tente novamente.</span>');
+  });
 }
 // ═══════════════════════════════════════════════════════
 // MODULE: GRANCOFFEE
@@ -3197,6 +3942,19 @@ function abrirFormFornecedor(id){
     <div class="form-group"><label class="form-label">Responsável</label><input class="form-input" id="fn-resp" value="${f.responsavel||''}"/></div></div>
     <div class="form-row"><div class="form-group"><label class="form-label">E-mail</label><input type="email" class="form-input" id="fn-email" value="${f.email||''}"/></div>
     <div class="form-group"><label class="form-label">Telefone</label><input class="form-input" id="fn-tel" value="${f.tel||''}"/></div></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Periodicidade do Check List</label><select class="form-select" id="fn-periodicidade">
+        <option value="semanal"${(!f.periodicidade||f.periodicidade==='semanal')?' selected':''}>Semanal</option>
+        <option value="quinzenal"${f.periodicidade==='quinzenal'?' selected':''}>Quinzenal</option></select>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">Usada para calcular quantos Check Lists são esperados por mês (Desempenho por Frequência).</div></div>
+      <div class="form-group"><label class="form-label" style="opacity:.5">Classificação de Nota</label>
+        <div style="font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:#F9F9F9">
+          ≥90% Excelência · 80–89,9% Satisfatório · 70–79,9% multa 5% · 60–69,9% multa 10% · &lt;60% multa 15%<br>
+          <span style="font-size:9px;color:var(--light)">Faixa única, aplicada a todos os fornecedores — não é editável por cadastro.</span>
+        </div>
+      </div>
+    </div>
+    <input type="hidden" id="fn-meta" value="${f.meta!=null?f.meta:90}"/>
     <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="fn-status">
       <option${(!f.status||f.status==='Ativo')?' selected':''}>Ativo</option><option${f.status==='Inativo'?' selected':''}>Inativo</option></select></div>
     <div class="form-group"><label class="form-label">Observações</label><textarea class="form-textarea" id="fn-obs">${f.obs||''}</textarea></div>`,
@@ -3209,6 +3967,8 @@ function salvarFornecedor(id){
   const rec={id:id||uid(),nome:document.getElementById('fn-nome').value,cnpj:document.getElementById('fn-cnpj').value,
     servico:document.getElementById('fn-serv').value,responsavel:document.getElementById('fn-resp').value,
     email:document.getElementById('fn-email').value,tel:document.getElementById('fn-tel').value,
+    meta:parseFloat(document.getElementById('fn-meta').value)||90,
+    periodicidade:document.getElementById('fn-periodicidade').value,
     status:document.getElementById('fn-status').value,obs:document.getElementById('fn-obs').value};
   if(!rec.nome){alert('Nome obrigatório.');return;}
   if(id){const i=forn.findIndex(x=>x.id===id);forn[i]=rec;}else forn.push(rec);
