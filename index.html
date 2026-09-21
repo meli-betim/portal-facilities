@@ -542,7 +542,7 @@ function renderPortalGrid(){
 
 const MODULE_MENUS = {
   bebedouros:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'equipamentos',icon:'🥤',label:'Equipamentos'},{key:'filtros',icon:'🔄',label:'Controle de Filtros'},{key:'historico',icon:'📋',label:'Histórico de Problemas'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
-  residuos:[{key:'dashres',icon:'📊',label:'Dashboard de Resíduos'},{key:'dash2',icon:'🚚',label:'Gestão de Coletas'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'procedimentos',icon:'📁',label:'Procedimentos'}],
+  residuos:[{key:'dashres',icon:'📊',label:'Dashboard de Resíduos'},{key:'dash2',icon:'🚚',label:'Dashboard de Gestão de Coletas'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'procedimentos',icon:'📁',label:'Procedimentos'}],
   estoque:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'itens',icon:'📦',label:'Itens do Estoque'},{key:'movimentos',icon:'🔄',label:'Movimentos'}],
   checklist:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'lancamento',icon:'➕',label:'Novo Lançamento'},{key:'painel',icon:'📋',label:'Painel Mensal'}],
   grancoffee:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'maquinas',icon:'☕',label:'Máquinas'},{key:'chamados',icon:'🔔',label:'Chamados'},{key:'doses',icon:'📊',label:'Controle de Doses'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
@@ -1994,8 +1994,12 @@ function normalizarTipoResiduo(raw){
 
 // Extrai o mês de referência pelo campo NOMINAL (ex: "AGOSTO/26"), nunca
 // pelas datas individuais de coleta — exatamente como especificado.
+// Aceita os formatos observados nos relatórios reais dos fornecedores:
+// "AGOSTO/26" (barra + ano de 2 dígitos), "JANEIRO 2026" (espaço + ano
+// de 4 dígitos), "JANEIRO-2026", etc. — mês por extenso seguido de
+// separador (barra, hífen ou espaço) e o ano com 2 ou 4 dígitos.
 function extrairMesReferencia(texto){
-  const regex = new RegExp('(' + MESES_PT_FULL.join('|') + ')\\s*[/\\-]\\s*(\\d{2,4})', 'i');
+  const regex = new RegExp('(' + MESES_PT_FULL.join('|') + ')\\s*[/\\-\\s]\\s*(\\d{2,4})\\b', 'i');
   const m = texto.match(regex);
   if(!m) return null;
   const mesNome = m[1].toUpperCase();
@@ -3622,7 +3626,7 @@ function renderDashboardGerencial(){
   return `<div>
   <div class="content-header">
     <div>
-      <div class="content-title">🚚 Gestão de Coletas</div>
+      <div class="content-title">🚚 Dashboard de Gestão de Coletas</div>
       <div class="content-sub" style="display:flex;align-items:center;gap:8px">
         Base única · ${coletas.length} coletas · ${ncs.length} não conformidades
         <span style="background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">🔗 BASE ÚNICA</span>
