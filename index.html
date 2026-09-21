@@ -2033,11 +2033,21 @@ function extrairPeriodo(texto){
 // aqui. Cada tipo é contado no máximo uma vez, mesmo que o resumo apareça
 // repetido em mais de uma página do PDF.
 const REGEX_DATA_RESIDUO = /\d{1,2}\/\d{1,2}\/\d{2,4}/;
+// Regex para identificar cabeçalhos de seção do detalhamento, que
+// SEMPRE começam com "TIPO - CAPACIDADE/UNIDADE" (ex: "ORGÂNICOS -
+// BOMBONAS 70L", "REJEITO - CAÇAMBA 5M³"). Esses cabeçalhos contêm um
+// número (a capacidade do reservatório, não o peso do resíduo) e por
+// isso NUNCA devem ser confundidos com uma linha de resumo por tipo —
+// era essa a causa do bug em que "70" (de "BOMBONAS 70L") era lido como
+// se fosse o volume em kg de Orgânicos.
+const REGEX_CABECALHO_SECAO_DETALHAMENTO = /-\s*(BOMBONA|CAÇAMBA|CACAMBA|COMPACTADORA|COMPACTADOR|GRANEL|FUSO)/i;
+
 function extrairLinhasResiduo(texto){
   const linhas = texto.split(/\n/).map(l=>l.trim()).filter(Boolean);
   const porTipo = {};
   for(const linha of linhas){
     if(REGEX_DATA_RESIDUO.test(linha)) continue; // linha de detalhamento por coleta — ignorada
+    if(REGEX_CABECALHO_SECAO_DETALHAMENTO.test(linha)) continue; // cabeçalho de seção (ex: "ORGÂNICOS - BOMBONAS 70L") — nunca é resumo
 
     // A linha deve COMEÇAR com um tipo de resíduo reconhecido (não basta "conter",
     // isso evita capturar menções ao tipo em observações/rodapés).
