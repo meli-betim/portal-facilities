@@ -2033,50 +2033,137 @@ function extrairPeriodo(texto){
 // aqui. Cada tipo é contado no máximo uma vez, mesmo que o resumo apareça
 // repetido em mais de uma página do PDF.
 const REGEX_DATA_RESIDUO = /\d{1,2}\/\d{1,2}\/\d{2,4}/;
-// Regex para identificar cabeçalhos de seção do detalhamento, que
-// SEMPRE começam com "TIPO - CAPACIDADE/UNIDADE" (ex: "ORGÂNICOS -
-// BOMBONAS 70L", "REJEITO - CAÇAMBA 5M³"). Esses cabeçalhos contêm um
-// número (a capacidade do reservatório, não o peso do resíduo) e por
-// isso NUNCA devem ser confundidos com uma linha de resumo por tipo —
-// era essa a causa do bug em que "70" (de "BOMBONAS 70L") era lido como
-// se fosse o volume em kg de Orgânicos.
-const REGEX_CABECALHO_SECAO_DETALHAMENTO = /-\s*(BOMBONA|CAÇAMBA|CACAMBA|COMPACTADORA|COMPACTADOR|GRANEL|FUSO)/i;
+// ═══════════════════════════════════════════════════════
+// EXTRAÇÃO DO PESO POR TIPO DE RESÍDUO — nova estratégia (v2), validada
+// contra relatórios reais do fornecedor.
+//
+// A tentativa anterior lia o resumo "VOLUME DE RESÍDUOS" do topo do
+// relatório, mas esse resumo costuma ficar fragmentado pelo pdf.js
+// (o nome do tipo e o número ficam em linhas de texto diferentes,
+// por estarem associados a elementos gráficos do gráfico de barras
+// na mesma região da página). Isso fazia tipos como "Orgânicos"
+// ficarem sem nenhum número válido reconhecido, ou pior, casarem
+// acidentalmente com um número de outro contexto (ex: "70" de
+// "BOMBONAS 70L", o volume do reservatório, não o peso do resíduo).
+//
+// A nova estratégia usa exclusivamente a seção "DETALHAMENTO", que é
+// texto plano e confiável:
+//   1. Para a maioria dos tipos (Orgânicos, Rejeito, Perigosos,
+//      Madeira, RSS, Sucata Metálica), soma o TOTAL de cada seção do
+//      detalhamento (ex: "ORGÂNICOS - BOMBONAS 70L" ... "5,00
+//      14.771,0" — a linha final da seção, com contagem + peso total).
+//      Um mesmo tipo pode ter mais de uma seção (ex: "REJEITOS -
+//      CAÇAMBA 5M³" e "REJEITOS - COMPACTADORA 8M³") — os totais são
+//      somados.
+//   2. Para a seção "RECICLÁVEIS - GRANEL" (que mistura Papelão,
+//      Plástico Stretch, Plástico Polionda, Pallet e Sucata Metálica
+//      numa lista só, com o nome do tipo às vezes antes e às vezes
+//      depois do peso, dependendo do relatório), associa cada
+//      ocorrência do nome de um tipo ao peso mais PRÓXIMO dela no
+//      texto (nunca à distância — evita pegar o peso de outra linha).
+// ═══════════════════════════════════════════════════════
+
+function ehCabecalhoDeSecaoDetalhamento(linha){
+  return /-\s*(BOMBONA|CA[ÇC]AMBA|COMPACTADORA?|GRANEL|FUSO)/i.test(linha)
+      || /^\s*(SUCATA MET[AÁ]LICA|RES[IÍ]DUOS DE SA[UÚ]DE|RECICL[AÁ]VEIS)/i.test(linha);
+}
+function _resMapearCabecalhoParaTipo(linha){
+  const upper = linha.toUpperCase();
+  if(/RECICL[AÁ]VEIS/.test(upper)) return null; // seção Granel, tratada por extrairGranelPorProximidade
+  if(/ORG[AÂ]NICOS?/.test(upper)) return 'Orgânicos';
+  if(/REJEITOS?/.test(upper)) return 'Rejeito';
+  if(/MADEIRA/.test(upper)) return 'Madeira';
+  if(/PERIGOSOS?/.test(upper)) return 'Perigosos';
+  if(/\bRSS\b|SA[UÚ]DE/.test(upper)) return 'RSS';
+  if(/SUCATA MET[AÁ]LICA/.test(upper)) return 'Sucata Metálica';
+  return null;
+}
+function _ehLinhaTotalSecaoDetalhamento(linha){
+  const l = linha.trim();
+  return /^\d{1,3}(?:\.\d{3})*,\d{2}\s+\d{1,3}(?:\.\d{3})*,\d+$/.test(l);
+}
+function _resMapearNomeResiduoGranular(nome){
+  const upper = nome.toUpperCase().trim();
+  if(/PAPEL[AÃ]O/.test(upper)) return 'Papelão';
+  if(/PL[AÁ]STICO STRETCH/.test(upper)) return 'Plástico Stretch';
+  if(/PL[AÁ]STICO POLIONDA/.test(upper)) return 'Plástico Polionda';
+  if(/PALLET/.test(upper)) return 'Pallet';
+  if(/SUCATA MET[AÁ]LICA/.test(upper)) return 'Sucata Metálica';
+  return null;
+}
+function extrairGranelPorProximidade(textoCompleto){
+  const inicioMatch = textoCompleto.match(/RECICL[AÁ]VEIS\s*-\s*GRANEL/i);
+  if(!inicioMatch) return {};
+  const inicio = inicioMatch.index;
+  const fimMatch = textoCompleto.slice(inicio).match(/\n\s*\d{1,3}(?:\.\d{3})*,\d{2}\s+\d{1,3}(?:\.\d{3})*,\d+\s*\n/);
+  const fim = fimMatch ? inicio + fimMatch.index + fimMatch[0].length : textoCompleto.length;
+  const bloco = textoCompleto.slice(inicio, fim);
+
+  const regexTipo = /PAPEL[AÃ]O|PL[AÁ]STICO STRETCH|PL[AÁ]STICO POLIONDA|PALLET|SUCATA MET[AÁ]LICA/gi;
+  const ocorrenciasTipo = [];
+  let m;
+  while((m = regexTipo.exec(bloco)) !== null){
+    ocorrenciasTipo.push({tipo: _resMapearNomeResiduoGranular(m[0]), pos: m.index});
+  }
+  const regexPeso = /\d{1,3}(?:\.\d{3})*,\d+/g;
+  const ocorrenciasPeso = [];
+  while((m = regexPeso.exec(bloco)) !== null){
+    if(m[0]==='1,00') continue; // é a "QTDE COLETAS" (sempre 1 por linha), não peso
+    ocorrenciasPeso.push({valor: parseFloat(m[0].replace(/\./g,'').replace(',','.')), pos: m.index});
+  }
+  const acumulado = {};
+  const pesosUsados = new Set();
+  ocorrenciasTipo.forEach(ot=>{
+    let melhor = null, melhorDist = Infinity;
+    ocorrenciasPeso.forEach((op,idx)=>{
+      if(pesosUsados.has(idx)) return;
+      const dist = Math.abs(op.pos - ot.pos);
+      if(dist < melhorDist){ melhorDist = dist; melhor = idx; }
+    });
+    if(melhor!==null && melhorDist < 60){
+      pesosUsados.add(melhor);
+      if(!acumulado[ot.tipo]) acumulado[ot.tipo]=0;
+      acumulado[ot.tipo] += ocorrenciasPeso[melhor].valor;
+    }
+  });
+  return acumulado;
+}
 
 function extrairLinhasResiduo(texto){
   const linhas = texto.split(/\n/).map(l=>l.trim()).filter(Boolean);
-  const porTipo = {};
-  for(const linha of linhas){
-    if(REGEX_DATA_RESIDUO.test(linha)) continue; // linha de detalhamento por coleta — ignorada
-    if(REGEX_CABECALHO_SECAO_DETALHAMENTO.test(linha)) continue; // cabeçalho de seção (ex: "ORGÂNICOS - BOMBONAS 70L") — nunca é resumo
+  const acumulado = {};
+  let secaoAtual = null;
 
-    // A linha deve COMEÇAR com um tipo de resíduo reconhecido (não basta "conter",
-    // isso evita capturar menções ao tipo em observações/rodapés).
-    let tipoEncontrado = null;
-    for(const tipoPadrao of TIPOS_RESIDUO_PADRAO){
-      const regexInicio = new RegExp('^' + tipoPadrao.replace(/[^\wà-ú]/gi, '\\s*.?\\s*'), 'i');
-      if(regexInicio.test(linha)){ tipoEncontrado = tipoPadrao; break; }
-    }
-    if(!tipoEncontrado || porTipo[tipoEncontrado]) continue;
-
-    const resto = linha.replace(new RegExp('^'+tipoEncontrado.replace(/[^\wà-ú]/gi,'.?'),'i'), '').trim();
-    const numeros = resto.match(/[\d.]+,\d+|[\d.]{1,}/g) || [];
-    // Volume: primeiro número com valor plausível de massa em kg (>=10);
-    // descarta números de 1-2 dígitos isolados, que tendem a ser contagens.
-    const candidatosVolume = numeros
-      .map(n => parseFloat(n.replace(/\./g,'').replace(',','.')))
-      .filter(n => !isNaN(n) && n >= 10);
-    if(!candidatosVolume.length) continue;
-    const volume = candidatosVolume[0];
-
-    const destMatch = DESTINACOES_PADRAO.find(d=>linha.toLowerCase().includes(d.toLowerCase()));
-    // Coletas: número inteiro pequeno (<1000) na linha — geralmente o
-    // último número, após o volume e a destinação.
-    const inteirosPequenos = numeros.map(n=>parseInt(n.replace(/\./g,''))).filter(n=>!isNaN(n) && n>0 && n<1000);
-    const qtdColetas = inteirosPequenos.length >= 1 ? inteirosPequenos[inteirosPequenos.length-1] : null;
-
-    porTipo[tipoEncontrado] = { tipo: tipoEncontrado, volume, destinacao: destMatch||null, coletas: qtdColetas };
+  function somar(tipo, volume, coletas){
+    if(!acumulado[tipo]) acumulado[tipo] = { tipo, volume:0, coletas:0, destinacao:null };
+    acumulado[tipo].volume += volume;
+    acumulado[tipo].coletas += (coletas||0);
   }
-  return Object.values(porTipo);
+
+  for(const linha of linhas){
+    if(ehCabecalhoDeSecaoDetalhamento(linha)){
+      secaoAtual = _resMapearCabecalhoParaTipo(linha);
+      continue;
+    }
+    if(!secaoAtual) continue;
+    if(_ehLinhaTotalSecaoDetalhamento(linha)){
+      const partes = linha.split(/\s+/);
+      const qtdColetas = parseInt(partes[0].replace(/\./g,'').replace(',','.'));
+      const volume = parseFloat(partes[1].replace(/\./g,'').replace(',','.'));
+      somar(secaoAtual, volume, qtdColetas);
+      secaoAtual = null;
+    }
+  }
+
+  // Seção Granel (Papelão, Plástico Stretch, Plástico Polionda, Pallet,
+  // Sucata Metálica misturados) — resolvida por proximidade textual.
+  const granel = extrairGranelPorProximidade(texto);
+  Object.entries(granel).forEach(([tipo,volume])=>{
+    if(!acumulado[tipo]) acumulado[tipo] = { tipo, volume:0, coletas:null, destinacao:null };
+    acumulado[tipo].volume = volume; // Granel já entrega o total, não é incremental
+  });
+
+  return Object.values(acumulado).filter(r=>r.volume>0 || r.coletas>0);
 }
 
 // Extrai o texto completo de um PDF usando pdf.js. Retorna string vazia
