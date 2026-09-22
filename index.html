@@ -2428,7 +2428,6 @@ function atualizarDashboardResiduos(){
     <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px" id="dres-grid1"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="dres-grid2"></div>
     ${modoEvolucao ? `<div id="dres-evolucao-tipo" style="margin-bottom:16px"></div>` : ''}
-    <div id="dres-tabela"></div>
   `;
 
   document.getElementById('dres-cards').innerHTML = _resRenderCards(medicoesFiltradas);
@@ -2437,7 +2436,6 @@ function atualizarDashboardResiduos(){
   if(modoEvolucao){
     document.getElementById('dres-evolucao-tipo').innerHTML = _resRenderSecaoEvolucaoPorTipo(medicoesTodas, f, mesesSelecionados);
   }
-  document.getElementById('dres-tabela').innerHTML = _resRenderTabelaResumo(medicoesFiltradas);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2476,6 +2474,65 @@ function _resRenderCards(medicoes){
 }
 
 // ═══════════════════════════════════════════════════════
+// PALETA DE CORES — segue o padrão de cores da coleta seletiva
+// (Resolução CONAMA 275/2001), aplicada de forma FIXA por tipo de
+// resíduo (nunca por posição/ranking), para que a cor de um tipo seja
+// sempre a mesma em qualquer gráfico do dashboard (barras, rosca,
+// empilhado). Antes, a cor vinha de um array por índice — então o
+// mesmo tipo mudava de cor conforme mudava de posição no ranking
+// (ordenado por volume) ou ficava tudo azul sólido (gráfico de barras).
+// ═══════════════════════════════════════════════════════
+const CORES_RESIDUO_SELETIVA = {
+  'Papelão':            '#1A73E8', // azul — papel/papelão
+  'Plástico Stretch':   '#D1242F', // vermelho — plástico
+  'Plástico Polionda':  '#F06292', // vermelho (tom secundário) — plástico
+  'Sucata Metálica':    '#F59E0B', // amarelo — metal
+  'Orgânicos':          '#6D4C41', // marrom — orgânico
+  'Rejeito':            '#6B6B6B', // cinza — rejeito/não reciclável
+  'Perigosos':          '#E67700', // laranja — resíduo perigoso
+  'Madeira':            '#212121', // preto — madeira
+  'RSS':                '#90A4AE', // branco-acinzentado — resíduo de saúde
+  'Recicláveis':        '#00A650', // verde — recicláveis (categoria genérica)
+};
+const CORES_FALLBACK = ['#0891B2','#059669','#BE123C','#7C3AED','#94A3B8'];
+function _resCorTipoResiduo(tipo, indiceFallback){
+  if(CORES_RESIDUO_SELETIVA[tipo]) return CORES_RESIDUO_SELETIVA[tipo];
+  // Tipo não mapeado (ex: nome novo/inesperado): cor estável baseada no
+  // próprio nome, não na posição no ranking, para não "piscar" cor ao
+  // reordenar por volume.
+  let hash = 0;
+  for(let i=0;i<tipo.length;i++) hash = (hash*31 + tipo.charCodeAt(i)) >>> 0;
+  return CORES_FALLBACK[hash % CORES_FALLBACK.length];
+}
+
+// O Dashboard de Coletas guarda o tipo de resíduo como texto livre da
+// planilha operacional (ex: "Orgânico — Compactadora", "Compactadora de
+// Papelão", "Bombonas — Perigosos"), não a categoria já normalizada do
+// Dashboard de Resíduos ("Orgânicos", "Papelão", "Perigosos"...). Esta
+// função só resolve a COR (nunca altera o texto salvo, nem o valor usado
+// nos filtros) — reconhece por palavra-chave e cai na mesma paleta
+// central (CORES_RESIDUO_SELETIVA / _resCorTipoResiduo) do Dashboard de
+// Resíduos. Um rótulo que não bate com nenhuma palavra-chave conhecida
+// (ex: "Caçamba Apoio Caminhão") não é forçado numa categoria — fica com
+// a cor estável de fallback, pra não arriscar categorizar errado.
+function _resCategoriaResiduoDeTipoColeta(tipoBruto){
+  const t = (tipoBruto||'').toUpperCase();
+  if(/PAPEL[AÃ]O|\bPAPEL\b/.test(t)) return 'Papelão';
+  if(/ORG[AÂ]NIC/.test(t)) return 'Orgânicos';
+  if(/PERIGOS/.test(t)) return 'Perigosos';
+  if(/MADEIRA/.test(t)) return 'Madeira';
+  if(/SUCATA MET[AÁ]LIC|\bMETAL\b/.test(t)) return 'Sucata Metálica';
+  if(/RES[IÍ]DUOS? DE SA[UÚ]DE|\bRSS\b/.test(t)) return 'RSS';
+  if(/PL[AÁ]STICO/.test(t)) return 'Plástico Stretch';
+  if(/REJEITO/.test(t)) return 'Rejeito';
+  if(/RECICL[AÁ]VEIS?/.test(t)) return 'Recicláveis';
+  return tipoBruto;
+}
+function _resCorTipoColeta(tipoBruto){
+  return _resCorTipoResiduo(_resCategoriaResiduoDeTipoColeta(tipoBruto));
+}
+
+// ═══════════════════════════════════════════════════════
 // GRÁFICO DE BARRAS — Volume por tipo (kg)
 // ═══════════════════════════════════════════════════════
 function _resRenderGraficoBarras(medicoes){
@@ -2491,7 +2548,7 @@ function _resRenderGraficoBarras(medicoes){
         <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})" title="Clique para filtrar: ${tipo}">
           <div style="width:120px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${tipo}</div>
           <div style="flex:1;height:20px;background:#F0F0F0;border-radius:4px;overflow:hidden">
-            <div style="height:100%;background:#1A73E8;width:${Math.max(Math.round((val/max)*100),val>0?2:0)}%;border-radius:4px;transition:width .4s"></div>
+            <div style="height:100%;background:${_resCorTipoResiduo(tipo)};width:${Math.max(Math.round((val/max)*100),val>0?2:0)}%;border-radius:4px;transition:width .4s"></div>
           </div>
           <div style="width:80px;font-size:11px;font-weight:700;color:var(--navy);text-align:right">${fmt(val)} kg</div>
         </div>`).join('')}
@@ -2511,7 +2568,6 @@ function _resRenderGraficoRosca(medicoes){
   medicoes.forEach(m=>{ porTipo[m.tipoResiduo]=(porTipo[m.tipoResiduo]||0)+(m.volumeKg||0); });
   const total = Object.values(porTipo).reduce((a,b)=>a+b,0);
   const data = Object.entries(porTipo).sort((a,b)=>b[1]-a[1]);
-  const CORES=['#1A73E8','#00A650','#E67700','#D1242F','#7C3AED','#0891B2','#059669','#BE123C','#6B6B6B','#F59E0B'];
 
   const R=70, C=2*Math.PI*R, cx=90, cy=90;
   let acumulado=0;
@@ -2520,7 +2576,7 @@ function _resRenderGraficoRosca(medicoes){
     const dash = pct*C;
     const offset = C - (acumulado*C);
     acumulado += pct;
-    return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${CORES[i%CORES.length]}" stroke-width="26"
+    return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${_resCorTipoResiduo(tipo)}" stroke-width="26"
       stroke-dasharray="${dash.toFixed(1)} ${(C-dash).toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
       transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})">
       <title>${tipo}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg (${(pct*100).toFixed(1)}%)</title>
@@ -2541,7 +2597,7 @@ function _resRenderGraficoRosca(medicoes){
       </div>
       <div style="flex:1;min-width:140px;display:flex;flex-direction:column;gap:5px">
         ${data.map(([tipo,val],i)=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})">
-          <span style="width:9px;height:9px;border-radius:2px;background:${CORES[i%CORES.length]};flex-shrink:0"></span>
+          <span style="width:9px;height:9px;border-radius:2px;background:${_resCorTipoResiduo(tipo)};flex-shrink:0"></span>
           <span style="color:var(--txt);flex:1">${tipo}</span>
           <b style="color:var(--navy)">${total>0?((val/total)*100).toFixed(1):'0'}%</b>
         </div>`).join('')}
@@ -2601,7 +2657,6 @@ function _resRenderGraficoEmpilhado(medicoesTodas, f){
   const base = _resAplicarFiltro(medicoesTodas, fSemMes);
   const meses = [...new Set(base.map(m=>m.mesReferencia))].sort().slice(-6);
   const tipos = [...new Set(base.map(m=>m.tipoResiduo))];
-  const CORES=['#1A73E8','#00A650','#E67700','#D1242F','#7C3AED','#0891B2','#059669','#BE123C','#6B6B6B','#F59E0B'];
 
   if(!meses.length) return `<div class="card-section" style="margin:0"><div class="card-section-title">📊 Volume por Tipo de Resíduo — Últimos Meses</div>
     <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem histórico suficiente.</div></div>`;
@@ -2617,7 +2672,7 @@ function _resRenderGraficoEmpilhado(medicoesTodas, f){
           const val = base.filter(m=>m.mesReferencia===mes&&m.tipoResiduo===t).reduce((s,m)=>s+(m.volumeKg||0),0);
           if(val<=0) return '';
           const alturaPct = (val/maxTotal)*100;
-          return `<div style="width:100%;background:${CORES[ti%CORES.length]};height:${alturaPct}%;cursor:pointer" onclick="resFiltrarPorTipoEMes(${JSON.stringify(t)},${JSON.stringify(mes)})" title="${t}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg"></div>`;
+          return `<div style="width:100%;background:${_resCorTipoResiduo(t)};height:${alturaPct}%;cursor:pointer" onclick="resFiltrarPorTipoEMes(${JSON.stringify(t)},${JSON.stringify(mes)})" title="${t}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg"></div>`;
         }).join('');
         return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:34px">
           <div style="width:100%;height:120px;display:flex;flex-direction:column-reverse;border-radius:4px 4px 0 0;overflow:hidden;background:#F5F5F5">${barras}</div>
@@ -2626,7 +2681,7 @@ function _resRenderGraficoEmpilhado(medicoesTodas, f){
       }).join('')}
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
-      ${tipos.map((t,i)=>`<div style="display:flex;align-items:center;gap:4px;font-size:10px"><span style="width:8px;height:8px;border-radius:2px;background:${CORES[i%CORES.length]}"></span>${t}</div>`).join('')}
+      ${tipos.map((t,i)=>`<div style="display:flex;align-items:center;gap:4px;font-size:10px"><span style="width:8px;height:8px;border-radius:2px;background:${_resCorTipoResiduo(t)}"></span>${t}</div>`).join('')}
     </div>
   </div>`;
 }
@@ -2637,10 +2692,6 @@ function resFiltrarPorTipoEMes(tipo, mes){
   atualizarDashboardResiduos();
 }
 
-// ═══════════════════════════════════════════════════════
-// TABELA — Resumo por tipo de resíduo (ordenável)
-// ═══════════════════════════════════════════════════════
-let _resOrdenacaoTabela = {campo:'volume', dir:'desc'};
 // ═══════════════════════════════════════════════════════
 // EVOLUÇÃO POR TIPO DE RESÍDUO — só exibida quando 2+ meses estão
 // selecionados no filtro. Gráfico de linhas (uma série por tipo) +
@@ -2713,16 +2764,14 @@ function _resRenderGraficoLinhasPorTipo(medicoes, meses, tipos){
   if(!meses.length || !tipos.length){
     return `<div style="text-align:center;padding:30px;color:var(--muted);font-size:12px">Selecione ao menos um tipo de resíduo para comparar.</div>`;
   }
-  const CORES=['#1A73E8','#00A650','#E67700','#D1242F','#7C3AED','#0891B2','#059669','#BE123C','#6B6B6B','#F59E0B'];
-
   // Matriz tipo -> [valor por mês], preservando null quando o tipo não
   // aparece naquele mês (nunca inventa zero).
-  const series = tipos.map((tipo,idx)=>{
+  const series = tipos.map((tipo)=>{
     const valores = meses.map(mes=>{
       const reg = medicoes.find(m=>m.mesReferencia===mes && m.tipoResiduo===tipo);
       return reg ? reg.volumeKg : null;
     });
-    return {tipo, valores, cor:CORES[idx%CORES.length]};
+    return {tipo, valores, cor:_resCorTipoResiduo(tipo)};
   });
 
   const todosValores = series.flatMap(s=>s.valores).filter(v=>v!=null);
@@ -2792,60 +2841,10 @@ function _resRenderTabelaEvolucao(medicoes, meses, tipos){
   </tbody></table></div>`;
 }
 
-function _resRenderTabelaResumo(medicoes){
-  const porTipo = {};
-  medicoes.forEach(m=>{
-    const k=m.tipoResiduo;
-    if(!porTipo[k]) porTipo[k]={tipo:k, volume:0, coletas:0, destinacoes:new Set()};
-    porTipo[k].volume += (m.volumeKg||0);
-    porTipo[k].coletas += (m.qtdColetas||0);
-    if(m.destinacao) porTipo[k].destinacoes.add(m.destinacao);
-  });
-  const total = Object.values(porTipo).reduce((s,r)=>s+r.volume,0);
-  let linhas = Object.values(porTipo).map(r=>({
-    ...r, pct: total>0?(r.volume/total)*100:0, destinacao:[...r.destinacoes].join(', ')||'—'
-  }));
-
-  const {campo,dir} = _resOrdenacaoTabela;
-  linhas.sort((a,b)=>{
-    const va = campo==='tipo'||campo==='destinacao' ? a[campo] : a[campo];
-    const vb = campo==='tipo'||campo==='destinacao' ? b[campo] : b[campo];
-    if(typeof va === 'string') return dir==='asc' ? va.localeCompare(vb) : vb.localeCompare(va);
-    return dir==='asc' ? va-vb : vb-va;
-  });
-
-  const setaIcon=(campo)=>_resOrdenacaoTabela.campo===campo ? (_resOrdenacaoTabela.dir==='asc'?' ▲':' ▼') : '';
-
-  return `<div class="card-section">
-    <div class="card-section-title">📋 Resumo por Tipo de Resíduo</div>
-    <div class="data-table-wrap"><table><thead><tr>
-      <th style="cursor:pointer" onclick="resOrdenarTabela('tipo')">Tipo de Resíduo${setaIcon('tipo')}</th>
-      <th style="cursor:pointer" onclick="resOrdenarTabela('volume')">Volume (kg)${setaIcon('volume')}</th>
-      <th style="cursor:pointer" onclick="resOrdenarTabela('pct')">% do Total${setaIcon('pct')}</th>
-      <th style="cursor:pointer" onclick="resOrdenarTabela('destinacao')">Destinação${setaIcon('destinacao')}</th>
-      <th style="cursor:pointer" onclick="resOrdenarTabela('coletas')">Qtd. Coletas${setaIcon('coletas')}</th>
-    </tr></thead><tbody>
-    ${linhas.map(l=>`<tr>
-      <td><b>${l.tipo}</b></td>
-      <td>${l.volume.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg</td>
-      <td>${l.pct.toFixed(1)}%</td>
-      <td style="font-size:11px">${l.destinacao}</td>
-      <td>${l.coletas}</td>
-    </tr>`).join('')}
-    </tbody></table></div>
-  </div>`;
-}
-function resOrdenarTabela(campo){
-  if(_resOrdenacaoTabela.campo===campo){
-    _resOrdenacaoTabela.dir = _resOrdenacaoTabela.dir==='asc' ? 'desc' : 'asc';
-  } else {
-    _resOrdenacaoTabela = {campo, dir:'desc'};
-  }
-  const f=_resGetFiltros();
-  const medicoes=_resAplicarFiltro(DB.get('medicoesResiduos')||[], f);
-  const el=document.getElementById('dres-tabela');
-  if(el) el.innerHTML=_resRenderTabelaResumo(medicoes);
-}
+// (Removido: card "Resumo por Tipo de Resíduo" — os totais de Qtd.
+// Coletas por tipo estavam inconsistentes com o volume/coletas real do
+// relatório para várias linhas, então o card foi retirado do dashboard
+// em vez de exibir números incorretos.)
 
 // ═══════════════════════════════════════════════════════
 // IMPORTAÇÃO DE MEDIÇÃO — fluxo em etapas:
@@ -3820,6 +3819,7 @@ function renderDashboardGerencial(){
       <button class="btn btn-outline" onclick="limparDash()" style="align-self:flex-end">Limpar</button>
     </div>
   </div>
+  <div id="dash-filtro-ativo" style="margin-bottom:12px"></div>
   <div id="dash-kpis" style="margin-bottom:18px"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
     <div class="card-section" style="margin:0">
@@ -3896,6 +3896,7 @@ function atualizarDash(){
   const f=getDashFiltros();
   const coletasFilt=aplicarFiltroColetas(coletas,f);
   const ncsFilt=aplicarFiltroNCs(ncs,f);
+  _resRenderFiltroAtivoDash(f);
   renderDashKPIs(coletasFilt, ncsFilt);
   renderChartMensal(coletasFilt, f);
   renderChartTipo(coletasFilt, f);
@@ -3903,6 +3904,23 @@ function atualizarDash(){
   renderChartNcTurno(coletasFilt, ncsFilt, f);
   renderChartNcDia(ncsFilt, f);
   renderHeatmap(coletasFilt, ncsFilt, f);
+}
+// Indicador visual de que existe um filtro de "Tipo de Resíduo" ativo
+// (aplicado pelo clique num gráfico ou pelo próprio select do filtro),
+// com um jeito rápido de limpar só esse campo sem mexer nos demais.
+function _resRenderFiltroAtivoDash(f){
+  const el = document.getElementById('dash-filtro-ativo');
+  if(!el) return;
+  if(!f.tipo){ el.innerHTML=''; return; }
+  el.innerHTML = `<div style="display:inline-flex;align-items:center;gap:8px;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:20px;padding:5px 6px 5px 14px;font-size:12px;color:#1D4ED8">
+    <span style="width:8px;height:8px;border-radius:50%;background:${_resCorTipoColeta(f.tipo)};flex-shrink:0"></span>
+    Filtrando por: <b>${f.tipo}</b>
+    <button onclick="dashLimparFiltroTipo()" title="Limpar filtro de tipo" style="border:none;background:#1D4ED8;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;cursor:pointer;line-height:1;padding:0">✕</button>
+  </div>`;
+}
+function dashLimparFiltroTipo(){
+  const el=document.getElementById('dash-tipo'); if(el) el.value='';
+  atualizarDash();
 }
 function renderDashKPIs(coletas, ncs){
   const el=document.getElementById('dash-kpis'); if(!el) return;
@@ -3957,22 +3975,30 @@ function dashScrollParaGrafico(elId){
   const el=document.getElementById(elId);
   if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
 }
-function renderBarChart(containerId, data, colorFn, onClickFn, maxBars){
+function renderBarChart(containerId, data, colorFn, onClickFn, maxBars, activeLabel){
   const el=document.getElementById(containerId); if(!el) return;
   const items=data.slice(0,maxBars||12);
   if(!items.length){ el.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem dados no período</div>`; return; }
   const max=Math.max(...items.map(i=>i[1]),1);
+  const total=items.reduce((s,i)=>s+i[1],0);
   el.innerHTML=`<div style="display:flex;flex-direction:column;gap:6px">
-    ${items.map(([label,val],i)=>`
-      <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="${onClickFn}(${JSON.stringify(label)})" title="Clique para filtrar: ${label}">
-        <div style="width:130px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0" title="${label}">${label}</div>
-        <div style="flex:1;height:20px;background:#F0F0F0;border-radius:4px;overflow:hidden;position:relative">
-          <div style="height:100%;background:${colorFn(i,val,max)};width:${Math.max(Math.round((val/max)*100),2)}%;border-radius:4px;transition:width .4s;display:flex;align-items:center;padding-left:6px">
+    ${items.map(([label,val],i)=>{
+      const ativo = !!activeLabel && activeLabel===label;
+      const pct = total>0 ? ((val/total)*100).toFixed(1) : '0';
+      return `
+      <div style="display:flex;align-items:center;gap:8px;cursor:pointer;${ativo?'background:#F0F7FF;border-radius:6px':''}" onclick="${onClickFn}(${JSON.stringify(label)})" title="${label}
+Quantidade: ${val}
+Participação: ${pct}%
+Clique para filtrar">
+        <div style="width:130px;font-size:11px;color:${ativo?'var(--navy)':'var(--muted)'};font-weight:${ativo?'700':'400'};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0" title="${label}">${ativo?'● ':''}${label}</div>
+        <div style="flex:1;height:20px;background:#F0F0F0;border-radius:4px;overflow:hidden;position:relative;${ativo?'box-shadow:0 0 0 2px #1A73E8':''}">
+          <div style="height:100%;background:${colorFn(i,val,max,label)};width:${Math.max(Math.round((val/max)*100),2)}%;border-radius:4px;transition:width .4s;display:flex;align-items:center;padding-left:6px">
             ${Math.round((val/max)*100)>15?`<span style="font-size:10px;font-weight:700;color:#fff">${val}</span>`:''}
           </div>
         </div>
         <div style="width:28px;font-size:11px;font-weight:700;color:var(--navy);text-align:right">${val}</div>
-      </div>`).join('')}
+      </div>`;
+    }).join('')}
   </div>`;
 }
 function renderChartMensal(coletas, f){
@@ -3991,48 +4017,57 @@ function renderChartMensal(coletas, f){
   if(!data.length){ el.innerHTML=`<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem dados</div>`; return; }
   const max=Math.max(...data.map(d=>d[1]),1);
   const CORES=['#1A73E8','#0891B2','#00A650','#E67700','#7C3AED','#D1242F','#6B6B6B','#059669'];
+  // O mês só é considerado "ativo" pra destaque quando é de fato ele que
+  // está determinando o filtro — se período/data específica também
+  // estiverem preenchidos, eles têm prioridade sobre o mês na função
+  // aplicarFiltroColetas (regra existente, não alterada aqui).
+  const mesAtivo = (!f.data && !f.periodoIni && !f.periodoFim) ? f.mes : '';
   el.innerHTML=`<div style="display:flex;align-items:flex-end;gap:6px;height:120px;padding-bottom:20px;position:relative;overflow-x:auto">
-    ${data.map(([label,val,mesRaw],i)=>`
+    ${data.map(([label,val,mesRaw],i)=>{
+      const ativo = !!mesAtivo && mesAtivo===mesRaw;
+      return `
       <div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:36px;cursor:pointer"
-           onclick="dashClickMes('${mesRaw}')" title="${label}: ${val} coletas">
+           onclick="dashClickMes('${mesRaw}')" title="${label}: ${val} coletas — clique para filtrar">
         <div style="font-size:10px;font-weight:700;color:${CORES[i%CORES.length]};margin-bottom:3px">${val}</div>
-        <div style="width:100%;background:${CORES[i%CORES.length]};height:${Math.max(Math.round((val/max)*88),4)}px;border-radius:4px 4px 0 0;transition:height .4s;opacity:.85"></div>
-        <div style="font-size:10px;color:var(--muted);margin-top:4px;white-space:nowrap">${label}</div>
-      </div>`).join('')}
+        <div style="width:100%;background:${CORES[i%CORES.length]};height:${Math.max(Math.round((val/max)*88),4)}px;border-radius:4px 4px 0 0;transition:height .4s;opacity:${ativo?'1':'.85'};${ativo?'box-shadow:0 0 0 2px #111':''}"></div>
+        <div style="font-size:10px;color:${ativo?'var(--navy)':'var(--muted)'};font-weight:${ativo?'700':'400'};margin-top:4px;white-space:nowrap">${label}</div>
+      </div>`;
+    }).join('')}
   </div>`;
 }
+// Clique num mês: agora filtra DENTRO do próprio Dashboard de Coletas,
+// usando o mesmo mecanismo de filtro que o botão "BUSCAR" já usa
+// (dash-mes + atualizarDash) — antes navegava para a tela "Controle
+// Geral", que continua acessível pelo botão no cabeçalho do dashboard.
 function dashClickMes(mes){
-  renderModContent('residuos','coletas');
-  setTimeout(()=>{
-    const el=document.getElementById('filt-hist-mes');
-    if(el){ el.value=mes; filtrarHistorico(); }
-  },100);
+  const elMes=document.getElementById('dash-mes'); if(elMes) elMes.value=mes;
+  const elData=document.getElementById('dash-data'); if(elData) elData.value='';
+  const elPi=document.getElementById('dash-periodo-ini'); if(elPi) elPi.value='';
+  const elPf=document.getElementById('dash-periodo-fim'); if(elPf) elPf.value='';
+  atualizarDash();
 }
 function renderChartTipo(coletas, f){
   const map={};
   coletas.forEach(c=>{ map[c.tipo]=(map[c.tipo]||0)+1; });
   const data=Object.entries(map).sort((a,b)=>b[1]-a[1]);
-  const CORES=['#1A73E8','#00A650','#E67700','#D1242F','#7C3AED','#0891B2','#059669','#BE123C'];
   renderBarChart('dash-chart-tipo', data,
-    (i)=>CORES[i%CORES.length],
-    'dashClickTipoColeta', 10);
+    (i,val,max,label)=>_resCorTipoColeta(label),
+    'dashClickTipoColeta', 10, f.tipo);
 }
+// Clique numa categoria: filtra dentro do próprio dashboard (mesmo
+// select #dash-tipo e mesma função atualizarDash já usados pelo botão
+// "BUSCAR"), em vez de navegar para outra tela.
 function dashClickTipoColeta(tipo){
-  const f=getDashFiltros();
-  renderModContent('residuos','coletas');
-  setTimeout(()=>{
-    if(f.mes){ const el=document.getElementById('filt-hist-mes'); if(el) el.value=f.mes; }
-    const et=document.getElementById('filt-hist-tipo'); if(et) et.value=tipo;
-    filtrarHistorico();
-  },100);
+  const el=document.getElementById('dash-tipo'); if(el) el.value=tipo;
+  atualizarDash();
 }
 function renderChartNcTipo(ncs, f){
   const map={};
   ncs.forEach(n=>{ const k=n.tipoColeta||'Sem tipo'; map[k]=(map[k]||0)+1; });
   const data=Object.entries(map).sort((a,b)=>b[1]-a[1]);
   renderBarChart('dash-chart-nc-tipo', data,
-    (i)=>['#D1242F','#E67700','#7C3AED','#0891B2','#6B6B6B'][i%5],
-    'dashClickNcTipo', 8);
+    (i,val,max,label)=>_resCorTipoColeta(label),
+    'dashClickNcTipo', 8, f.tipo);
 }
 function dashClickNcTipo(tipo){
   const f=getDashFiltros();
