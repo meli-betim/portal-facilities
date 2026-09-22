@@ -2080,7 +2080,13 @@ function _resMapearCabecalhoParaTipo(linha){
 }
 function _ehLinhaTotalSecaoDetalhamento(linha){
   const l = linha.trim();
-  return /^\d{1,3}(?:\.\d{3})*,\d{2}\s+\d{1,3}(?:\.\d{3})*,\d+$/.test(l);
+  // Número com OU sem separador de milhar (ponto): aceita tanto "14.771,0"
+  // quanto "11977,00" — alguns relatórios (ex: Junho) não usam ponto de
+  // milhar, e a regex antiga (que exigia agrupamento em blocos de 3)
+  // rejeitava essas linhas silenciosamente, fazendo o total da seção
+  // nunca ser reconhecido (bug real: Orgânicos sumia do relatório).
+  const NUM = '\\d+(?:\\.\\d{3})*,\\d+';
+  return new RegExp(`^${NUM}\\s+${NUM}$`).test(l);
 }
 function _resMapearNomeResiduoGranular(nome){
   const upper = nome.toUpperCase().trim();
@@ -2129,10 +2135,20 @@ function extrairGranelPorProximidade(textoCompleto){
   return acumulado;
 }
 
+// Quantas linhas, no máximo, podem separar um cabeçalho de seção do
+// detalhamento ("ORGÂNICOS - BOMBONAS 70L") da sua linha de total
+// ("5,00 14.771,0"). Isso limita o "alcance" do casamento: se o total
+// real da seção vier fragmentado pelo pdf.js e não for reconhecido
+// dentro dessa janela, a seção é descartada como não identificada em
+// vez de ficar "pendurada" esperando por qualquer linha futura do
+// texto que por acaso combine com o padrão numérico.
+const MAX_LINHAS_ATE_TOTAL_SECAO = 6;
+
 function extrairLinhasResiduo(texto){
   const linhas = texto.split(/\n/).map(l=>l.trim()).filter(Boolean);
   const acumulado = {};
   let secaoAtual = null;
+  let linhasDesdeCabecalho = 0;
 
   function somar(tipo, volume, coletas){
     if(!acumulado[tipo]) acumulado[tipo] = { tipo, volume:0, coletas:0, destinacao:null };
@@ -2143,9 +2159,23 @@ function extrairLinhasResiduo(texto){
   for(const linha of linhas){
     if(ehCabecalhoDeSecaoDetalhamento(linha)){
       secaoAtual = _resMapearCabecalhoParaTipo(linha);
+      linhasDesdeCabecalho = 0;
       continue;
     }
     if(!secaoAtual) continue;
+    linhasDesdeCabecalho++;
+    // Causa raiz do bug do "20kg fantasma": sem este limite, se o total
+    // real da seção não é reconhecido logo após o cabeçalho (por vir
+    // fragmentado em mais de uma linha pelo pdf.js), secaoAtual ficava
+    // "aceso" indefinidamente e acabava casando com um número não
+    // relacionado, muito mais adiante no texto (ex: fragmento de rótulo
+    // do eixo Y de um gráfico). Ao estourar a janela, a seção é
+    // abandonada (fica de fora do relatório) em vez de roubar um valor
+    // de outro lugar do texto.
+    if(linhasDesdeCabecalho > MAX_LINHAS_ATE_TOTAL_SECAO){
+      secaoAtual = null;
+      continue;
+    }
     if(_ehLinhaTotalSecaoDetalhamento(linha)){
       const partes = linha.split(/\s+/);
       const qtdColetas = parseInt(partes[0].replace(/\./g,'').replace(',','.'));
@@ -2163,7 +2193,15 @@ function extrairLinhasResiduo(texto){
     acumulado[tipo].volume = volume; // Granel já entrega o total, não é incremental
   });
 
-  return Object.values(acumulado).filter(r=>r.volume>0 || r.coletas>0);
+  // Uma seção só entra aqui via somar() (total reconhecido, mesmo que
+  // zero) ou via granel (peso > 0 sempre, por construção). "coletas"
+  // não-nulo é o sinal de "foi de fato lido no texto": distingue um
+  // resíduo CONFIRMADO como zero (ex: RSS = 0,00 no relatório real) de
+  // um resíduo nunca encontrado. Ambos tinham volume<=0 antes, e a
+  // condição antiga (`volume>0 || coletas>0`) descartava os dois casos
+  // igual — fazendo RSS=0 desaparecer do relatório em vez de aparecer
+  // como zero real.
+  return Object.values(acumulado).filter(r=>r.volume>0 || r.coletas!==null);
 }
 
 // Extrai o texto completo de um PDF usando pdf.js. Retorna string vazia
@@ -2960,7 +2998,10 @@ function renderResultadoAnaliseResiduos(){
   if(!p.linhas.length) pendencias.push({campo:'linhas', texto:'Nenhum tipo de resíduo foi identificado no relatório.'});
   p.linhas.forEach(l=>{
     if(!l.destinacao) pendencias.push({campo:'destinacao:'+l.id, texto:`Destinação do resíduo "${l.tipo}" não identificada.`});
-    if(l.volume==null || l.volume<=0) pendencias.push({campo:'volume:'+l.id, texto:`Volume do resíduo "${l.tipo}" não identificado.`});
+    // l.coletas!==null é o sinal de "linha de total foi de fato lida no
+    // relatório" (ver extrairLinhasResiduo) — um resíduo confirmado como
+    // zero (ex: RSS = 0,00 kg em Junho) não deve pedir correção manual.
+    if(l.volume==null || (l.volume<=0 && l.coletas==null)) pendencias.push({campo:'volume:'+l.id, texto:`Volume do resíduo "${l.tipo}" não identificado.`});
   });
 
   const totalCategorias = p.linhas.length;
@@ -3167,7 +3208,10 @@ function resConfirmarESalvar(){
     alert('Não conseguimos identificar nenhum resíduo no relatório. Use "Corrigir" para adicionar manualmente antes de salvar.');
     return;
   }
-  const semVolume = p.linhas.filter(l=>l.volume==null || l.volume<=0);
+  // Mesmo critério de "confirmado como zero" usado nas pendências acima
+  // (l.coletas!==null): não bloqueia o salvamento de um resíduo que o
+  // relatório realmente informa como 0 kg.
+  const semVolume = p.linhas.filter(l=>l.volume==null || (l.volume<=0 && l.coletas==null));
   if(semVolume.length){
     alert(`Não conseguimos identificar o volume de ${semVolume.length} ite${semVolume.length>1?'ns':'m'} do relatório. Revise so${semVolume.length>1?'mente estes itens':'mente este item'} antes de salvar.`);
     return;
