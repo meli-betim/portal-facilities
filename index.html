@@ -138,18 +138,46 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
    Dashboard de Resíduos. */
 .res-clicavel{transition:opacity .15s;}
 .res-clicavel:hover{opacity:.75;}
+/* Layout comum dos dashboards (Resíduos e Gestão de Coletas) */
+.dsh-head{display:flex;justify-content:space-between;align-items:center;gap:16px 20px;flex-wrap:wrap;margin-bottom:18px;}
+.dsh-titulo{display:flex;align-items:center;gap:14px;flex:1 1 300px;min-width:0;}
+.dsh-titulo-ico{width:54px;height:54px;border-radius:14px;background:#FCEBA2;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dsh-titulo-ico svg{width:28px;height:28px;}
+.dsh-eyebrow{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.dsh-h1{white-space:nowrap;font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--navy);letter-spacing:-.02em;line-height:1.15;margin-top:2px;}
+.dsh-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+.dsh-acoes{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px;}
+.dsh-acoes .btn{padding:4px 9px;font-size:10.5px;white-space:nowrap;}
+.dsh-filtros{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;flex:0 1 auto;}
+.dsh-lbl{font-size:9.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:5px;}
+.dsh-filtros .filter-select{font-size:12px;min-width:96px;height:34px;padding:6px 8px;}
+.dsh-btn-ico{height:34px;align-self:flex-end;padding:0 12px;white-space:nowrap;}
+.dsh-btn-ico svg{width:14px;height:14px;}
+.dsh-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;min-width:0;}
+.dsh-card-title{font-size:13px;font-weight:700;color:var(--navy);}
+.dsh-card-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.dsh-card-head{margin-bottom:14px;}
+.dsh-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-bottom:16px;}
+.dsh-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+@media(max-width:1000px){.dsh-grid,.dsh-grid-2{grid-template-columns:1fr;}}
+/* Rótulos de valor dos gráficos do Dashboard de Resíduos — mesmo padrão em todos */
+.res-val{font-family:'Inter',sans-serif;font-weight:700;font-variant-numeric:tabular-nums;color:#1F2937;}
+.res-val-svg{font-family:'Inter',sans-serif;font-weight:700;font-variant-numeric:tabular-nums;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round;pointer-events:none;}
 /* Cards de KPI do Dashboard de Resíduos (escopo próprio: não afeta .kpi-box de outras telas) */
 .res-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-.res-kpi{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 20px;display:flex;align-items:center;gap:13px;min-height:96px;box-shadow:0 1px 3px rgba(16,24,40,.04);}
-.res-kpi-ico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;}
-.res-kpi-ico svg{width:17px;height:17px;}
+.res-kpi{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:14px;min-height:84px;}
+.res-kpi-ico{width:40px;height:40px;border-radius:50%;background:#F1F3F6;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;}
+.res-kpi-ico svg{width:19px;height:19px;}
 .res-kpi-txt{min-width:0;position:relative;z-index:1;}
 .res-kpi-label{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#1F2937;margin-bottom:6px;line-height:1.2;}
-.res-kpi-val{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:#111111;letter-spacing:-.03em;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.res-kpi-val.res-kpi-val-txt{font-size:22px;}
+.res-kpi-val{font-family:'Sora',sans-serif;font-size:24px;font-weight:800;color:#111111;letter-spacing:-.03em;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.res-kpi-val.res-kpi-val-txt{font-size:19px;}
+.res-kpi.res-kpi-click{cursor:pointer;transition:border-color .15s;}
+.res-kpi.res-kpi-click:hover{border-color:#C9CED6;}
+.res-kpi-row.res-kpi-row-5{grid-template-columns:repeat(5,1fr);}
 .res-kpi-sub{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:#6B7280;margin-top:5px;}
 .res-kpi-deco{position:absolute;right:-4px;bottom:-6px;width:40px;height:40px;pointer-events:none;z-index:0;}
-@media(max-width:1100px){.res-kpi-row{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:1100px){.res-kpi-row,.res-kpi-row.res-kpi-row-5{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:560px){.res-kpi-row{grid-template-columns:1fr;}.res-kpi-val{font-size:22px;}}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;}
@@ -2785,24 +2813,10 @@ function renderDashboardResiduos(){
     : `${mesesMarcados.length} meses selecionados`;
   const sel = (campo, v)=> fAnterior && fAnterior[campo]===v ? 'selected' : '';
 
-  return `
-  <div class="content-header">
-    <div>
-      <div class="content-title">📊 Dashboard de Resíduos</div>
-      <div class="content-sub">Acompanhe o volume, a composição e a evolução dos resíduos.</div>
-    </div>
-    <div class="content-actions">
-      <button class="btn btn-outline" onclick="resAbrirHistoricoImportacoes()">🕘 Histórico de Importações</button>
-      <button class="btn btn-outline" onclick="exportCSV(DB.get('medicoesResiduos')||[],'medicoes_residuos.csv')">↓ Exportar Relatório</button>
-      <button class="btn btn-primary" onclick="resAbrirImportarMedicao()">+ Importar Medição</button>
-    </div>
-  </div>
-
-  <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:16px">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+  const filtrosHtml = `
       <div style="position:relative">
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">PERÍODO / MESES</label>
-        <button type="button" class="filter-select" onclick="resToggleMesDropdown()" id="dres-mes-btn" style="font-size:12px;min-width:180px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center">
+        <label class="dsh-lbl">Período / Meses</label>
+        <button type="button" class="filter-select" onclick="resToggleMesDropdown()" id="dres-mes-btn" style="min-width:140px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px">
           <span id="dres-mes-btn-label">${labelMeses}</span> <span>▾</span>
         </button>
         <div id="dres-mes-dropdown" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);padding:10px;z-index:50;min-width:200px;max-height:260px;overflow-y:auto">
@@ -2817,30 +2831,44 @@ function renderDashboardResiduos(){
         </div>
       </div>
       <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">UNIDADE</label>
-        <select class="filter-select" id="dres-unidade" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:130px">
+        <label class="dsh-lbl">Unidade</label>
+        <select class="filter-select" id="dres-unidade" onchange="atualizarDashboardResiduos()">
           <option value="">Todas</option>
           ${unidades.map(u=>`<option ${sel('unidade',u)}>${u}</option>`).join('')}
         </select>
       </div>
       <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">FORNECEDOR</label>
-        <select class="filter-select" id="dres-fornecedor" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:170px">
+        <label class="dsh-lbl">Fornecedor</label>
+        <select class="filter-select" id="dres-fornecedor" onchange="atualizarDashboardResiduos()">
           <option value="">Todos</option>
           ${fornecedores.map(f=>`<option ${sel('fornecedor',f)}>${f}</option>`).join('')}
         </select>
       </div>
       <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">TIPO DE RESÍDUO</label>
-        <select class="filter-select" id="dres-tipo" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:140px">
+        <label class="dsh-lbl">Tipo de Resíduo</label>
+        <select class="filter-select" id="dres-tipo" onchange="atualizarDashboardResiduos()">
           <option value="">Todos</option>
           ${tipos.map(t=>`<option ${sel('tipoResiduo',t)}>${t}</option>`).join('')}
         </select>
       </div>
-      <button class="btn btn-primary" onclick="atualizarDashboardResiduos()" style="align-self:flex-end">Atualizar</button>
-      <button class="btn btn-outline" onclick="resLimparFiltros()" style="align-self:flex-end">Limpar</button>
-    </div>
-  </div>
+      ${_dshBotoesFiltro('atualizarDashboardResiduos()','resLimparFiltros()','Atualizar')}`;
+
+  // Ações de importação/exportação: não aparecem no modelo, mas são
+  // funções do sistema — ficam como botões discretos sob o subtítulo.
+  const acoesHtml = `
+      <button class="btn btn-outline" onclick="resAbrirImportarMedicao()" title="Importar Medição">+ Importar</button>
+      <button class="btn btn-outline" onclick="resAbrirHistoricoImportacoes()" title="Histórico de Importações">Histórico</button>
+      <button class="btn btn-outline" onclick="exportCSV(DB.get('medicoesResiduos')||[],'medicoes_residuos.csv')" title="Exportar Relatório">Exportar</button>`;
+
+  return `
+  ${_dshCabecalho({
+    icone:'reciclar',
+    eyebrow:'Gestão de Resíduos',
+    titulo:'Dashboard de Resíduos',
+    sub:'Acompanhe o volume, a composição e a evolução dos resíduos da nossa unidade.',
+    acoes: acoesHtml,
+    filtros: filtrosHtml,
+  })}
 
   <div id="dres-body"><div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:12px">⏳ Carregando dados do dashboard…</div></div>`;
 }
@@ -2918,14 +2946,14 @@ function atualizarDashboardResiduos(){
 
   el.innerHTML = `
     <div id="dres-cards" style="margin-bottom:18px"></div>
-    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:16px;margin-bottom:16px" id="dres-grid1"></div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="dres-grid2"></div>
+    <div class="dsh-grid" id="dres-grid1"></div>
+    <div class="dsh-grid" id="dres-grid2"></div>
     ${modoEvolucao ? `<div id="dres-evolucao-tipo" style="margin-bottom:16px"></div>` : ''}
   `;
 
   document.getElementById('dres-cards').innerHTML = _resRenderCards(medicoesFiltradas);
-  document.getElementById('dres-grid1').innerHTML = _resRenderGraficoBarras(medicoesFiltradas) + _resRenderGraficoRosca(medicoesFiltradas);
-  document.getElementById('dres-grid2').innerHTML = _resRenderGraficoEvolucao(medicoesTodas, f) + _resRenderGraficoEmpilhado(medicoesTodas, f);
+  document.getElementById('dres-grid1').innerHTML = _resRenderGraficoBarras(medicoesFiltradas) + _resRenderGraficoEmpilhado(medicoesTodas, f);
+  document.getElementById('dres-grid2').innerHTML = _resRenderGraficoEvolucao(medicoesTodas, f) + _resRenderGraficoRosca(medicoesFiltradas);
   if(modoEvolucao){
     document.getElementById('dres-evolucao-tipo').innerHTML = _resRenderSecaoEvolucaoPorTipo(medicoesTodas, f, mesesSelecionados);
   }
@@ -2945,32 +2973,11 @@ function _resRenderCards(medicoes){
 
   const fmt = v=>v.toLocaleString('pt-BR',{minimumFractionDigits:v%1!==0?1:0,maximumFractionDigits:1});
 
-  // Ícones (traço estilo "lucide", desenhados em SVG inline — sem
-  // dependência externa). ICO: ícone branco dentro do círculo colorido;
-  // DECO: marca d'água clara no canto inferior direito do card.
-  const P = {
-    caminhao: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
-    reciclar: '<path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/>',
-    folha: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
-  };
-  const ico = nome=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[nome]}</svg>`;
-  const deco = (nome,cor)=>`<svg class="res-kpi-deco" viewBox="0 0 24 24" fill="${cor}" fill-opacity=".13" stroke="${cor}" stroke-opacity=".22" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[nome]}</svg>`;
-  const card = (cor, icone, decoNome, label, valor, sub, valorTexto)=>`
-    <div class="res-kpi">
-      <div class="res-kpi-ico" style="background:${cor}">${ico(icone)}</div>
-      <div class="res-kpi-txt">
-        <div class="res-kpi-label">${label}</div>
-        <div class="res-kpi-val${valorTexto?' res-kpi-val-txt':''}" title="${_resAttrEsc(valor)}">${valor}</div>
-        ${sub?`<div class="res-kpi-sub">${sub}</div>`:''}
-      </div>
-      ${deco(decoNome, cor)}
-    </div>`;
-
   return `<div class="res-kpi-row">
-    ${card('#00A650','caminhao','folha','Volume Total de Resíduos', fmt(volumeTotal)+' kg')}
-    ${card('#7C3AED','reciclar','folha','Tipos de Resíduos', String(tiposUnicos))}
-    ${card('#1A73E8','caminhao','caminhao','Total de Coletas', String(totalColetas))}
-    ${card('#F97316','folha','folha','Principal Resíduo', principal?principal[0]:'—', principal?fmt(principal[1])+' kg · '+String(principalPct).replace('.',',')+'%':'', true)}
+    ${_dshCardKpi({icone:'peso', label:'Volume Total de Resíduos', valor:fmt(volumeTotal)+' kg'})}
+    ${_dshCardKpi({icone:'reciclar', label:'Tipos de Resíduos', valor:String(tiposUnicos)})}
+    ${_dshCardKpi({icone:'caminhao', label:'Total de Coletas', valor:String(totalColetas)})}
+    ${_dshCardKpi({icone:'folha', label:'Principal Resíduo', valor:principal?principal[0]:'—', sub:principal?fmt(principal[1])+' kg · '+String(principalPct).replace('.',',')+'%':'', valorTexto:true})}
   </div>`;
 }
 
@@ -3034,6 +3041,85 @@ function _resCorTipoColeta(tipoBruto){
 }
 
 // ═══════════════════════════════════════════════════════
+// LAYOUT COMUM DOS DASHBOARDS (Resíduos e Gestão de Coletas)
+// Cabeçalho com ícone + filtros em card, cards de KPI e cards de gráfico.
+// ═══════════════════════════════════════════════════════
+const DSH_ICONES = {
+  peso: '<circle cx="12" cy="5" r="3"/><path d="M6.5 8a2 2 0 0 0-1.905 1.46L2.1 18.5A2 2 0 0 0 4 21h16a2 2 0 0 0 1.925-2.54L19.4 9.5A2 2 0 0 0 17.48 8Z"/>',
+  reciclar: '<path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/>',
+  caminhao: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  folha: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  alerta: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  percentual: '<line x1="19" x2="5" y1="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
+  relogio: '<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',
+  atualizar: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  limpar: '<path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/>',
+};
+function _dshIcone(nome, cor){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="${cor||'#374151'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${DSH_ICONES[nome]||''}</svg>`;
+}
+function _dshCabecalho({icone, eyebrow, titulo, sub, acoes, filtros}){
+  return `<div class="dsh-head">
+    <div class="dsh-titulo">
+      <div class="dsh-titulo-ico">${_dshIcone(icone,'#111111')}</div>
+      <div style="min-width:0">
+        <div class="dsh-eyebrow">${eyebrow}</div>
+        <div class="dsh-h1">${titulo}</div>
+        <div class="dsh-sub">${sub}</div>
+        ${acoes?`<div class="dsh-acoes">${acoes}</div>`:''}
+      </div>
+    </div>
+    <div class="dsh-filtros">${filtros}</div>
+  </div>`;
+}
+function _dshBotoesFiltro(onAtualizar, onLimpar, rotuloAtualizar){
+  return `<div style="display:flex;gap:8px;align-self:flex-end">
+    <button class="btn btn-primary dsh-btn-ico" onclick="${onAtualizar}">${_dshIcone('atualizar','#FFE600')} ${rotuloAtualizar||'Atualizar'}</button>
+    <button class="btn btn-outline dsh-btn-ico" onclick="${onLimpar}">${_dshIcone('limpar','currentColor')} Limpar</button>
+  </div>`;
+}
+function _dshCardKpi({icone, label, valor, sub, valorTexto, onclick, corSub}){
+  return `<div class="res-kpi${onclick?' res-kpi-click':''}" ${onclick?`onclick="${_resAttrEsc(onclick)}" title="Clique para ver os registros"`:''}>
+    <div class="res-kpi-ico">${_dshIcone(icone)}</div>
+    <div class="res-kpi-txt">
+      <div class="res-kpi-label">${label}</div>
+      <div class="res-kpi-val${valorTexto?' res-kpi-val-txt':''}" title="${_resAttrEsc(valor)}">${valor}</div>
+      ${sub?`<div class="res-kpi-sub"${corSub?` style="color:${corSub}"`:''}>${sub}</div>`:''}
+    </div>
+  </div>`;
+}
+function _dshCardHead(titulo, sub){
+  return `<div class="dsh-card-head"><div class="dsh-card-title">${titulo}</div>${sub?`<div class="dsh-card-sub">${sub}</div>`:''}</div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// FORMATAÇÃO E CORES DOS RÓTULOS DE VALOR (padrão único dos gráficos)
+// 99.429 kg · 95.048,1 kg · 63,9% — casa decimal só quando relevante.
+// ═══════════════════════════════════════════════════════
+function _resFmtKg(v){
+  const r = Math.round((Number(v)||0)*10)/10;
+  return r.toLocaleString('pt-BR',{minimumFractionDigits: r%1!==0?1:0, maximumFractionDigits:1})+' kg';
+}
+function _resFmtPct(frac){
+  return ((Number(frac)||0)*100).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+}
+function _resLuminancia(hex){
+  const m = String(hex||'').match(/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  if(!m) return 0;
+  const [r,g,b] = [m[1],m[2],m[3]].map(h=>parseInt(h,16)/255);
+  return 0.299*r + 0.587*g + 0.114*b;
+}
+// Texto sobre um fundo colorido (dentro de barra/fatia): branco ou escuro.
+function _resCorTextoSobre(hex){ return _resLuminancia(hex) > 0.62 ? '#1F2937' : '#FFFFFF'; }
+// Texto na cor da série sobre fundo branco: escurece cores muito claras
+// (amarelo, cinza-claro) para continuar legível.
+function _resCorTextoLegivel(hex){
+  if(_resLuminancia(hex) <= 0.55) return hex;
+  const m = hex.match(/^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  return '#'+[m[1],m[2],m[3]].map(h=>Math.round(parseInt(h,16)*0.62).toString(16).padStart(2,'0')).join('');
+}
+
+// ═══════════════════════════════════════════════════════
 // GRÁFICO DE BARRAS — Volume por tipo (kg)
 // ═══════════════════════════════════════════════════════
 function _resRenderGraficoBarras(medicoes){
@@ -3041,17 +3127,17 @@ function _resRenderGraficoBarras(medicoes){
   medicoes.forEach(m=>{ porTipo[m.tipoResiduo]=(porTipo[m.tipoResiduo]||0)+(m.volumeKg||0); });
   const data = Object.entries(porTipo).sort((a,b)=>b[1]-a[1]);
   const max = Math.max(...data.map(d=>d[1]),1);
-  const fmt = v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
-  return `<div class="card-section" style="margin:0">
-    <div class="card-section-title">📦 Volume de Resíduos por Tipo (kg)</div>
-    <div style="display:flex;flex-direction:column;gap:8px">
+  const fmt = v=>_resFmtKg(v).replace(' kg','');
+  return `<div class="dsh-card">
+    ${_dshCardHead('Volume de Resíduos por Tipo (kg)')}
+    <div style="display:flex;flex-direction:column;gap:9px">
       ${data.map(([tipo,val])=>`
         <div class="res-clicavel" style="display:flex;align-items:center;gap:8px;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:tipo})} title="${tipo}: ${fmt(val)} kg — clique para ver os registros">
-          <div style="width:120px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${tipo}</div>
-          <div style="flex:1;height:20px;background:#F0F0F0;border-radius:4px;overflow:hidden">
-            <div style="height:100%;background:${_resCorTipoResiduo(tipo)};width:${Math.max(Math.round((val/max)*100),val>0?2:0)}%;border-radius:4px;transition:width .4s"></div>
+          <div style="width:118px;font-size:11px;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${tipo}</div>
+          <div style="flex:1;height:12px;background:#EFF1F4;border-radius:6px;overflow:hidden">
+            <div style="height:100%;background:${_resCorTipoResiduo(tipo)};width:${Math.max(Math.round((val/max)*100),val>0?2:0)}%;border-radius:6px;transition:width .4s"></div>
           </div>
-          <div style="width:80px;font-size:11px;font-weight:700;color:var(--navy);text-align:right">${fmt(val)} kg</div>
+          <div class="res-val" style="width:86px;font-size:11px;text-align:right;white-space:nowrap;flex-shrink:0">${_resFmtKg(val)}</div>
         </div>`).join('')}
     </div>
   </div>`;
@@ -3068,25 +3154,33 @@ function _resRenderGraficoRosca(medicoes){
 
   const R=70, C=2*Math.PI*R, cx=90, cy=90;
   let acumulado=0;
+  // Percentual dentro da fatia só quando ela comporta o texto (>= 7%);
+  // as demais continuam com o valor na legenda ao lado — nada é omitido.
+  const rotulosFatias = [];
   const segmentos = data.map(([tipo,val],i)=>{
     const pct = total>0 ? val/total : 0;
     const dash = pct*C;
     const offset = C - (acumulado*C);
+    if(pct >= 0.07){
+      const ang = (acumulado + pct/2) * 2*Math.PI;
+      const cor = _resCorTipoResiduo(tipo);
+      rotulosFatias.push(`<text x="${(cx + R*Math.sin(ang)).toFixed(1)}" y="${(cy - R*Math.cos(ang) + 3.2).toFixed(1)}" text-anchor="middle" font-size="9" class="res-val" style="pointer-events:none" fill="${_resCorTextoSobre(cor)}">${_resFmtPct(pct)}</text>`);
+    }
     acumulado += pct;
     return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${_resCorTipoResiduo(tipo)}" stroke-width="26"
       stroke-dasharray="${dash.toFixed(1)} ${(C-dash).toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
       transform="rotate(-90 ${cx} ${cy})" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:tipo})}>
-      <title>${tipo}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg (${(pct*100).toFixed(1)}%) — clique para ver os registros</title>
+      <title>${tipo}: ${_resFmtKg(val)} (${_resFmtPct(pct)}) — clique para ver os registros</title>
     </circle>`;
   }).join('');
 
   const fmtTotal = total.toLocaleString('pt-BR',{maximumFractionDigits:1});
 
-  return `<div class="card-section" style="margin:0">
-    <div class="card-section-title">🍩 Participação por Tipo de Resíduo</div>
+  return `<div class="dsh-card">
+    ${_dshCardHead('Participação no Período')}
     <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
       <div style="position:relative;width:180px;height:180px;flex-shrink:0">
-        <svg width="180" height="180" viewBox="0 0 180 180">${segmentos}</svg>
+        <svg width="180" height="180" viewBox="0 0 180 180">${segmentos}${rotulosFatias.join('')}</svg>
         <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center">
           <div style="font-size:15px;font-weight:800;color:var(--navy)">${fmtTotal}</div>
           <div style="font-size:9px;color:var(--muted)">kg total</div>
@@ -3094,9 +3188,9 @@ function _resRenderGraficoRosca(medicoes){
       </div>
       <div style="flex:1;min-width:140px;display:flex;flex-direction:column;gap:5px">
         ${data.map(([tipo,val],i)=>`<div class="res-clicavel" style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:tipo})} title="Clique para ver os registros de ${tipo}">
-          <span style="width:9px;height:9px;border-radius:2px;background:${_resCorTipoResiduo(tipo)};flex-shrink:0"></span>
+          <span style="width:8px;height:8px;border-radius:50%;background:${_resCorTipoResiduo(tipo)};flex-shrink:0"></span>
           <span style="color:var(--txt);flex:1">${tipo}</span>
-          <b style="color:var(--navy)">${total>0?((val/total)*100).toFixed(1):'0'}%</b>
+          <b class="res-val" style="font-size:11px">${_resFmtPct(total>0?val/total:0)}</b>
         </div>`).join('')}
       </div>
     </div>
@@ -3115,17 +3209,26 @@ function _resRenderGraficoEvolucao(medicoesTodas, f){
     mes, volume: base.filter(m=>m.mesReferencia===mes).reduce((s,m)=>s+(m.volumeKg||0),0)
   }));
 
-  if(porMes.length < 1) return `<div class="card-section" style="margin:0"><div class="card-section-title">📈 Evolução do Volume Total de Resíduos</div>
+  if(porMes.length < 1) return `<div class="dsh-card">${_dshCardHead('Evolução do Volume Total (kg)')}
     <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem histórico suficiente.</div></div>`;
 
-  const W=480,H=180,padL=50,padB=24,padT=14,padR=14;
+  // padT/padR maiores que antes para o rótulo do ponto mais alto e do
+  // último mês não serem cortados.
+  const W=480,H=180,padL=50,padB=24,padT=26,padR=34;
   const plotW=W-padL-padR, plotH=H-padT-padB;
   const maxVal = Math.max(...porMes.map(p=>p.volume),1);
   const xStep = porMes.length>1 ? plotW/(porMes.length-1) : 0;
   const pts = porMes.map((p,i)=>({x:padL+i*xStep, y:padT+plotH-(p.volume/maxVal)*plotH, ...p}));
+  // Valor acima do ponto. Com muitos meses (pontos próximos), alterna
+  // acima/abaixo para os textos vizinhos não se sobreporem.
+  const alternar = porMes.length>1 && xStep < 56;
+  const valores = pts.map((p,i)=>{
+    const abaixo = alternar && i%2===1 && (p.y+16) < (padT+plotH);
+    return `<text x="${p.x.toFixed(1)}" y="${(abaixo ? p.y+16 : p.y-9).toFixed(1)}" text-anchor="middle" font-size="10" class="res-val-svg" fill="#1F2937">${_resFmtKg(p.volume)}</text>`;
+  }).join('');
   const path = pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-  const circles = pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="11" fill="transparent" style="cursor:pointer" ${_resOnClickRelatorio({mesReferencia:p.mes})}><title>${_resMesLabel(p.mes)}: ${p.volume.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros</title></circle><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="#1A73E8" stroke="#fff" stroke-width="1.5" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({mesReferencia:p.mes})}>
-    <title>${_resMesLabel(p.mes)}: ${p.volume.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros</title></circle>`).join('');
+  const circles = pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="11" fill="transparent" style="cursor:pointer" ${_resOnClickRelatorio({mesReferencia:p.mes})}><title>${_resMesLabel(p.mes)}: ${_resFmtKg(p.volume)} — clique para ver os registros</title></circle><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="#1A73E8" stroke="#fff" stroke-width="1.5" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({mesReferencia:p.mes})}>
+    <title>${_resMesLabel(p.mes)}: ${_resFmtKg(p.volume)} — clique para ver os registros</title></circle>`).join('');
   const labels = pts.map(p=>`<text x="${p.x.toFixed(1)}" y="${H-6}" font-size="9" fill="#999" text-anchor="middle" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({mesReferencia:p.mes})}><title>Clique para ver os registros de ${_resMesLabel(p.mes)}</title>${_resMesLabel(p.mes)}</text>`).join('');
   const gridY = [0,0.5,1].map(pct=>{
     const y = padT+plotH-(pct*plotH);
@@ -3133,10 +3236,10 @@ function _resRenderGraficoEvolucao(medicoesTodas, f){
       <text x="${padL-6}" y="${y+3}" font-size="8" fill="#999" text-anchor="end">${Math.round(maxVal*pct).toLocaleString('pt-BR')}</text>`;
   }).join('');
 
-  return `<div class="card-section" style="margin:0">
-    <div class="card-section-title">📈 Evolução do Volume Total de Resíduos <span style="font-size:10px;color:var(--muted);font-weight:400">(kg)</span></div>
+  return `<div class="dsh-card">
+    ${_dshCardHead('Evolução do Volume Total (kg)')}
     <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">
-      ${gridY}<path d="${path}" fill="none" stroke="#1A73E8" stroke-width="2.5"/>${circles}${labels}
+      ${gridY}<path d="${path}" fill="none" stroke="#1A73E8" stroke-width="2.5"/>${circles}${valores}${labels}
     </svg>
   </div>`;
 }
@@ -3149,32 +3252,60 @@ function _resRenderGraficoEmpilhado(medicoesTodas, f){
   const base = _resAplicarFiltro(medicoesTodas, fSemMes);
   const meses = [...new Set(base.map(m=>m.mesReferencia))].sort().slice(-6);
   const tipos = [...new Set(base.map(m=>m.tipoResiduo))];
+  const titulo = _dshCardHead('Evolução da Composição por Mês', `Últimos ${meses.length||6} meses`);
 
-  if(!meses.length) return `<div class="card-section" style="margin:0"><div class="card-section-title">📊 Volume por Tipo de Resíduo — Últimos Meses</div>
+  if(!meses.length) return `<div class="dsh-card">${titulo}
     <div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Sem histórico suficiente.</div></div>`;
 
-  const totaisPorMes = meses.map(mes=>tipos.reduce((s,t)=>s+base.filter(m=>m.mesReferencia===mes&&m.tipoResiduo===t).reduce((s2,m)=>s2+(m.volumeKg||0),0),0));
-  const maxTotal = Math.max(...totaisPorMes,1);
+  const valorDe = (mes,t)=>base.filter(m=>m.mesReferencia===mes&&m.tipoResiduo===t).reduce((s,m)=>s+(m.volumeKg||0),0);
+  const totaisPorMes = meses.map(mes=>tipos.reduce((s,t)=>s+valorDe(mes,t),0));
 
-  return `<div class="card-section" style="margin:0">
-    <div class="card-section-title">📊 Volume por Tipo de Resíduo — Últimos Meses</div>
-    <div style="display:flex;align-items:flex-end;gap:14px;height:160px;padding-bottom:20px;overflow-x:auto">
-      ${meses.map((mes,mi)=>{
-        const barras = tipos.map((t,ti)=>{
-          const val = base.filter(m=>m.mesReferencia===mes&&m.tipoResiduo===t).reduce((s,m)=>s+(m.volumeKg||0),0);
-          if(val<=0) return '';
-          const alturaPct = (val/maxTotal)*100;
-          return `<div class="res-clicavel" style="width:100%;background:${_resCorTipoResiduo(t)};height:${alturaPct}%;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:t,mesReferencia:mes})} title="${t} — ${_resMesLabel(mes)}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros"></div>`;
-        }).join('');
-        return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:34px">
-          <div style="width:100%;height:120px;display:flex;flex-direction:column-reverse;border-radius:4px 4px 0 0;overflow:hidden;background:#F5F5F5">${barras}</div>
-          <div class="res-clicavel" style="font-size:10px;color:var(--muted);margin-top:4px;cursor:pointer" ${_resOnClickRelatorio({mesReferencia:mes})} title="Clique para ver os registros de ${_resMesLabel(mes)}">${_resMesLabel(mes)}</div>
-        </div>`;
-      }).join('')}
+  // Barras 100% (composição do mês): cada segmento = participação do tipo
+  // no total do mês; o total em kg fica acima da barra. Percentual dentro
+  // do segmento quando ele comporta o texto; o valor exato (kg e %)
+  // continua no tooltip e no clique.
+  const HEAD = 24, BAR_H = 200, MIN_PX_ROTULO = 14;
+  const ticks = [0, 25, 50, 75, 100];
+  const yPx = p=>HEAD + BAR_H*(1 - p/100);
+  const grade = ticks.map(p=>`<div style="position:absolute;left:0;right:0;top:${yPx(p)}px;border-top:1px ${p===0?'solid #D9DEE7':'dashed #E8ECF2'}"></div>`).join('');
+  const eixo = ticks.map(p=>`<div style="position:absolute;right:8px;top:${yPx(p)-7}px;font-size:10px;color:var(--muted)">${p}%</div>`).join('');
+
+  const colunas = meses.map((mes,mi)=>{
+    const total = totaisPorMes[mi];
+    const segs = tipos.map(t=>{
+      const val = valorDe(mes,t);
+      if(val<=0 || total<=0) return '';
+      const frac = val/total;
+      const cor = _resCorTipoResiduo(t);
+      const rotulo = frac*BAR_H >= MIN_PX_ROTULO
+        ? `<span class="res-val" style="font-size:10px;color:${_resCorTextoSobre(cor)};white-space:nowrap;pointer-events:none">${_resFmtPct(frac)}</span>` : '';
+      return `<div class="res-clicavel" style="width:100%;height:${(frac*100).toFixed(3)}%;background:${cor};display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;border-top:1px solid rgba(255,255,255,.55)" ${_resOnClickRelatorio({tipoResiduo:t,mesReferencia:mes})} title="${t} — ${_resMesLabel(mes)}: ${_resFmtKg(val)} (${_resFmtPct(frac)}) — clique para ver os registros">${rotulo}</div>`;
+    }).join('');
+    return `<div style="flex:1;min-width:52px;max-width:90px;display:flex;flex-direction:column;align-items:center;height:100%">
+      <div class="res-val res-clicavel" style="height:${HEAD}px;display:flex;align-items:center;font-size:10.5px;white-space:nowrap;cursor:pointer" ${_resOnClickRelatorio({mesReferencia:mes})} title="${_resMesLabel(mes)}: ${_resFmtKg(total)} — clique para ver os registros">${Math.round(total).toLocaleString('pt-BR')} kg</div>
+      <div style="width:100%;height:${BAR_H}px;display:flex;flex-direction:column-reverse;border-radius:3px 3px 0 0;overflow:hidden">${segs}</div>
+    </div>`;
+  }).join('');
+
+  const rotulosMes = meses.map(mes=>`<div class="res-clicavel" style="flex:1;min-width:52px;max-width:90px;text-align:center;font-size:11px;color:var(--muted);cursor:pointer" ${_resOnClickRelatorio({mesReferencia:mes})} title="Clique para ver os registros de ${_resMesLabel(mes)}">${_resMesLabel(mes)}</div>`).join('');
+
+  const legenda = tipos.map(t=>`<div class="res-clicavel" style="display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--txt);cursor:pointer;white-space:nowrap" ${_resOnClickRelatorio({tipoResiduo:t})} title="Clique para ver os registros de ${_resAttrEsc(t)}"><span style="width:8px;height:8px;border-radius:50%;background:${_resCorTipoResiduo(t)};flex-shrink:0"></span>${t}</div>`).join('');
+
+  return `<div class="dsh-card">
+    ${titulo}
+    <div style="display:flex">
+      <div style="position:relative;width:40px;flex-shrink:0;height:${HEAD+BAR_H}px">${eixo}</div>
+      <div style="flex:1;min-width:0;overflow-x:auto">
+        <div style="min-width:${meses.length*62}px">
+          <div style="position:relative;height:${HEAD+BAR_H}px">
+            ${grade}
+            <div style="position:absolute;inset:0;display:flex;gap:12px;padding:0 8px;justify-content:space-around">${colunas}</div>
+          </div>
+          <div style="display:flex;gap:12px;padding:6px 8px 0;justify-content:space-around">${rotulosMes}</div>
+        </div>
+      </div>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
-      ${tipos.map((t,i)=>`<div class="res-clicavel" style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:t})} title="Clique para ver os registros de ${_resAttrEsc(t)}"><span style="width:8px;height:8px;border-radius:2px;background:${_resCorTipoResiduo(t)}"></span>${t}</div>`).join('')}
-    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px 14px;margin-top:14px;justify-content:center">${legenda}</div>
   </div>`;
 }
 
@@ -3199,9 +3330,9 @@ function _resRenderSecaoEvolucaoPorTipo(medicoesTodas, f, mesesSelecionados){
   const tiposParaComparar = todosTipos.filter(t=>_resTiposSelecionadosEvolucao.has(t));
 
   return `
-  <div class="card-section">
+  <div class="dsh-card" style="margin-bottom:16px">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px">
-      <div class="card-section-title" style="margin:0">📈 Evolução do Peso por Tipo de Resíduo</div>
+      <div class="dsh-card-title">Evolução do Peso por Tipo de Resíduo</div>
       <button class="btn btn-outline btn-sm" onclick="resToggleSeletorTipos()">🔧 Selecionar Resíduos para Comparar</button>
     </div>
     <div id="res-seletor-tipos-evolucao" style="display:none;background:#FAFAFA;border-radius:8px;padding:12px;margin-bottom:14px">
@@ -3219,8 +3350,8 @@ function _resRenderSecaoEvolucaoPorTipo(medicoesTodas, f, mesesSelecionados){
     <div id="res-grafico-evolucao-tipo">${_resRenderGraficoLinhasPorTipo(base, mesesOrdenados, tiposParaComparar)}</div>
   </div>
 
-  <div class="card-section">
-    <div class="card-section-title">📋 Peso por Tipo de Resíduo</div>
+  <div class="dsh-card" style="margin-bottom:16px">
+    ${_dshCardHead('Peso por Tipo de Resíduo')}
     ${_resRenderTabelaEvolucao(base, mesesOrdenados, tiposParaComparar)}
   </div>`;
 }
@@ -3263,7 +3394,9 @@ function _resRenderGraficoLinhasPorTipo(medicoes, meses, tipos){
   const todosValores = series.flatMap(s=>s.valores).filter(v=>v!=null);
   const maxVal = todosValores.length ? Math.max(...todosValores) : 1;
 
-  const W=760,H=240,padL=60,padB=28,padT=16,padR=16;
+  // Altura cresce um pouco com muitas séries para os rótulos de valor
+  // caberem perto dos pontos; padT/padR folgados para não cortar rótulos.
+  const W=760,H=240+Math.max(0,tipos.length-5)*16,padL=60,padB=28,padT=20,padR=74; // padR: espaço dos rótulos do último mês
   const plotW=W-padL-padR, plotH=H-padT-padB;
   const xStep = meses.length>1 ? plotW/(meses.length-1) : 0;
 
@@ -3277,10 +3410,10 @@ function _resRenderGraficoLinhasPorTipo(medicoes, meses, tipos){
     // Áreas de clique (invisíveis) primeiro e pontos visíveis por último,
     // para que a área ampliada de uma série não encubra o ponto de outra.
     hitsSVG += pts.filter(Boolean).map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="10" fill="transparent" style="cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:s.tipo,mesReferencia:p.mes})}><title>${_resMesLabel(p.mes)}
-${s.tipo}: ${p.v.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros</title></circle>`).join('');
+${s.tipo}: ${_resFmtKg(p.v)} — clique para ver os registros</title></circle>`).join('');
     const circles = pts.filter(Boolean).map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="${s.cor}" stroke="#fff" stroke-width="1.2" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:s.tipo,mesReferencia:p.mes})}>
       <title>${_resMesLabel(p.mes)}
-${s.tipo}: ${p.v.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros</title></circle>`).join('');
+${s.tipo}: ${_resFmtKg(p.v)} — clique para ver os registros</title></circle>`).join('');
     return `<path d="${path}" fill="none" stroke="${s.cor}" stroke-width="2.2"/>${circles}`;
   }).join('');
 
@@ -3291,7 +3424,50 @@ ${s.tipo}: ${p.v.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — cliqu
   }).join('');
   const labelsX = meses.map((mes,i)=>`<text x="${padL+i*xStep}" y="${H-6}" font-size="9" fill="#999" text-anchor="middle">${_resMesLabel(mes)}</text>`).join('');
 
-  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${gridY}${hitsSVG}${linhasSVG}${labelsX}</svg>
+  // Valor de cada ponto, na cor da série, AO LADO do ponto (à direita).
+  // Em cada mês, rótulos que colidiriam são
+  // redistribuídos em bloco em torno da média dos seus pontos (o mais
+  // perto possível de cada ponto) e mantidos dentro da área do gráfico;
+  // quando um rótulo precisa se afastar do ponto, uma linha fina o liga
+  // ao ponto correspondente.
+  const ESPACO = 10.5, TOPO = 9, BASE = H - padB - 4;
+  const posicionar = (desejados)=>{
+    const topoDe = g=>{
+      const n = g.itens.length;
+      const media = g.itens.reduce((s,i)=>s+i.dy,0)/n;
+      return Math.max(TOPO, Math.min(media - (n-1)*ESPACO/2, BASE - (n-1)*ESPACO));
+    };
+    const grupos = desejados.map(d=>{ const g={itens:[d]}; g.topo=topoDe(g); return g; });
+    for(let mudou=true; mudou;){
+      mudou=false;
+      for(let i=1;i<grupos.length;i++){
+        const A=grupos[i-1], B=grupos[i];
+        if(A.topo + A.itens.length*ESPACO > B.topo){
+          A.itens = A.itens.concat(B.itens); A.topo = topoDe(A); grupos.splice(i,1); mudou=true; break;
+        }
+      }
+    }
+    grupos.forEach(g=>g.itens.forEach((it,k)=>{ it.ly = g.topo + k*ESPACO; }));
+  };
+  const rotulosPontos = meses.map((mes,i)=>{
+    const itens = series
+      .map(s=>({s, v:s.valores[i]}))
+      .filter(o=>o.v!=null)
+      .map(o=>{ const py=padT+plotH-(o.v/maxVal)*plotH; return {x:padL+i*xStep, py, dy:py+3, v:o.v, cor:o.s.cor}; })
+      .sort((a,b)=>a.dy-b.dy);
+    posicionar(itens);
+    const lado = 1;
+    return itens.map(it=>{
+      const tx = it.x + lado*9;
+      const cor = _resCorTextoLegivel(it.cor);
+      const guia = Math.abs(it.ly - it.dy) > 4
+        ? `<line x1="${(it.x+lado*4).toFixed(1)}" y1="${it.py.toFixed(1)}" x2="${(tx-lado*1).toFixed(1)}" y2="${(it.ly-3).toFixed(1)}" stroke="${cor}" stroke-opacity=".45" stroke-width=".8" style="pointer-events:none"/>`
+        : '';
+      return `${guia}<text x="${tx.toFixed(1)}" y="${it.ly.toFixed(1)}" text-anchor="start" font-size="8.5" class="res-val-svg" fill="${cor}">${_resFmtKg(it.v)}</text>`;
+    }).join('');
+  }).join('');
+
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${gridY}${hitsSVG}${linhasSVG}${rotulosPontos}${labelsX}</svg>
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
     ${series.map(s=>`<div class="res-clicavel" style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:s.tipo})} title="Clique para ver os registros de ${_resAttrEsc(s.tipo)}"><span style="width:9px;height:9px;border-radius:2px;background:${s.cor}"></span>${s.tipo}</div>`).join('')}
   </div>`;
@@ -3304,7 +3480,7 @@ function _resRenderTabelaEvolucao(medicoes, meses, tipos){
   if(!meses.length || !tipos.length){
     return `<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Nenhum tipo selecionado.</div>`;
   }
-  const fmt = v=>v==null?'—':v.toLocaleString('pt-BR',{maximumFractionDigits:1})+' kg';
+  const fmt = v=>v==null?'—':_resFmtKg(v);
 
   const linhas = tipos.map(tipo=>{
     const valores = meses.map(mes=>{
@@ -4266,91 +4442,52 @@ function renderDashboardGerencial(){
   const tipos=[...new Set(coletas.map(c=>c.tipo).filter(Boolean))].sort();
   const hoje=new Date();
   const anoMes=`${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}`;
+  const campo = (rotulo, html)=>`<div><label class="dsh-lbl">${rotulo}</label>${html}</div>`;
+  const filtrosHtml = [
+    campo('Mês', `<input type="month" class="filter-select" id="dash-mes" value="${anoMes}"/>`),
+    campo('Período inicial', `<input type="date" class="filter-select" id="dash-periodo-ini"/>`),
+    campo('Período final', `<input type="date" class="filter-select" id="dash-periodo-fim"/>`),
+    campo('Data específica', `<input type="date" class="filter-select" id="dash-data"/>`),
+    campo('Dia da semana', `<select class="filter-select" id="dash-dia"><option value="">Todos</option>${['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'].map(d=>`<option>${d}</option>`).join('')}</select>`),
+    campo('Turno', `<select class="filter-select" id="dash-turno"><option value="">Todos</option><option>Manhã</option><option>Tarde</option><option>Noite</option></select>`),
+    campo('Tipo de Resíduo', `<select class="filter-select" id="dash-tipo"><option value="">Todos</option>${tipos.map(t=>`<option>${t}</option>`).join('')}</select>`),
+    _dshBotoesFiltro('atualizarDash()','limparDash()','Atualizar'),
+  ].join('');
+  const acoesHtml = `
+      <button class="btn btn-outline" onclick="renderModContent('residuos','coletas')">Controle Geral</button>
+      <button class="btn btn-outline" onclick="renderModContent('residuos','ncs')">Não Conformidades</button>`;
   return `<div>
-  <div class="content-header">
-    <div>
-      <div class="content-title">🚚 Dashboard de Gestão de Coletas</div>
-      <div class="content-sub" style="display:flex;align-items:center;gap:8px">
-        Base única · ${coletas.length} coletas · ${ncs.length} não conformidades
-        <span style="background:#D1FAE5;color:#065F46;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px">🔗 BASE ÚNICA</span>
-      </div>
-    </div>
-    <div class="content-actions">
-      <button class="btn btn-outline btn-sm" onclick="renderModContent('residuos','coletas')">📋 Controle Geral</button>
-      <button class="btn btn-outline btn-sm" onclick="renderModContent('residuos','ncs')">🚨 Não Conformidades</button>
-    </div>
-  </div>
-  <div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:16px">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
-      <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">MÊS</label>
-        <input type="month" class="filter-select" id="dash-mes" value="${anoMes}" style="font-size:12px"/>
-      </div>
-      <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">PERÍODO INICIAL</label>
-        <input type="date" class="filter-select" id="dash-periodo-ini" style="font-size:12px"/>
-      </div>
-      <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">PERÍODO FINAL</label>
-        <input type="date" class="filter-select" id="dash-periodo-fim" style="font-size:12px"/>
-      </div>
-      <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">DATA ESPECÍFICA</label>
-        <input type="date" class="filter-select" id="dash-data" style="font-size:12px"/>
-      </div>
-      <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">DIA DA SEMANA</label>
-        <select class="filter-select" id="dash-dia" style="font-size:12px">
-          <option value="">Todos</option>
-          ${['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'].map(d=>`<option>${d}</option>`).join('')}
-        </select>
-      </div>
-      <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">TURNO</label>
-        <select class="filter-select" id="dash-turno" style="font-size:12px">
-          <option value="">Todos</option><option>Manhã</option><option>Tarde</option><option>Noite</option>
-        </select>
-      </div>
-      <div>
-        <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">TIPO DE RESÍDUO</label>
-        <select class="filter-select" id="dash-tipo" style="font-size:12px">
-          <option value="">Todos</option>
-          ${tipos.map(t=>`<option>${t}</option>`).join('')}
-        </select>
-      </div>
-      <button class="btn btn-primary" onclick="atualizarDash()" style="align-self:flex-end">BUSCAR</button>
-      <button class="btn btn-outline" onclick="limparDash()" style="align-self:flex-end">Limpar</button>
-    </div>
-  </div>
+  ${_dshCabecalho({
+    icone:'caminhao',
+    eyebrow:'Gestão de Resíduos',
+    titulo:'Dashboard de Gestão de Coletas',
+    sub:`Base única · ${coletas.length} coletas · ${ncs.length} não conformidades`,
+    acoes: acoesHtml,
+    filtros: filtrosHtml,
+  })}
   <div id="dash-filtro-ativo" style="margin-bottom:12px"></div>
   <div id="dash-kpis" style="margin-bottom:18px"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-    <div class="card-section" style="margin:0">
-      <div class="card-section-title">📅 Coletas por Mês <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
+  <div class="dsh-grid-2">
+    <div class="dsh-card">${_dshCardHead('Coletas por Mês','Clique para filtrar')}
       <div id="dash-chart-mensal" style="padding:8px 0"></div>
     </div>
-    <div class="card-section" style="margin:0">
-      <div class="card-section-title">♻️ Coletas por Tipo de Resíduo <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
+    <div class="dsh-card">${_dshCardHead('Coletas por Tipo de Resíduo','Clique para filtrar')}
       <div id="dash-chart-tipo" style="padding:8px 0"></div>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-    <div class="card-section" style="margin:0">
-      <div class="card-section-title">🚨 NCs por Tipo de Resíduo <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
+  <div class="dsh-grid-2">
+    <div class="dsh-card">${_dshCardHead('NCs por Tipo de Resíduo','Clique para filtrar')}
       <div id="dash-chart-nc-tipo" style="padding:8px 0"></div>
     </div>
-    <div class="card-section" style="margin:0">
-      <div class="card-section-title">🕐 NCs por Turno <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
+    <div class="dsh-card">${_dshCardHead('NCs por Turno','Clique para filtrar')}
       <div id="dash-chart-nc-turno" style="padding:8px 0"></div>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-    <div class="card-section" style="margin:0">
-      <div class="card-section-title">📆 NCs por Dia da Semana <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
+  <div class="dsh-grid-2">
+    <div class="dsh-card">${_dshCardHead('NCs por Dia da Semana','Clique para filtrar')}
       <div id="dash-chart-nc-dia" style="padding:8px 0"></div>
     </div>
-    <div class="card-section" style="margin:0">
-      <div class="card-section-title">🌡️ Mapa de Calor — NCs por Dia × Turno <span style="font-size:10px;color:var(--muted);font-weight:400">(clique para filtrar)</span></div>
+    <div class="dsh-card">${_dshCardHead('Mapa de Calor — NCs por Dia × Turno','Clique para filtrar')}
       <div id="dash-heatmap" style="padding:8px 0"></div>
     </div>
   </div>
@@ -4440,19 +4577,14 @@ function renderDashKPIs(coletas, ncs){
   });
   const topTurno=Object.entries(turnoNcMap).sort((a,b)=>b[1]-a[1])[0];
   const f=getDashFiltros();
-  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
-    ${[
-      {label:'Total de Coletas',val:coletas.length,cor:'#1A73E8',sub:'no período filtrado',onclick:'dashClickTotalColetas()'},
-      {label:'Não Conformidades',val:ncs.length,cor:'#D1242F',sub:'no período filtrado',onclick:'dashClickTotalNCs()'},
-      {label:'% NC / Coletas',val:pct+'%',cor:parseFloat(pct)>10?'#D1242F':parseFloat(pct)>5?'#E67700':'#00A650',sub:'taxa de não conformidade',onclick:'dashClickTotalNCs()'},
-      {label:'Tipo + frequente',val:topTipo?topTipo[0]:'—',cor:'#6B6B6B',sub:topTipo?topTipo[1]+' coletas':'',small:true,onclick:topTipo?`dashClickTipoColeta(${JSON.stringify(topTipo[0])})`:''},
-      {label:'Turno com + NCs',val:topTurno?topTurno[0]:'—',cor:'#E67700',sub:topTurno?topTurno[1]+' ocorrência(s)':'',small:true,onclick:(topTurno&&topTurno[0]!=='—')?`dashScrollParaGrafico('dash-chart-nc-turno')`:''},
-    ].map(k=>`<div style="background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow:hidden;${k.onclick?'cursor:pointer':''}"
-      ${k.onclick?`onclick="${k.onclick}" title="Clique para ver os registros"`:''}>
-      <div style="font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">${k.label}</div>
-      <div style="font-family:'Sora',sans-serif;font-size:${k.small?'14px':'26px'};font-weight:800;color:${k.cor};line-height:1.2;word-break:break-word">${k.val}</div>
-      <div style="font-size:10px;color:var(--light);margin-top:3px">${k.sub}</div>
-    </div>`).join('')}
+  const pctNum = parseFloat(pct);
+  const corPct = pctNum>10?'#D1242F':pctNum>5?'#E67700':'#00A650';
+  el.innerHTML=`<div class="res-kpi-row res-kpi-row-5">
+    ${_dshCardKpi({icone:'caminhao', label:'Total de Coletas', valor:String(coletas.length), sub:'no período filtrado', onclick:'dashClickTotalColetas()'})}
+    ${_dshCardKpi({icone:'alerta', label:'Não Conformidades', valor:String(ncs.length), sub:'no período filtrado', onclick:'dashClickTotalNCs()'})}
+    ${_dshCardKpi({icone:'percentual', label:'% NC / Coletas', valor:String(pct).replace('.',',')+'%', sub:'taxa de não conformidade', corSub:corPct, onclick:'dashClickTotalNCs()'})}
+    ${_dshCardKpi({icone:'reciclar', label:'Tipo + frequente', valor:topTipo?topTipo[0]:'—', sub:topTipo?topTipo[1]+' coletas':'', valorTexto:true, onclick:topTipo?`dashClickTipoColeta(${JSON.stringify(topTipo[0])})`:''})}
+    ${_dshCardKpi({icone:'relogio', label:'Turno com + NCs', valor:topTurno?topTurno[0]:'—', sub:topTurno?topTurno[1]+' ocorrência(s)':'', valorTexto:true, onclick:(topTurno&&topTurno[0]!=='—')?`dashScrollParaGrafico('dash-chart-nc-turno')`:''})}
   </div>`;
 }
 // KPI "Total de Coletas": leva ao Controle Geral respeitando o filtro de
@@ -4489,7 +4621,7 @@ function renderBarChart(containerId, data, colorFn, onClickFn, maxBars, activeLa
       const ativo = !!activeLabel && activeLabel===label;
       const pct = total>0 ? ((val/total)*100).toFixed(1) : '0';
       return `
-      <div style="display:flex;align-items:center;gap:8px;cursor:pointer;${ativo?'background:#F0F7FF;border-radius:6px':''}" onclick="${onClickFn}(${JSON.stringify(label)})" title="${label}
+      <div style="display:flex;align-items:center;gap:8px;cursor:pointer;${ativo?'background:#F0F7FF;border-radius:6px':''}" onclick="${_resAttrEsc(onClickFn+'('+JSON.stringify(label)+')')}" title="${label}
 Quantidade: ${val}
 Participação: ${pct}%
 Clique para filtrar">
