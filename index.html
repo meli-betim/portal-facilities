@@ -133,6 +133,24 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
 .btn-yellow{background:var(--yellow);color:var(--black);}
 .btn-yellow:hover{background:#f0d800;}
 .btn-sm{padding:5px 10px;font-size:11px;}
+/* Elemento de gráfico clicável (barra, fatia, ponto) — feedback visual
+   discreto de que dá pra clicar, reutilizado em todos os gráficos do
+   Dashboard de Resíduos. */
+.res-clicavel{transition:opacity .15s;}
+.res-clicavel:hover{opacity:.75;}
+/* Cards de KPI do Dashboard de Resíduos (escopo próprio: não afeta .kpi-box de outras telas) */
+.res-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.res-kpi{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px 20px;display:flex;align-items:center;gap:13px;min-height:96px;box-shadow:0 1px 3px rgba(16,24,40,.04);}
+.res-kpi-ico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;}
+.res-kpi-ico svg{width:17px;height:17px;}
+.res-kpi-txt{min-width:0;position:relative;z-index:1;}
+.res-kpi-label{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:#1F2937;margin-bottom:6px;line-height:1.2;}
+.res-kpi-val{font-family:'Sora',sans-serif;font-size:26px;font-weight:800;color:#111111;letter-spacing:-.03em;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.res-kpi-val.res-kpi-val-txt{font-size:22px;}
+.res-kpi-sub{font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:#6B7280;margin-top:5px;}
+.res-kpi-deco{position:absolute;right:-4px;bottom:-6px;width:40px;height:40px;pointer-events:none;z-index:0;}
+@media(max-width:1100px){.res-kpi-row{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.res-kpi-row{grid-template-columns:1fr;}.res-kpi-val{font-size:22px;}}
 .btn:disabled{opacity:.5;cursor:not-allowed;}
 .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;}
 .badge-green{background:#D1FAE5;color:#065F46;}
@@ -626,6 +644,7 @@ function renderModContent(id,page){
     'checklist:dashboard': atualizarChecklistDashboard,
     'residuos:ncs': filtrarNCs,
     'residuos:dash2': atualizarDash,
+    'residuos:dashres': atualizarDashboardResiduos,
   };
   const initFn=initPosRender[id+':'+page];
   if(initFn) initFn();
@@ -2253,6 +2272,292 @@ function interpretarMedicaoPdf(texto){
 }
 
 // ═══════════════════════════════════════════════════════
+// DETALHAMENTO LINHA A LINHA DA MEDIÇÃO (retiradas individuais)
+//
+// O consolidado (medicoesResiduos) guarda um total por tipo/competência.
+// As retiradas individuais (data, OS SIGRA, MTR, qtde, peso) existem nas
+// tabelas "DETALHAMENTO" do PDF da medição e são guardadas aqui, numa
+// coleção SEPARADA, sem alterar medicoesResiduos:
+//
+//   medicoesResiduosDetalhe = {
+//     [arquivoOrigemId]: { versao, processadoEm, linhas:[...], totaisSecao:[...] }
+//   }
+//
+// A leitura usa a POSIÇÃO de cada texto na página (colunas pelo
+// cabeçalho SEQ / DATA RETIRADA / OS SIGRA / MTR / QTDE COLETAS / PESO /
+// RESÍDUO), porque no texto corrido o pdf.js quebra várias linhas em
+// duas (o peso sai 1pt abaixo do resto da linha). Nada é estimado: cada
+// linha gravada é uma linha que existe no PDF.
+// ═══════════════════════════════════════════════════════
+const RES_DETALHE_VERSAO = 1;
+const RES_DETALHE_COLUNAS = [
+  {campo:'seq',     re:/^SEQ/i},
+  {campo:'data',    re:/^DATA/i},
+  {campo:'os',      re:/^OS\b/i},
+  {campo:'mtr',     re:/^MTR/i},
+  {campo:'qtd',     re:/^QTDE/i},
+  {campo:'peso',    re:/^PESO/i},
+  {campo:'residuo', re:/^RES[IÍ]DUO/i},
+];
+
+async function _resExtrairItensPdf(arrayBuffer){
+  const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+  const itens = [];
+  for(let p=1; p<=pdf.numPages; p++){
+    const page = await pdf.getPage(p);
+    const content = await page.getTextContent();
+    content.items.forEach(it=>{
+      const s = (it.str||'').trim();
+      if(!s) return;
+      itens.push({pagina:p, x:it.transform[4], y:it.transform[5], w:it.width||0, s});
+    });
+  }
+  return itens;
+}
+
+function _resNumeroBR(s){
+  const t = String(s==null?'':s).trim();
+  if(!/^-?\d[\d.]*(,\d+)?$/.test(t)) return null;
+  const n = parseFloat(t.replace(/\./g,'').replace(',','.'));
+  return isNaN(n) ? null : n;
+}
+
+// Os relatórios exportados do Google Planilhas trazem as datas da tabela
+// como M/D/AAAA (ex: 5/21/2026), enquanto o cabeçalho usa DD/MM/AAAA.
+// O formato é decidido pelas datas não ambíguas do próprio documento
+// (dia > 12); sem evidência, assume o padrão brasileiro DD/MM.
+function _resFormatoDatasDetalhe(brutas){
+  let md=0, dm=0;
+  brutas.forEach(d=>{
+    const m = String(d).match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+    if(!m) return;
+    const a=+m[1], b=+m[2];
+    if(a>12 && b<=12) dm++;
+    else if(b>12 && a<=12) md++;
+  });
+  return md>dm ? 'MDY' : 'DMY';
+}
+function _resDataDetalheISO(bruta, formato){
+  const m = String(bruta||'').match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if(!m) return '';
+  let dia = formato==='MDY' ? +m[2] : +m[1];
+  let mes = formato==='MDY' ? +m[1] : +m[2];
+  let ano = +m[3]; if(ano<100) ano += 2000;
+  if(mes<1||mes>12||dia<1||dia>31) return '';
+  return `${ano}-${String(mes).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
+}
+
+function _resTipoDaLinhaDetalhe(residuoTxt, secao){
+  const t = String(residuoTxt||'').toUpperCase().replace(/\s+/g,' ').trim();
+  const compacto = t.replace(/\s+/g,'');
+  if(/PL[AÁ]STICOSTRETCH/.test(compacto)) return 'Plástico Stretch';
+  if(/PL[AÁ]STICOPOLIONDA/.test(compacto)) return 'Plástico Polionda';
+  if(/SUCATAMET[AÁ]LICA/.test(compacto)) return 'Sucata Metálica';
+  return (t && (_resMapearNomeResiduoGranular(t) || _resMapearCabecalhoParaTipo(t)))
+      || _resMapearCabecalhoParaTipo(secao||'')
+      || null;
+}
+
+function _resInterpretarDetalhamento(itens){
+  const brutas = [];
+  const linhas = [];
+  const totaisSecao = [];
+  let colunas = null;      // centros X das colunas da tabela atual
+  let secao = '';
+  let textoAnterior = '';  // última faixa de texto antes do cabeçalho = título da seção
+
+  const paginas = [...new Set(itens.map(i=>i.pagina))].sort((a,b)=>a-b);
+  paginas.forEach(pg=>{
+    const doPg = itens.filter(i=>i.pagina===pg).sort((a,b)=>(b.y-a.y)||(a.x-b.x));
+    // Faixas horizontais: tolerância de 3pt une as linhas que o pdf.js
+    // quebrou em duas (peso/OS 1pt abaixo do resto da linha).
+    const faixas = [];
+    doPg.forEach(it=>{
+      const ult = faixas[faixas.length-1];
+      if(ult && (ult.yRef - it.y) <= 3) ult.itens.push(it);
+      else faixas.push({yRef: it.y, itens:[it]});
+    });
+
+    faixas.forEach(f=>{
+      const its = f.itens.sort((a,b)=>a.x-b.x);
+      const texto = its.map(i=>i.s).join(' ');
+
+      // Cabeçalho de tabela do detalhamento
+      const cab = {};
+      its.forEach(i=>{ RES_DETALHE_COLUNAS.forEach(c=>{ if(c.re.test(i.s) && cab[c.campo]==null) cab[c.campo]=i.x+i.w/2; }); });
+      if(cab.seq!=null && cab.peso!=null && cab.data!=null){
+        colunas = cab;
+        secao = textoAnterior;
+        return;
+      }
+      if(!colunas){ textoAnterior = texto; return; }
+
+      // Distribui os itens da faixa pelas colunas (centro mais próximo)
+      const cel = {};
+      its.forEach(i=>{
+        const cx = i.x + i.w/2;
+        let melhor=null, dist=Infinity;
+        Object.entries(colunas).forEach(([campo,x])=>{ const d=Math.abs(cx-x); if(d<dist){dist=d; melhor=campo;} });
+        if(melhor && dist<=45) cel[melhor] = cel[melhor] ? cel[melhor]+' '+i.s : i.s;
+      });
+
+      const seq = (cel.seq||'').trim();
+      if(/^\d{1,3}$/.test(seq)){
+        const dataBruta = (cel.data||'').trim();
+        const peso = _resNumeroBR(cel.peso);
+        if(!dataBruta && peso==null) return; // linha vazia do modelo (ex: RSS sem retirada)
+        if(dataBruta) brutas.push(dataBruta);
+        const limpa = v=>{ const t=(v||'').trim(); return (t==='-'||t==='—') ? '' : t; };
+        linhas.push({
+          seq,
+          dataRetiradaOriginal: dataBruta,
+          osSigra: limpa(cel.os),
+          mtr: limpa(cel.mtr),
+          qtdColetas: _resNumeroBR(cel.qtd),
+          pesoKg: peso,
+          residuoOriginal: limpa(cel.residuo),
+          tipoResiduo: _resTipoDaLinhaDetalhe(cel.residuo, secao),
+          secao,
+        });
+        return;
+      }
+
+      // Linha de total da seção (só QTDE e PESO) — encerra a tabela
+      const soNumeros = Object.keys(cel).every(k=>k==='qtd'||k==='peso');
+      if(soNumeros && cel.peso!=null && _resNumeroBR(cel.peso)!=null){
+        totaisSecao.push({secao, qtdColetas:_resNumeroBR(cel.qtd), pesoKg:_resNumeroBR(cel.peso)});
+        colunas = null;
+        textoAnterior = '';
+        return;
+      }
+      textoAnterior = texto;
+    });
+  });
+
+  const formato = _resFormatoDatasDetalhe(brutas);
+  linhas.forEach(l=>{ l.dataRetirada = _resDataDetalheISO(l.dataRetiradaOriginal, formato); });
+  return {linhas, totaisSecao, formatoData: formato};
+}
+
+async function _resDetalharPdfArrayBuffer(arrayBuffer){
+  const itens = await _resExtrairItensPdf(arrayBuffer);
+  return _resInterpretarDetalhamento(itens);
+}
+
+function _resDetalhesMapa(){
+  const m = DB.get('medicoesResiduosDetalhe');
+  return (m && typeof m==='object' && !Array.isArray(m)) ? m : {};
+}
+function _resSalvarDetalhe(arquivoOrigemId, resultado){
+  if(!arquivoOrigemId || !resultado) return;
+  const mapa = {..._resDetalhesMapa()};
+  mapa[arquivoOrigemId] = {
+    versao: RES_DETALHE_VERSAO,
+    processadoEm: new Date().toISOString(),
+    linhas: resultado.linhas || [],
+    totaisSecao: resultado.totaisSecao || [],
+  };
+  DB.set('medicoesResiduosDetalhe', mapa);
+}
+function _resRemoverDetalhes(ids){
+  const mapa = _resDetalhesMapa();
+  const alvo = (ids||[]).filter(id=>id && mapa[id]);
+  if(!alvo.length) return;
+  const novo = {...mapa};
+  alvo.forEach(id=>{ delete novo[id]; });
+  DB.set('medicoesResiduosDetalhe', novo);
+}
+function _resDetalheProcessado(id){
+  const d = _resDetalhesMapa()[id];
+  return !!(d && (d.versao||0) >= RES_DETALHE_VERSAO);
+}
+
+// Medições importadas ANTES desta versão não têm detalhamento gravado,
+// mas o PDF original está guardado em pdfsMedicaoResiduos.conteudoBase64.
+// Ele é lido uma única vez, quando o relatório precisa, e o resultado
+// fica gravado para as próximas consultas.
+const _resDetalheEmAndamento = {};
+const _resDetalheFalhou = {};
+function _resDataUrlParaArrayBuffer(dataUrl){
+  const b64 = String(dataUrl||'').split(',').pop();
+  const bin = atob(b64);
+  const u8 = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) u8[i] = bin.charCodeAt(i);
+  return u8.buffer;
+}
+function _resPdfOrigemDisponivel(id){
+  const pdf = (DB.get('pdfsMedicaoResiduos')||[]).find(p=>p.id===id);
+  return !!(pdf && pdf.conteudoBase64 && typeof pdfjsLib!=='undefined' && !_resDetalheFalhou[id]);
+}
+function _resGarantirDetalhes(ids){
+  const pdfs = DB.get('pdfsMedicaoResiduos')||[];
+  return Promise.all((ids||[]).map(id=>{
+    if(!id || _resDetalheProcessado(id) || !_resPdfOrigemDisponivel(id)) return Promise.resolve();
+    if(_resDetalheEmAndamento[id]) return _resDetalheEmAndamento[id];
+    const pdf = pdfs.find(p=>p.id===id);
+    const pr = _resDetalharPdfArrayBuffer(_resDataUrlParaArrayBuffer(pdf.conteudoBase64))
+      .then(r=>_resSalvarDetalhe(id, r))
+      .catch(e=>{ console.error('Falha ao ler o detalhamento do PDF', id, e); _resDetalheFalhou[id]=true; })
+      .finally(()=>{ delete _resDetalheEmAndamento[id]; });
+    _resDetalheEmAndamento[id] = pr;
+    return pr;
+  }));
+}
+
+// Monta o detalhamento para os filtros do relatório. Parte SEMPRE dos
+// registros consolidados que alimentam o dashboard (mesmos filtros) e,
+// para cada um, pega as retiradas do mesmo PDF (arquivoOrigemId) e do
+// mesmo tipo de resíduo. Assim o detalhe nunca inclui algo que o
+// dashboard não conta, e a soma pode ser conferida contra o consolidado.
+function _resMontarDetalhamento(f){
+  const consolidados = _resAplicarFiltro(DB.get('medicoesResiduos')||[], f);
+  const mapa = _resDetalhesMapa();
+  const linhas=[], pendentes=[], semDetalhe=[], divergencias=[];
+  consolidados.forEach(m=>{
+    const id = m.arquivoOrigemId;
+    if(!_resDetalheProcessado(id)){
+      if(_resPdfOrigemDisponivel(id)) pendentes.push(m);
+      else if((m.volumeKg||0)>0) semDetalhe.push(m);
+      return;
+    }
+    const doTipo = (mapa[id].linhas||[]).filter(l=>l && l.tipoResiduo===m.tipoResiduo);
+    if(!doTipo.length){ if((m.volumeKg||0)>0) semDetalhe.push(m); return; }
+    const soma = doTipo.reduce((s,l)=>s+(l.pesoKg||0),0);
+    if(Math.abs(soma-(m.volumeKg||0)) > 0.5) divergencias.push({m, soma});
+    doTipo.forEach(l=>linhas.push({
+      ...l,
+      mesReferencia: m.mesReferencia,
+      unidade: m.unidade||'',
+      fornecedor: m.fornecedor||'',
+      destinacao: m.destinacao||'',
+    }));
+  });
+  linhas.sort((a,b)=>
+    (a.dataRetirada||'').localeCompare(b.dataRetirada||'') ||
+    (a.tipoResiduo||'').localeCompare(b.tipoResiduo||'') ||
+    (parseInt(a.seq)||0)-(parseInt(b.seq)||0));
+  const totalConsolidado = consolidados.reduce((s,m)=>s+(m.volumeKg||0),0);
+
+  // Retiradas que estão no PDF mas cujo tipo NÃO existe no consolidado
+  // daquela medição (o dashboard não as conta). Não entram na tabela nem
+  // no total — só são sinalizadas, para não esconder a diferença.
+  const foraDoDashboard = [];
+  [...new Set(consolidados.map(m=>m.arquivoOrigemId).filter(Boolean))].forEach(id=>{
+    if(!_resDetalheProcessado(id)) return;
+    const ref = consolidados.find(m=>m.arquivoOrigemId===id);
+    const tiposConsolidados = new Set((DB.get('medicoesResiduos')||[]).filter(m=>m.arquivoOrigemId===id).map(m=>m.tipoResiduo));
+    const soma = {};
+    (mapa[id].linhas||[]).forEach(l=>{
+      if(!l || !l.tipoResiduo || tiposConsolidados.has(l.tipoResiduo)) return;
+      if(f.tipoResiduo && l.tipoResiduo!==f.tipoResiduo) return;
+      soma[l.tipoResiduo] = (soma[l.tipoResiduo]||0) + (l.pesoKg||0);
+    });
+    Object.entries(soma).forEach(([tipo,kg])=>{ if(kg>0) foraDoDashboard.push({tipo, kg, mesReferencia:ref.mesReferencia}); });
+  });
+  return {consolidados, linhas, pendentes, semDetalhe, divergencias, totalConsolidado, foraDoDashboard};
+}
+
+// ═══════════════════════════════════════════════════════
 // FILTROS E AGREGAÇÕES
 // ═══════════════════════════════════════════════════════
 function _resGetFiltros(){
@@ -2274,10 +2579,187 @@ function _resAplicarFiltro(medicoes, f){
     return mesOk && unidadeOk && fornecedorOk && tipoOk;
   });
 }
+
+// ═══════════════════════════════════════════════════════
+// NAVEGAÇÃO CENTRAL PARA O RELATÓRIO DE RESÍDUOS — destino único de
+// todo clique em gráfico do Dashboard de Resíduos.
+//
+// Não existe, hoje, uma tela de registros individuais de
+// medicoesResiduos filtrável por tipo/mês/unidade/fornecedor — só o
+// próprio Dashboard (agregado) e o Histórico de Importações (por PDF,
+// não por tipo). Por isso o relatório é aberto no mesmo mecanismo de
+// "tela de detalhe" que o sistema já usa (openModal — igual a
+// "Visualizar PDF", "Substituir Medição" etc.), reaproveitando
+// integralmente o formato de filtro (_resGetFiltros/_resAplicarFiltro)
+// e os dados (medicoesResiduos) já existentes — nenhuma tela nova de
+// navegação, nenhuma estrutura de dado nova.
+//
+// filtros: {tipoResiduo?, mesReferencia?, unidade?, fornecedor?} — cada
+// campo omitido herda o filtro ATUALMENTE ativo no dashboard; um campo
+// explicitamente informado (mesmo vazio '') sobrescreve o herdado.
+// ═══════════════════════════════════════════════════════
+let _resRelatorioFiltroAtivo = null;
+
+function resAbrirRelatorioComFiltros(filtros){
+  filtros = filtros || {};
+  const fAtual = _resGetFiltros();
+  const f = {
+    tipoResiduo: filtros.tipoResiduo !== undefined ? filtros.tipoResiduo : fAtual.tipoResiduo,
+    mesesReferencia: filtros.mesReferencia !== undefined
+      ? (filtros.mesReferencia ? [filtros.mesReferencia] : [])
+      : fAtual.mesesReferencia,
+    unidade: filtros.unidade !== undefined ? filtros.unidade : fAtual.unidade,
+    fornecedor: filtros.fornecedor !== undefined ? filtros.fornecedor : fAtual.fornecedor,
+  };
+  _resRelatorioFiltroAtivo = f;
+  openModal('📋 Relatório de Resíduos', _resRenderRelatorioDetalhado(f),
+    `<button class="btn btn-outline" onclick="resExportarRelatorioAtual()">↓ Exportar CSV</button>
+     <button class="btn btn-primary" onclick="closeModalDirect()">Fechar</button>`, true);
+  _resCarregarDetalhesDoRelatorio(f);
+}
+
+function _resRenderRelatorioDetalhado(f){
+  const d = _resMontarDetalhamento(f);
+  const fmtKg = v=>(v||0).toLocaleString('pt-BR',{maximumFractionDigits:1});
+  const esc = _resAttrEsc;
+
+  const chips = [];
+  if(f.tipoResiduo) chips.push(`Tipo: <b>${esc(f.tipoResiduo)}</b>`);
+  if(f.mesesReferencia && f.mesesReferencia.length) chips.push(`Período: <b>${f.mesesReferencia.map(_resMesLabel).join(', ')}</b>`);
+  if(f.unidade) chips.push(`Unidade: <b>${esc(f.unidade)}</b>`);
+  if(f.fornecedor) chips.push(`Fornecedor: <b>${esc(f.fornecedor)}</b>`);
+
+  const totalDetalhe = d.linhas.reduce((s,l)=>s+(l.pesoKg||0),0);
+  const qtdDetalhe = d.linhas.reduce((s,l)=>s+(l.qtdColetas||0),0);
+
+  // Colunas: só entram as que têm ao menos um valor no resultado.
+  const COLS = [
+    {h:'Período',          v:l=>_resMesLabel(l.mesReferencia)},
+    {h:'Data da retirada', v:l=>l.dataRetirada ? fmtDate(l.dataRetirada) : (l.dataRetiradaOriginal||'')},
+    {h:'Tipo de Resíduo',  v:l=>l.tipoResiduo||'', html:l=>`<span style="color:${_resCorTipoResiduo(l.tipoResiduo||'')}">●</span> ${esc(l.tipoResiduo)}`},
+    {h:'Serviço',          v:l=>l.secao||''},
+    {h:'Unidade',          v:l=>l.unidade||''},
+    {h:'Fornecedor',       v:l=>l.fornecedor||''},
+    {h:'OS SIGRA',         v:l=>l.osSigra||''},
+    {h:'MTR',              v:l=>l.mtr||''},
+    {h:'Qtde coletas',     v:l=>l.qtdColetas!=null ? l.qtdColetas.toLocaleString('pt-BR',{maximumFractionDigits:2}) : '', num:true},
+    {h:'Peso (kg)',        v:l=>l.pesoKg!=null ? fmtKg(l.pesoKg) : '', num:true},
+    {h:'Destinação',       v:l=>l.destinacao||''},
+  ].filter(c=>d.linhas.some(l=>String(c.v(l)).trim()!==''));
+
+  const idxQtd = COLS.findIndex(c=>c.h==='Qtde coletas');
+  const idxPeso = COLS.findIndex(c=>c.h==='Peso (kg)');
+
+  const avisoCarregando = d.pendentes.length ? `<div style="background:#F0F7FF;border-radius:8px;padding:10px 12px;font-size:12px;color:var(--navy);margin-bottom:10px">
+      ⏳ Lendo o detalhamento no PDF original de ${[...new Set(d.pendentes.map(m=>_resMesLabel(m.mesReferencia)))].join(', ')}… (feito uma única vez)</div>` : '';
+
+  const avisoSemDetalhe = d.semDetalhe.length ? `<div style="background:#FFF8E6;border-radius:8px;padding:10px 12px;font-size:12px;color:#8A5A00;margin-bottom:10px">
+      Sem detalhamento disponível no PDF para: ${d.semDetalhe.map(m=>`<b>${esc(m.tipoResiduo)}</b> (${_resMesLabel(m.mesReferencia)} · ${fmtKg(m.volumeKg)} kg consolidado)`).join('; ')}.
+      Esse volume está no total acima, mas não aparece nas linhas abaixo.</div>` : '';
+
+  const avisoDivergencia = d.divergencias.length ? `<div style="background:#FDECEC;border-radius:8px;padding:10px 12px;font-size:12px;color:#A01B24;margin-bottom:10px">
+      ⚠️ A soma das retiradas difere do valor do dashboard em: ${d.divergencias.map(x=>`<b>${esc(x.m.tipoResiduo)}</b> ${_resMesLabel(x.m.mesReferencia)} — linhas ${fmtKg(x.soma)} kg × dashboard ${fmtKg(x.m.volumeKg)} kg`).join('; ')}.</div>` : '';
+
+  const tabela = !d.linhas.length ? (d.pendentes.length ? '' :
+      `<div style="text-align:center;padding:30px;color:var(--muted);font-size:12px">${d.consolidados.length ? 'Nenhuma retirada individual encontrada para os filtros selecionados.' : 'Nenhum registro para os filtros selecionados.'}</div>`)
+    : `<div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin:6px 0">DETALHAMENTO</div>
+    <div class="data-table-wrap" style="max-height:420px;overflow:auto"><table><thead><tr>
+      ${COLS.map(c=>`<th${c.num?' style="text-align:right"':''}>${c.h}</th>`).join('')}
+    </tr></thead><tbody>
+    ${d.linhas.map(l=>`<tr>${COLS.map(c=>{
+        const v = String(c.v(l)).trim();
+        const conteudo = v==='' ? '—' : (c.html ? c.html(l) : esc(v));
+        return `<td${c.num?' style="text-align:right"':''}>${conteudo}</td>`;
+      }).join('')}</tr>`).join('')}
+    </tbody><tfoot><tr style="background:#F5F5F5;font-weight:700">
+      ${COLS.map((c,i)=>{
+        if(i===idxQtd) return `<td style="text-align:right">${qtdDetalhe.toLocaleString('pt-BR',{maximumFractionDigits:2})}</td>`;
+        if(i===idxPeso) return `<td style="text-align:right">${fmtKg(totalDetalhe)} kg</td>`;
+        if(i===0) return `<td>TOTAL</td>`;
+        return `<td></td>`;
+      }).join('')}
+    </tr></tfoot></table></div>`;
+
+  return `<div id="res-relatorio-detalhado">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+      ${chips.length
+        ? chips.map(c=>`<span style="background:#F5F5F5;border-radius:14px;padding:4px 10px;font-size:12px;color:var(--navy)">${c}</span>`).join('')
+        : `<span style="font-size:12px;color:var(--muted)">Todos os registros (sem filtro)</span>`}
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${d.linhas.length} registro(s) · <b style="color:var(--navy)">${fmtKg(d.totalConsolidado)} kg</b> no total</div>
+    ${avisoCarregando}${avisoDivergencia}${avisoSemDetalhe}${d.foraDoDashboard.length ? `<div style="background:#FFF8E6;border-radius:8px;padding:10px 12px;font-size:12px;color:#8A5A00;margin-bottom:10px">
+      O PDF desta medição também traz retiradas que não constam no dashboard: ${d.foraDoDashboard.map(x=>`<b>${esc(x.tipo)}</b> (${_resMesLabel(x.mesReferencia)} · ${fmtKg(x.kg)} kg)`).join('; ')}. Elas não estão incluídas nas linhas nem no total acima.</div>` : ''}
+    ${tabela}
+  </div>`;
+}
+
+// Dispara (uma única vez por medição) a leitura do PDF original das
+// medições antigas que ainda não têm o detalhamento gravado e redesenha
+// o relatório aberto quando terminar.
+function _resCarregarDetalhesDoRelatorio(f){
+  const ids = [...new Set(_resAplicarFiltro(DB.get('medicoesResiduos')||[], f).map(m=>m.arquivoOrigemId).filter(Boolean))];
+  if(!ids.some(id=>!_resDetalheProcessado(id) && _resPdfOrigemDisponivel(id))) return;
+  _resGarantirDetalhes(ids).then(()=>{
+    if(_resRelatorioFiltroAtivo!==f) return; // usuário já abriu outro relatório
+    const overlay = document.getElementById('modal-overlay');
+    const body = document.getElementById('modal-body');
+    if(body && overlay && overlay.classList.contains('open') && document.getElementById('res-relatorio-detalhado')){
+      body.innerHTML = _resRenderRelatorioDetalhado(f);
+    }
+  });
+}
+
+function resExportarRelatorioAtual(){
+  if(!_resRelatorioFiltroAtivo) return;
+  const d = _resMontarDetalhamento(_resRelatorioFiltroAtivo);
+  if(d.linhas.length){
+    exportCSV(d.linhas.map(l=>({
+      periodo: _resMesLabel(l.mesReferencia),
+      dataRetirada: l.dataRetirada ? fmtDate(l.dataRetirada) : (l.dataRetiradaOriginal||''),
+      tipoResiduo: l.tipoResiduo||'',
+      servico: l.secao||'',
+      unidade: l.unidade||'',
+      fornecedor: l.fornecedor||'',
+      osSigra: l.osSigra||'',
+      mtr: l.mtr||'',
+      qtdColetas: l.qtdColetas!=null ? String(l.qtdColetas).replace('.',',') : '',
+      pesoKg: l.pesoKg!=null ? String(l.pesoKg).replace('.',',') : '',
+      destinacao: l.destinacao||'',
+    })), 'relatorio_residuos_detalhado.csv');
+  } else {
+    exportCSV(d.consolidados, 'relatorio_residuos.csv');
+  }
+}
+
 function _resMesLabel(chaveMes){
   if(!chaveMes) return '';
   const [ano,mes] = chaveMes.split('-');
   return `${MESES_ABREV_RES[parseInt(mes)-1]}/${ano}`;
+}
+
+// Gera o atributo onclick dos elementos clicáveis dos gráficos.
+// O filtro vai como JSON (aspas duplas) dentro de um atributo HTML que
+// também usa aspas duplas; sem escapar, o atributo era cortado no meio
+// (onclick="...({tipoResiduo:"Papelão"})") e o clique não fazia nada.
+// Com &quot; o navegador decodifica antes de executar o JS. Como o
+// atributo é recriado junto com o HTML a cada atualização, não há
+// acúmulo de listeners.
+function _resAttrEsc(v){
+  return String(v==null?'':v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function _resOnClickRelatorio(filtros){
+  return `onclick="${_resAttrEsc('resAbrirRelatorioComFiltros('+JSON.stringify(filtros||{})+')')}"`;
+}
+
+// Último mês (AAAA-MM) que realmente possui dados em medicoesResiduos.
+// Prioriza meses com volume > 0; ignora registros sem mês válido (um
+// mesReferencia vazio/indefinido ia parar no topo da lista após
+// sort().reverse() e deixava o dashboard vazio na abertura).
+function _resMesMaisRecenteComDados(medicoes){
+  const validos = (medicoes||[]).filter(m=>m && /^\d{4}-\d{2}$/.test(m.mesReferencia||''));
+  const comVolume = validos.filter(m=>(m.volumeKg||0)>0);
+  const base = comVolume.length ? comVolume : validos;
+  return base.map(m=>m.mesReferencia).sort().pop() || '';
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2285,11 +2767,23 @@ function _resMesLabel(chaveMes){
 // ═══════════════════════════════════════════════════════
 function renderDashboardResiduos(){
   const medicoes = DB.get('medicoesResiduos')||[];
-  const mesesDisponiveis = [...new Set(medicoes.map(m=>m.mesReferencia))].sort().reverse();
+  const mesesDisponiveis = [...new Set(medicoes.map(m=>m.mesReferencia).filter(Boolean))].sort().reverse();
   const unidades = [...new Set(medicoes.map(m=>m.unidade).filter(Boolean))].sort();
   const fornecedores = [...new Set(medicoes.map(m=>m.fornecedor).filter(Boolean))].sort();
   const tipos = [...new Set(medicoes.map(m=>m.tipoResiduo).filter(Boolean))].sort();
-  const mesPadrao = mesesDisponiveis[0] || '';
+  // Ao ENTRAR na tela: último mês com dados + Unidade/Fornecedor/Tipo em
+  // "Todos". Se o dashboard já está aberto e está só sendo redesenhado
+  // (sincronização do Firebase via refreshCurrentView), mantém os filtros
+  // que o usuário escolheu em vez de voltar ao padrão.
+  const fAnterior = document.getElementById('dres-body') ? _resGetFiltros() : null;
+  const mesPadrao = _resMesMaisRecenteComDados(medicoes) || mesesDisponiveis[0] || '';
+  const mesesMarcados = fAnterior
+    ? fAnterior.mesesReferencia.filter(m=>mesesDisponiveis.includes(m))
+    : (mesPadrao ? [mesPadrao] : []);
+  const labelMeses = !mesesMarcados.length ? 'Todos os meses'
+    : mesesMarcados.length===1 ? _resMesLabel(mesesMarcados[0])
+    : `${mesesMarcados.length} meses selecionados`;
+  const sel = (campo, v)=> fAnterior && fAnterior[campo]===v ? 'selected' : '';
 
   return `
   <div class="content-header">
@@ -2309,7 +2803,7 @@ function renderDashboardResiduos(){
       <div style="position:relative">
         <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">PERÍODO / MESES</label>
         <button type="button" class="filter-select" onclick="resToggleMesDropdown()" id="dres-mes-btn" style="font-size:12px;min-width:180px;text-align:left;cursor:pointer;display:flex;justify-content:space-between;align-items:center">
-          <span id="dres-mes-btn-label">${mesPadrao?_resMesLabel(mesPadrao):'Todos os meses'}</span> <span>▾</span>
+          <span id="dres-mes-btn-label">${labelMeses}</span> <span>▾</span>
         </button>
         <div id="dres-mes-dropdown" style="display:none;position:absolute;top:100%;left:0;margin-top:4px;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);padding:10px;z-index:50;min-width:200px;max-height:260px;overflow-y:auto">
           <div style="display:flex;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--line)">
@@ -2317,7 +2811,7 @@ function renderDashboardResiduos(){
             <button type="button" class="btn btn-outline btn-sm" onclick="resLimparSelecaoMeses()" style="font-size:10px">Limpar seleção</button>
           </div>
           ${mesesDisponiveis.map((m,i)=>`<label style="display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 0;cursor:pointer">
-            <input type="checkbox" class="dres-mes-checkbox" value="${m}" onchange="resAoMudarSelecaoMeses()" ${i===0?'checked':''}/>
+            <input type="checkbox" class="dres-mes-checkbox" value="${m}" onchange="resAoMudarSelecaoMeses()" ${mesesMarcados.includes(m)?'checked':''}/>
             ${_resMesLabel(m)}
           </label>`).join('')}
         </div>
@@ -2326,21 +2820,21 @@ function renderDashboardResiduos(){
         <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">UNIDADE</label>
         <select class="filter-select" id="dres-unidade" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:130px">
           <option value="">Todas</option>
-          ${unidades.map(u=>`<option>${u}</option>`).join('')}
+          ${unidades.map(u=>`<option ${sel('unidade',u)}>${u}</option>`).join('')}
         </select>
       </div>
       <div>
         <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">FORNECEDOR</label>
         <select class="filter-select" id="dres-fornecedor" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:170px">
           <option value="">Todos</option>
-          ${fornecedores.map(f=>`<option>${f}</option>`).join('')}
+          ${fornecedores.map(f=>`<option ${sel('fornecedor',f)}>${f}</option>`).join('')}
         </select>
       </div>
       <div>
         <label style="font-size:10px;font-weight:600;color:var(--muted);display:block;margin-bottom:4px">TIPO DE RESÍDUO</label>
         <select class="filter-select" id="dres-tipo" onchange="atualizarDashboardResiduos()" style="font-size:12px;min-width:140px">
           <option value="">Todos</option>
-          ${tipos.map(t=>`<option>${t}</option>`).join('')}
+          ${tipos.map(t=>`<option ${sel('tipoResiduo',t)}>${t}</option>`).join('')}
         </select>
       </div>
       <button class="btn btn-primary" onclick="atualizarDashboardResiduos()" style="align-self:flex-end">Atualizar</button>
@@ -2348,8 +2842,7 @@ function renderDashboardResiduos(){
     </div>
   </div>
 
-  <div id="dres-body"></div>
-  <script>setTimeout(()=>atualizarDashboardResiduos(),50);<\/script>`;
+  <div id="dres-body"><div style="text-align:center;padding:40px 20px;color:var(--muted);font-size:12px">⏳ Carregando dados do dashboard…</div></div>`;
 }
 
 // Dropdown de seleção múltipla de meses — abre/fecha e mantém o rótulo
@@ -2452,24 +2945,32 @@ function _resRenderCards(medicoes){
 
   const fmt = v=>v.toLocaleString('pt-BR',{minimumFractionDigits:v%1!==0?1:0,maximumFractionDigits:1});
 
-  return `<div class="kpi-row" style="grid-template-columns:repeat(4,1fr)">
-    <div class="kpi-box">
-      <div class="kpi-box-label">Volume Total de Resíduos</div>
-      <div class="kpi-box-val" style="color:#1A73E8">${fmt(volumeTotal)} kg</div>
-    </div>
-    <div class="kpi-box">
-      <div class="kpi-box-label">Tipos de Resíduos</div>
-      <div class="kpi-box-val" style="color:#7C3AED">${tiposUnicos}</div>
-    </div>
-    <div class="kpi-box">
-      <div class="kpi-box-label">Total de Coletas</div>
-      <div class="kpi-box-val" style="color:#00A650">${totalColetas}</div>
-    </div>
-    <div class="kpi-box">
-      <div class="kpi-box-label">Principal Resíduo</div>
-      <div class="kpi-box-val" style="font-size:16px;color:#E67700">${principal?principal[0]:'—'}</div>
-      <div class="kpi-box-sub">${principal?fmt(principal[1])+' kg · '+principalPct+'%':''}</div>
-    </div>
+  // Ícones (traço estilo "lucide", desenhados em SVG inline — sem
+  // dependência externa). ICO: ícone branco dentro do círculo colorido;
+  // DECO: marca d'água clara no canto inferior direito do card.
+  const P = {
+    caminhao: '<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+    reciclar: '<path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/>',
+    folha: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  };
+  const ico = nome=>`<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[nome]}</svg>`;
+  const deco = (nome,cor)=>`<svg class="res-kpi-deco" viewBox="0 0 24 24" fill="${cor}" fill-opacity=".13" stroke="${cor}" stroke-opacity=".22" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[nome]}</svg>`;
+  const card = (cor, icone, decoNome, label, valor, sub, valorTexto)=>`
+    <div class="res-kpi">
+      <div class="res-kpi-ico" style="background:${cor}">${ico(icone)}</div>
+      <div class="res-kpi-txt">
+        <div class="res-kpi-label">${label}</div>
+        <div class="res-kpi-val${valorTexto?' res-kpi-val-txt':''}" title="${_resAttrEsc(valor)}">${valor}</div>
+        ${sub?`<div class="res-kpi-sub">${sub}</div>`:''}
+      </div>
+      ${deco(decoNome, cor)}
+    </div>`;
+
+  return `<div class="res-kpi-row">
+    ${card('#00A650','caminhao','folha','Volume Total de Resíduos', fmt(volumeTotal)+' kg')}
+    ${card('#7C3AED','reciclar','folha','Tipos de Resíduos', String(tiposUnicos))}
+    ${card('#1A73E8','caminhao','caminhao','Total de Coletas', String(totalColetas))}
+    ${card('#F97316','folha','folha','Principal Resíduo', principal?principal[0]:'—', principal?fmt(principal[1])+' kg · '+String(principalPct).replace('.',',')+'%':'', true)}
   </div>`;
 }
 
@@ -2545,7 +3046,7 @@ function _resRenderGraficoBarras(medicoes){
     <div class="card-section-title">📦 Volume de Resíduos por Tipo (kg)</div>
     <div style="display:flex;flex-direction:column;gap:8px">
       ${data.map(([tipo,val])=>`
-        <div style="display:flex;align-items:center;gap:8px;cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})" title="Clique para filtrar: ${tipo}">
+        <div class="res-clicavel" style="display:flex;align-items:center;gap:8px;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:tipo})} title="${tipo}: ${fmt(val)} kg — clique para ver os registros">
           <div style="width:120px;font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0">${tipo}</div>
           <div style="flex:1;height:20px;background:#F0F0F0;border-radius:4px;overflow:hidden">
             <div style="height:100%;background:${_resCorTipoResiduo(tipo)};width:${Math.max(Math.round((val/max)*100),val>0?2:0)}%;border-radius:4px;transition:width .4s"></div>
@@ -2554,10 +3055,6 @@ function _resRenderGraficoBarras(medicoes){
         </div>`).join('')}
     </div>
   </div>`;
-}
-function resFiltrarPorTipo(tipo){
-  const el=document.getElementById('dres-tipo');
-  if(el){ el.value=tipo; atualizarDashboardResiduos(); }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2578,8 +3075,8 @@ function _resRenderGraficoRosca(medicoes){
     acumulado += pct;
     return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${_resCorTipoResiduo(tipo)}" stroke-width="26"
       stroke-dasharray="${dash.toFixed(1)} ${(C-dash).toFixed(1)}" stroke-dashoffset="${offset.toFixed(1)}"
-      transform="rotate(-90 ${cx} ${cy})" style="cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})">
-      <title>${tipo}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg (${(pct*100).toFixed(1)}%)</title>
+      transform="rotate(-90 ${cx} ${cy})" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:tipo})}>
+      <title>${tipo}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg (${(pct*100).toFixed(1)}%) — clique para ver os registros</title>
     </circle>`;
   }).join('');
 
@@ -2596,7 +3093,7 @@ function _resRenderGraficoRosca(medicoes){
         </div>
       </div>
       <div style="flex:1;min-width:140px;display:flex;flex-direction:column;gap:5px">
-        ${data.map(([tipo,val],i)=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer" onclick="resFiltrarPorTipo(${JSON.stringify(tipo)})">
+        ${data.map(([tipo,val],i)=>`<div class="res-clicavel" style="display:flex;align-items:center;gap:6px;font-size:11px;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:tipo})} title="Clique para ver os registros de ${tipo}">
           <span style="width:9px;height:9px;border-radius:2px;background:${_resCorTipoResiduo(tipo)};flex-shrink:0"></span>
           <span style="color:var(--txt);flex:1">${tipo}</span>
           <b style="color:var(--navy)">${total>0?((val/total)*100).toFixed(1):'0'}%</b>
@@ -2627,9 +3124,9 @@ function _resRenderGraficoEvolucao(medicoesTodas, f){
   const xStep = porMes.length>1 ? plotW/(porMes.length-1) : 0;
   const pts = porMes.map((p,i)=>({x:padL+i*xStep, y:padT+plotH-(p.volume/maxVal)*plotH, ...p}));
   const path = pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-  const circles = pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="#1A73E8" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="resFiltrarPorMes(${JSON.stringify(p.mes)})">
-    <title>${_resMesLabel(p.mes)}: ${p.volume.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg</title></circle>`).join('');
-  const labels = pts.map(p=>`<text x="${p.x.toFixed(1)}" y="${H-6}" font-size="9" fill="#999" text-anchor="middle">${_resMesLabel(p.mes)}</text>`).join('');
+  const circles = pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="11" fill="transparent" style="cursor:pointer" ${_resOnClickRelatorio({mesReferencia:p.mes})}><title>${_resMesLabel(p.mes)}: ${p.volume.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros</title></circle><circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4" fill="#1A73E8" stroke="#fff" stroke-width="1.5" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({mesReferencia:p.mes})}>
+    <title>${_resMesLabel(p.mes)}: ${p.volume.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros</title></circle>`).join('');
+  const labels = pts.map(p=>`<text x="${p.x.toFixed(1)}" y="${H-6}" font-size="9" fill="#999" text-anchor="middle" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({mesReferencia:p.mes})}><title>Clique para ver os registros de ${_resMesLabel(p.mes)}</title>${_resMesLabel(p.mes)}</text>`).join('');
   const gridY = [0,0.5,1].map(pct=>{
     const y = padT+plotH-(pct*plotH);
     return `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="#EEE" stroke-width="1"/>
@@ -2642,11 +3139,6 @@ function _resRenderGraficoEvolucao(medicoesTodas, f){
       ${gridY}<path d="${path}" fill="none" stroke="#1A73E8" stroke-width="2.5"/>${circles}${labels}
     </svg>
   </div>`;
-}
-function resFiltrarPorMes(mes){
-  document.querySelectorAll('.dres-mes-checkbox').forEach(c=>{ c.checked = (c.value===mes); });
-  _resAtualizarLabelMesBtn();
-  atualizarDashboardResiduos();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2672,24 +3164,18 @@ function _resRenderGraficoEmpilhado(medicoesTodas, f){
           const val = base.filter(m=>m.mesReferencia===mes&&m.tipoResiduo===t).reduce((s,m)=>s+(m.volumeKg||0),0);
           if(val<=0) return '';
           const alturaPct = (val/maxTotal)*100;
-          return `<div style="width:100%;background:${_resCorTipoResiduo(t)};height:${alturaPct}%;cursor:pointer" onclick="resFiltrarPorTipoEMes(${JSON.stringify(t)},${JSON.stringify(mes)})" title="${t}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg"></div>`;
+          return `<div class="res-clicavel" style="width:100%;background:${_resCorTipoResiduo(t)};height:${alturaPct}%;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:t,mesReferencia:mes})} title="${t} — ${_resMesLabel(mes)}: ${val.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros"></div>`;
         }).join('');
         return `<div style="display:flex;flex-direction:column;align-items:center;flex:1;min-width:34px">
           <div style="width:100%;height:120px;display:flex;flex-direction:column-reverse;border-radius:4px 4px 0 0;overflow:hidden;background:#F5F5F5">${barras}</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:4px">${_resMesLabel(mes)}</div>
+          <div class="res-clicavel" style="font-size:10px;color:var(--muted);margin-top:4px;cursor:pointer" ${_resOnClickRelatorio({mesReferencia:mes})} title="Clique para ver os registros de ${_resMesLabel(mes)}">${_resMesLabel(mes)}</div>
         </div>`;
       }).join('')}
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
-      ${tipos.map((t,i)=>`<div style="display:flex;align-items:center;gap:4px;font-size:10px"><span style="width:8px;height:8px;border-radius:2px;background:${_resCorTipoResiduo(t)}"></span>${t}</div>`).join('')}
+      ${tipos.map((t,i)=>`<div class="res-clicavel" style="display:flex;align-items:center;gap:4px;font-size:10px;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:t})} title="Clique para ver os registros de ${_resAttrEsc(t)}"><span style="width:8px;height:8px;border-radius:2px;background:${_resCorTipoResiduo(t)}"></span>${t}</div>`).join('')}
     </div>
   </div>`;
-}
-function resFiltrarPorTipoEMes(tipo, mes){
-  const elT=document.getElementById('dres-tipo'); if(elT) elT.value=tipo;
-  document.querySelectorAll('.dres-mes-checkbox').forEach(c=>{ c.checked = (c.value===mes); });
-  _resAtualizarLabelMesBtn();
-  atualizarDashboardResiduos();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2720,7 +3206,7 @@ function _resRenderSecaoEvolucaoPorTipo(medicoesTodas, f, mesesSelecionados){
     </div>
     <div id="res-seletor-tipos-evolucao" style="display:none;background:#FAFAFA;border-radius:8px;padding:12px;margin-bottom:14px">
       <div style="display:flex;gap:8px;margin-bottom:8px">
-        <button class="btn btn-outline btn-sm" onclick="resSelecionarTodosTiposEvolucao(${JSON.stringify(todosTipos)})">Selecionar Todos</button>
+        <button class="btn btn-outline btn-sm" onclick="${_resAttrEsc('resSelecionarTodosTiposEvolucao('+JSON.stringify(todosTipos)+')')}">Selecionar Todos</button>
         <button class="btn btn-outline btn-sm" onclick="resLimparTiposEvolucao()">Limpar</button>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:10px">
@@ -2781,14 +3267,20 @@ function _resRenderGraficoLinhasPorTipo(medicoes, meses, tipos){
   const plotW=W-padL-padR, plotH=H-padT-padB;
   const xStep = meses.length>1 ? plotW/(meses.length-1) : 0;
 
+  let hitsSVG = '';
   const linhasSVG = series.map(s=>{
     const pts = s.valores.map((v,i)=>v==null?null:{x:padL+i*xStep, y:padT+plotH-(v/maxVal)*plotH, v, mes:meses[i]});
     const segmentos=[]; let atual=[];
     pts.forEach(p=>{ if(p){atual.push(p);} else { if(atual.length>1) segmentos.push(atual); atual=[]; } });
     if(atual.length>1) segmentos.push(atual);
     const path = segmentos.map(seg=>'M'+seg.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' L')).join(' ');
-    const circles = pts.filter(Boolean).map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="${s.cor}" stroke="#fff" stroke-width="1.2">
-      <title>${_resMesLabel(p.mes)}\n${s.tipo}: ${p.v.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg</title></circle>`).join('');
+    // Áreas de clique (invisíveis) primeiro e pontos visíveis por último,
+    // para que a área ampliada de uma série não encubra o ponto de outra.
+    hitsSVG += pts.filter(Boolean).map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="10" fill="transparent" style="cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:s.tipo,mesReferencia:p.mes})}><title>${_resMesLabel(p.mes)}
+${s.tipo}: ${p.v.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros</title></circle>`).join('');
+    const circles = pts.filter(Boolean).map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="${s.cor}" stroke="#fff" stroke-width="1.2" class="res-clicavel" style="cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:s.tipo,mesReferencia:p.mes})}>
+      <title>${_resMesLabel(p.mes)}
+${s.tipo}: ${p.v.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg — clique para ver os registros</title></circle>`).join('');
     return `<path d="${path}" fill="none" stroke="${s.cor}" stroke-width="2.2"/>${circles}`;
   }).join('');
 
@@ -2799,9 +3291,9 @@ function _resRenderGraficoLinhasPorTipo(medicoes, meses, tipos){
   }).join('');
   const labelsX = meses.map((mes,i)=>`<text x="${padL+i*xStep}" y="${H-6}" font-size="9" fill="#999" text-anchor="middle">${_resMesLabel(mes)}</text>`).join('');
 
-  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${gridY}${linhasSVG}${labelsX}</svg>
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${gridY}${hitsSVG}${linhasSVG}${labelsX}</svg>
   <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
-    ${series.map(s=>`<div style="display:flex;align-items:center;gap:5px;font-size:11px"><span style="width:9px;height:9px;border-radius:2px;background:${s.cor}"></span>${s.tipo}</div>`).join('')}
+    ${series.map(s=>`<div class="res-clicavel" style="display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer" ${_resOnClickRelatorio({tipoResiduo:s.tipo})} title="Clique para ver os registros de ${_resAttrEsc(s.tipo)}"><span style="width:9px;height:9px;border-radius:2px;background:${s.cor}"></span>${s.tipo}</div>`).join('')}
   </div>`;
 }
 
@@ -2946,6 +3438,11 @@ async function resAnalisarRelatorio(){
     _resPdfPendenteNome = file.name;
 
     const previa = interpretarMedicaoPdf(texto);
+    // Retiradas individuais (tabelas DETALHAMENTO). Falha aqui não
+    // impede a importação do consolidado — o relatório tenta de novo
+    // depois a partir do PDF guardado.
+    try{ previa.detalhamento = await _resDetalharPdfArrayBuffer(arrayBuffer.slice(0)); }
+    catch(e){ console.error('Falha ao ler o detalhamento do PDF', e); previa.detalhamento = null; }
     renderEtapas(previa.cnpj?3:2);
     await new Promise(r=>setTimeout(r,200));
     renderEtapas(previa.mesReferencia?4:3);
@@ -3237,6 +3734,7 @@ function resConfirmarESalvar(){
       DB.set('medicoesResiduos', medicoesSemAntiga);
       const pdfsSemAntigo = (DB.get('pdfsMedicaoResiduos')||[]).filter(x=>x.id!==alvo.id);
       DB.set('pdfsMedicaoResiduos', pdfsSemAntigo);
+      _resRemoverDetalhes([alvo.id]);
       _resSubstituindoCompetencia = null;
     }
   }
@@ -3252,6 +3750,9 @@ function resConfirmarESalvar(){
       !(m.mesReferencia===p.mesReferencia && m.unidade===p.unidade && m.cnpj===p.cnpj && m.fornecedor===p.fornecedor)
     );
     DB.set('medicoesResiduos', restantes);
+    const idsRemovidos = [...new Set(medicoesExistentes.filter(m=>!restantes.includes(m)).map(m=>m.arquivoOrigemId))]
+      .filter(id=>id && !restantes.some(r=>r.arquivoOrigemId===id));
+    _resRemoverDetalhes(idsRemovidos);
   }
 
   const arquivoOrigemId = uid();
@@ -3274,6 +3775,7 @@ function resConfirmarESalvar(){
     });
   });
   DB.set('medicoesResiduos', medicoesAtualizadas);
+  if(p.detalhamento) _resSalvarDetalhe(arquivoOrigemId, p.detalhamento);
 
   const pdfsOrigem = DB.get('pdfsMedicaoResiduos')||[];
   pdfsOrigem.push({
@@ -3401,6 +3903,7 @@ function resExcluirMedicao(pdfId){
   DB.set('medicoesResiduos', medicoesRestantes);
   const pdfsRestantes = pdfs.filter(p=>p.id!==pdfId);
   DB.set('pdfsMedicaoResiduos', pdfsRestantes);
+  _resRemoverDetalhes([pdfId]);
 
   resAbrirHistoricoImportacoes();
 }
