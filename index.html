@@ -5690,6 +5690,7 @@ function excluirChecklist(id,afterDelete){
   if(!confirm('Excluir este lançamento de check list? Esta ação não pode ser desfeita.')) return;
   const d=DB.get('checklistData')||[];
   DB.set('checklistData',d.filter(c=>c.id!==id));
+  fbPdfsChecklist.child(id).remove().catch(e=>console.warn('Falha ao remover PDF do lançamento excluído',e));
   if(afterDelete) afterDelete();
 }
 function _refreshChecklistView(reopenDetalhe){
@@ -5712,12 +5713,28 @@ function adicionarChecklistNaSemana(fornecedor,mes,ano){
 }
 
 // ─── DETALHAMENTO SEMANAL + PDF DO CHECK LIST ───
-// ANEXO DE PDF — Base64 dentro do Realtime Database (sem Firebase Storage).
-// Motivo: o plano do projeto Firebase é Spark (gratuito), e o Storage exige
-// o plano Blaze. Para não depender de Storage nem mudar de plano, o PDF é
-// convertido para uma string Base64 no próprio navegador e salvo dentro do
-// registro do checklist, no campo `pdfAnexo` (nome, tamanho, data, conteúdo).
-const PDF_MAX_BYTES = 2 * 1024 * 1024; // limite de 2 MB por arquivo
+// ANEXO DE PDF — Base64 no Realtime Database (sem Firebase Storage, plano Spark).
+//
+// ARMAZENAMENTO SEPARADO (v2): o conteúdo do PDF NÃO fica mais dentro do
+// array 'checklistData'. Motivos:
+//   1) Toda gravação do checklistData (salvar nota, editar, anexar) regravava
+//      o array inteiro — com todos os PDFs juntos. O SDK do Realtime Database
+//      aceita no máximo 16 MB por gravação, então após algumas dezenas de PDFs
+//      qualquer salvamento do Check List passaria a falhar.
+//   2) O listener fbRoot.on('value') baixa todo o nó 'portal_facilities' a
+//      cada abertura do portal — com os PDFs dentro, cada usuário baixaria
+//      o ano inteiro de PDFs só para abrir a tela (cota de 10 GB/mês do Spark).
+// Agora o conteúdo vai para 'portal_facilities_arquivos/checklistPdfs/
+// {idDoRegistro}/{idDoUpload}', fatiado em partes de ~1 MB, e é baixado sob
+// demanda só quando alguém clica em Visualizar/Baixar. No registro do
+// checklist fica apenas a referência: pdfAnexo = {nome, tamanho, dataUpload,
+// uploadId}. Registros antigos (com conteudoBase64 embutido) continuam
+// funcionando e são migrados automaticamente em segundo plano.
+const PDF_MAX_BYTES = 15 * 1024 * 1024; // limite de 15 MB por arquivo
+const PDF_MAX_MB_TXT = '15 MB';
+const PDF_PARTE_CHARS = 1024 * 1024;    // ~1 MB de texto Base64 por parte
+const fbPdfsChecklist = firebase.database().ref('portal_facilities_arquivos/checklistPdfs');
+const _pdfChecklistCacheSessao = {};    // uploadId -> dataURL (evita baixar 2x na mesma sessão)
 let _pdfUploadRecordId=null;
 let _pdfUploadEmAndamento=false;
 
@@ -5797,6 +5814,49 @@ function _lerArquivoComoBase64(file){
   });
 }
 
+// Grava o PDF (Data URL Base64) em partes no nó separado.
+// Cada parte é uma gravação pequena (~1 MB), bem abaixo do limite de 16 MB
+// por gravação e de 10 MB por string do Realtime Database.
+async function _gravarPartesPdfChecklist(recordId, uploadId, dataUrl, meta, onProgresso){
+  const ref=fbPdfsChecklist.child(recordId).child(uploadId);
+  const total=Math.max(1,Math.ceil(dataUrl.length/PDF_PARTE_CHARS));
+  for(let i=0;i<total;i++){
+    await ref.child('partes').child('p'+i).set(dataUrl.slice(i*PDF_PARTE_CHARS,(i+1)*PDF_PARTE_CHARS));
+    if(onProgresso) onProgresso(i+1,total);
+  }
+  // Metadados por último: só existe 'meta' se todas as partes foram gravadas.
+  await ref.child('meta').set({...meta, totalPartes: total});
+  return total;
+}
+
+// Atualiza UM registro do checklistData via transação no próprio item
+// (checklistData/{índice}), sem reenviar o array inteiro. Confere o id
+// dentro da transação para não alterar o item errado caso a lista tenha
+// mudado de ordem em outra aba/usuário.
+function _atualizarRegistroChecklist(recordId, mutador){
+  const arr=DB.get('checklistData')||[];
+  const idx=arr.findIndex(c=>c&&c.id===recordId);
+  if(idx<0) return Promise.resolve({committed:false, motivo:'nao-encontrado'});
+  return fbRoot.child('checklistData').child(String(idx)).transaction(atual=>{
+    if(atual===null) return null; // ainda sem valor local: o servidor devolve o valor real e a transação repete
+    if(!atual || atual.id!==recordId) return; // item mudou de posição → aborta
+    return mutador({...atual});
+  }).then(tx=>{
+    if(tx.committed){
+      const val=tx.snapshot.val();
+      const lista=DB.get('checklistData');
+      if(Array.isArray(lista) && val && lista[idx] && lista[idx].id===recordId) lista[idx]=val;
+    }
+    return tx;
+  });
+}
+
+function _msgErroFirebasePdf(err){
+  const cod=String((err&&(err.code||err.message))||'').toLowerCase();
+  if(cod.includes('permission')) return '❌ Sem permissão para gravar em "portal_facilities_arquivos" no Firebase. Libere esse caminho nas Regras do Realtime Database.';
+  return '❌ Falha ao processar/salvar o PDF. Tente novamente.';
+}
+
 function onPdfFileSelected(event){
   const file=event.target.files[0];
   event.target.value='';
@@ -5808,67 +5868,107 @@ function onPdfFileSelected(event){
     _setPdfStatus(id, '<span style="color:var(--red)">❌ Apenas arquivos PDF são aceitos.</span>');
     return;
   }
-  // Validação: tamanho (2 MB)
+  // Validação: tamanho
   if(file.size>PDF_MAX_BYTES){
     const tamanhoMB=(file.size/1024/1024).toFixed(2);
-    _setPdfStatus(id, `<span style="color:var(--red)">❌ Arquivo muito grande (${tamanhoMB} MB). O limite é 2 MB.</span>`);
+    _setPdfStatus(id, `<span style="color:var(--red)">❌ Arquivo muito grande (${tamanhoMB} MB). O limite é ${PDF_MAX_MB_TXT}.</span>`);
     return;
   }
 
   const data=DB.get('checklistData')||[];
   const rec=data.find(c=>c.id===id);
   if(!rec){ _setPdfStatus(id, '<span style="color:var(--red)">Registro não encontrado. Feche e reabra o detalhamento.</span>'); return; }
+  const uploadAnterior=rec.pdfAnexo&&rec.pdfAnexo.uploadId?rec.pdfAnexo.uploadId:null;
+  const uploadId=uid();
 
   _pdfUploadEmAndamento=true;
   _setBotaoAnexarHabilitado(id,false,'Processando…');
-  _setPdfStatus(id, '<span style="color:var(--blue)">⏳ 1/2 Convertendo arquivo…</span>');
+  _setPdfStatus(id, '<span style="color:var(--blue)">⏳ 1/3 Convertendo arquivo…</span>');
+
+  const meta={ nome:file.name, tamanho:file.size, dataUpload:new Date().toISOString() };
 
   _lerArquivoComoBase64(file)
     .then(base64DataUrl=>{
-      _setPdfStatus(id, '<span style="color:var(--blue)">⏳ 2/2 Salvando no banco de dados…</span>');
-
-      const pdfAnexo={
-        nome: file.name,
-        tamanho: file.size,
-        dataUpload: new Date().toISOString(),
-        conteudoBase64: base64DataUrl
-      };
-
-      // Transação atômica no nó 'checklistData': parte sempre do valor mais
-      // recente confirmado no servidor (evita perder o anexo se outra
-      // escrita concorrente acontecer no meio do processo).
-      return fbRoot.child('checklistData').transaction(currentArray=>{
-        const arr = Array.isArray(currentArray) ? currentArray.slice() : [];
-        const idx = arr.findIndex(c=>c && c.id===id);
-        if(idx>=0){
-          arr[idx] = {...arr[idx], pdfAnexo};
-        }
-        return arr;
-      });
+      _setPdfStatus(id, '<span style="color:var(--blue)">⏳ 2/3 Enviando arquivo…</span>');
+      return _gravarPartesPdfChecklist(id, uploadId, base64DataUrl, meta, (n,t)=>{
+        _setPdfStatus(id, `<span style="color:var(--blue)">⏳ 2/3 Enviando arquivo… ${Math.round(n/t*100)}%</span>`);
+      }).then(()=>{ _pdfChecklistCacheSessao[uploadId]=base64DataUrl; });
+    })
+    .then(()=>{
+      _setPdfStatus(id, '<span style="color:var(--blue)">⏳ 3/3 Vinculando ao lançamento…</span>');
+      // No registro fica só a referência (sem conteudoBase64).
+      return _atualizarRegistroChecklist(id, atual=>({...atual, pdfAnexo:{...meta, uploadId}}));
     })
     .then(txResult=>{
       _pdfUploadEmAndamento=false;
       if(!txResult.committed){
+        fbPdfsChecklist.child(id).child(uploadId).remove().catch(()=>{});
         _setPdfStatus(id, '<span style="color:var(--red)">❌ Não foi possível confirmar o salvamento. Tente novamente.</span>');
         _setBotaoAnexarHabilitado(id,true,'📎 Tentar novamente');
         return;
       }
-      const arrConfirmado = txResult.snapshot.val();
-      if(Array.isArray(arrConfirmado)) DB_CACHE['checklistData']=arrConfirmado;
-
-      _setPdfStatus(id, '<span style="color:var(--green)">✅ PDF anexado e salvo com sucesso.</span>');
-
-      // Reabre o detalhamento para já refletir os novos botões (Visualizar/Baixar/Substituir)
-      if(rec){
-        setTimeout(()=>abrirDetalheSemanal(rec.fornecedor, rec.mes, rec.ano), 400);
+      // Substituição: apaga o arquivo anterior só depois do novo estar vinculado.
+      if(uploadAnterior && uploadAnterior!==uploadId){
+        fbPdfsChecklist.child(id).child(uploadAnterior).remove().catch(e=>console.warn('Falha ao limpar PDF anterior',e));
       }
+      _setPdfStatus(id, '<span style="color:var(--green)">✅ PDF anexado e salvo com sucesso.</span>');
+      setTimeout(()=>abrirDetalheSemanal(rec.fornecedor, rec.mes, rec.ano), 400);
     })
     .catch(err=>{
       _pdfUploadEmAndamento=false;
       console.error('Erro ao salvar PDF do checklist',err);
-      _setPdfStatus(id, '<span style="color:var(--red)">❌ Falha ao processar/salvar o PDF. Tente novamente.</span>');
+      fbPdfsChecklist.child(id).child(uploadId).remove().catch(()=>{});
+      _setPdfStatus(id, `<span style="color:var(--red)">${_msgErroFirebasePdf(err)}</span>`);
       _setBotaoAnexarHabilitado(id,true,'📎 Tentar novamente');
     });
+}
+
+// Obtém o Data URL do PDF de um registro: embutido (formato antigo) ou
+// baixado sob demanda do nó separado.
+async function _obterPdfChecklistDataUrl(rec){
+  const anexo=rec&&rec.pdfAnexo;
+  if(!anexo) return null;
+  if(anexo.conteudoBase64) return anexo.conteudoBase64;
+  if(!anexo.uploadId) return null;
+  if(_pdfChecklistCacheSessao[anexo.uploadId]) return _pdfChecklistCacheSessao[anexo.uploadId];
+  const snap=await fbPdfsChecklist.child(rec.id).child(anexo.uploadId).once('value');
+  const v=snap.val();
+  if(!v||!v.meta||!v.partes) return null;
+  let dataUrl='';
+  for(let i=0;i<v.meta.totalPartes;i++){
+    const parte=v.partes['p'+i];
+    if(typeof parte!=='string') return null;
+    dataUrl+=parte;
+  }
+  _pdfChecklistCacheSessao[anexo.uploadId]=dataUrl;
+  return dataUrl;
+}
+
+// Migração automática: move PDFs antigos (conteudoBase64 dentro do
+// checklistData) para o nó separado, um de cada vez. Idempotente — se
+// outra aba/usuário já migrou o mesmo registro, a cópia extra é apagada.
+let _migracaoPdfChecklistFeita=false;
+async function _migrarPdfsChecklistLegados(){
+  if(_migracaoPdfChecklistFeita) return;
+  _migracaoPdfChecklistFeita=true;
+  const legados=(DB.get('checklistData')||[]).filter(c=>c&&c.pdfAnexo&&c.pdfAnexo.conteudoBase64);
+  for(const rec of legados){
+    const uploadId=uid();
+    const a=rec.pdfAnexo;
+    const meta={ nome:a.nome||'checklist.pdf', tamanho:a.tamanho||0, dataUpload:a.dataUpload||new Date().toISOString() };
+    try{
+      await _gravarPartesPdfChecklist(rec.id, uploadId, a.conteudoBase64, meta);
+      const tx=await _atualizarRegistroChecklist(rec.id, atual=>{
+        if(!atual.pdfAnexo||!atual.pdfAnexo.conteudoBase64) return; // já migrado por outro cliente
+        return {...atual, pdfAnexo:{...meta, uploadId}};
+      });
+      if(!tx.committed) await fbPdfsChecklist.child(rec.id).child(uploadId).remove();
+    }catch(e){
+      console.warn('Migração do PDF do Check List interrompida (os PDFs antigos continuam acessíveis):',e);
+      fbPdfsChecklist.child(rec.id).child(uploadId).remove().catch(()=>{});
+      return;
+    }
+  }
 }
 
 // Converte uma Data URL "data:application/pdf;base64,XXXX" em um Blob real.
@@ -5893,48 +5993,60 @@ function _dataUrlParaBlob(dataUrl){
 function visualizarPdfChecklist(recordId){
   const data=DB.get('checklistData')||[];
   const rec=data.find(c=>c.id===recordId);
-  const conteudo=rec&&rec.pdfAnexo&&rec.pdfAnexo.conteudoBase64;
-
-  if(!conteudo){
+  if(!rec||!rec.pdfAnexo){
     alert('❌ Não foi possível localizar o PDF deste registro. Tente recarregar a página.');
     return;
   }
-
-  const blob=_dataUrlParaBlob(conteudo);
-  if(!blob||blob.size===0){
-    alert('❌ O arquivo PDF está corrompido ou em um formato inválido e não pode ser visualizado. Tente substituir o PDF.');
-    return;
-  }
-
-  const blobUrl=URL.createObjectURL(blob);
-  const janela=window.open(blobUrl,'_blank');
-
+  // Abre a aba já no clique (antes do download), senão o navegador trata
+  // como pop-up e bloqueia.
+  const janela=window.open('','_blank');
   if(!janela){
-    // Pop-up bloqueado pelo navegador
-    URL.revokeObjectURL(blobUrl);
     alert('❌ O navegador bloqueou a abertura da nova aba. Permita pop-ups para este site e tente novamente.');
     return;
   }
+  try{ janela.document.write('<p style="font-family:sans-serif;padding:24px;color:#555">⏳ Carregando PDF…</p>'); }catch(e){}
 
-  // Libera a memória do Blob depois que a aba já teve tempo de carregar o PDF.
-  setTimeout(()=>URL.revokeObjectURL(blobUrl), 60000);
+  _obterPdfChecklistDataUrl(rec).then(conteudo=>{
+    const blob=conteudo?_dataUrlParaBlob(conteudo):null;
+    if(!blob||blob.size===0){
+      janela.close();
+      alert('❌ O arquivo PDF não foi encontrado ou está corrompido. Tente substituir o PDF.');
+      return;
+    }
+    const blobUrl=URL.createObjectURL(blob);
+    janela.location.href=blobUrl;
+    setTimeout(()=>URL.revokeObjectURL(blobUrl), 60000);
+  }).catch(err=>{
+    console.error('Erro ao carregar PDF do checklist',err);
+    janela.close();
+    alert('❌ Falha ao carregar o PDF. Verifique sua conexão e tente novamente.');
+  });
 }
 function baixarPdfChecklist(recordId){
   const data=DB.get('checklistData')||[];
   const rec=data.find(c=>c.id===recordId);
-  if(!rec||!rec.pdfAnexo||!rec.pdfAnexo.conteudoBase64) return;
-  const a=document.createElement('a');
-  a.href=rec.pdfAnexo.conteudoBase64;
-  a.download=rec.pdfAnexo.nome||'checklist.pdf';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  if(!rec||!rec.pdfAnexo) return;
+  _setPdfStatus(recordId, '<span style="color:var(--blue)">⏳ Baixando PDF…</span>');
+  _obterPdfChecklistDataUrl(rec).then(conteudo=>{
+    const blob=conteudo?_dataUrlParaBlob(conteudo):null;
+    if(!blob){ _setPdfStatus(recordId, '<span style="color:var(--red)">❌ PDF não encontrado ou corrompido.</span>'); return; }
+    const blobUrl=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=blobUrl;
+    a.download=rec.pdfAnexo.nome||'checklist.pdf';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(blobUrl), 60000);
+    _setPdfStatus(recordId, '');
+  }).catch(err=>{
+    console.error('Erro ao baixar PDF do checklist',err);
+    _setPdfStatus(recordId, '<span style="color:var(--red)">❌ Falha ao baixar o PDF. Tente novamente.</span>');
+  });
 }
 
 // Exclui apenas o PDF anexado a um lançamento de Check List, mantendo o
-// lançamento (data, resultado, semana, obs) intacto. Usa a mesma transação
-// atômica do Realtime Database já usada no upload, para não perder dados
-// em caso de escrita concorrente de outra aba/usuário.
+// lançamento (data, resultado, semana, obs) intacto.
 function excluirPdfChecklist(recordId){
   const data=DB.get('checklistData')||[];
   const rec=data.find(c=>c.id===recordId);
@@ -5943,21 +6055,15 @@ function excluirPdfChecklist(recordId){
 
   _setPdfStatus(recordId, '<span style="color:var(--blue)">⏳ Excluindo PDF…</span>');
 
-  fbRoot.child('checklistData').transaction(currentArray=>{
-    const arr = Array.isArray(currentArray) ? currentArray.slice() : [];
-    const idx = arr.findIndex(c=>c && c.id===recordId);
-    if(idx>=0){
-      const { pdfAnexo, ...semAnexo } = arr[idx];
-      arr[idx] = semAnexo;
-    }
-    return arr;
+  _atualizarRegistroChecklist(recordId, atual=>{
+    const { pdfAnexo, ...semAnexo } = atual;
+    return semAnexo;
   }).then(txResult=>{
     if(!txResult.committed){
       _setPdfStatus(recordId, '<span style="color:var(--red)">❌ Não foi possível excluir o PDF. Tente novamente.</span>');
       return;
     }
-    const arrConfirmado = txResult.snapshot.val();
-    if(Array.isArray(arrConfirmado)) DB_CACHE['checklistData']=arrConfirmado;
+    fbPdfsChecklist.child(recordId).remove().catch(e=>console.warn('Falha ao remover arquivo do PDF',e));
     setTimeout(()=>abrirDetalheSemanal(rec.fornecedor, rec.mes, rec.ano), 200);
   }).catch(err=>{
     console.error('Erro ao excluir PDF do checklist',err);
@@ -6540,6 +6646,7 @@ fbRoot.on('value', (snapshot) => {
   if(!dbReady){
     dbReady = true;
     seedDefaults();
+    setTimeout(()=>{ _migrarPdfsChecklistLegados(); }, 3000);
     if(loginBtn){ loginBtn.disabled = false; loginBtn.textContent = loginBtnTextoOriginal; loginBtn.style.opacity = ''; }
     try{
       const saved = recuperarSessao();
