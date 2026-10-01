@@ -2722,13 +2722,29 @@ function normalizarTipoResiduo(raw){
 // separador (barra, hífen ou espaço) e o ano com 2 ou 4 dígitos.
 function extrairMesReferencia(texto){
   const regex = new RegExp('(' + MESES_PT_FULL.join('|') + ')\\s*[/\\-\\s]\\s*(\\d{2,4})\\b', 'i');
+  const montar = (m)=>{
+    const mesNum = MESES_PT_FULL.indexOf(m[1].toUpperCase()) + 1;
+    let ano = parseInt(m[2]);
+    if(ano < 100) ano += 2000;
+    return { mes: mesNum, ano, chave: `${ano}-${String(mesNum).padStart(2,'0')}`, label: `${MESES_ABREV_RES[mesNum-1]}/${ano}` };
+  };
+  // 1) Regra do documento: a competência é o campo nominal (ex.: "JANEIRO
+  //    2026", "AGOSTO/26") escrito logo ABAIXO do CNPJ da unidade. Olha a
+  //    própria linha do CNPJ e as 3 seguintes — nunca as datas das coletas.
+  const cnpj = extrairCNPJ(texto);
+  if(cnpj){
+    const linhas = texto.split(/\n/).map(l=>l.trim()).filter(Boolean);
+    const idx = linhas.findIndex(l=>l.includes(cnpj));
+    if(idx >= 0){
+      for(let i=idx; i<=Math.min(idx+3, linhas.length-1); i++){
+        const m = linhas[i].match(regex);
+        if(m) return montar(m);
+      }
+    }
+  }
+  // 2) Reserva: primeira ocorrência "MÊS ANO" em qualquer parte do texto.
   const m = texto.match(regex);
-  if(!m) return null;
-  const mesNome = m[1].toUpperCase();
-  const mesNum = MESES_PT_FULL.indexOf(mesNome) + 1;
-  let ano = parseInt(m[2]);
-  if(ano < 100) ano += 2000;
-  return { mes: mesNum, ano, chave: `${ano}-${String(mesNum).padStart(2,'0')}`, label: `${MESES_ABREV_RES[mesNum-1]}/${ano}` };
+  return m ? montar(m) : null;
 }
 function extrairCNPJ(texto){
   const m = texto.match(/\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/);
@@ -2857,20 +2873,18 @@ function extrairGranelPorProximidade(textoCompleto){
   return acumulado;
 }
 
-// Quantas linhas, no máximo, podem separar um cabeçalho de seção do
-// detalhamento ("ORGÂNICOS - BOMBONAS 70L") da sua linha de total
-// ("5,00 14.771,0"). Isso limita o "alcance" do casamento: se o total
-// real da seção vier fragmentado pelo pdf.js e não for reconhecido
-// dentro dessa janela, a seção é descartada como não identificada em
-// vez de ficar "pendurada" esperando por qualquer linha futura do
-// texto que por acaso combine com o padrão numérico.
-const MAX_LINHAS_ATE_TOTAL_SECAO = 6;
+// (Removido: limite fixo de linhas entre o cabeçalho da seção e o total.)
+// Ele descartava seções legítimas com mais de ~5 retiradas — Orgânicos e
+// Rejeito sumiam de relatórios reais (Fev e Jun), porque a linha de total
+// vem depois de todas as retiradas. A seção agora só é encerrada pelo
+// próximo cabeçalho; qualquer divergência é pega pela conferência cruzada
+// com o detalhamento (_resConciliarComDetalhamento), que é visível ao
+// usuário, em vez de um corte silencioso.
 
 function extrairLinhasResiduo(texto){
   const linhas = texto.split(/\n/).map(l=>l.trim()).filter(Boolean);
   const acumulado = {};
   let secaoAtual = null;
-  let linhasDesdeCabecalho = 0;
 
   function somar(tipo, volume, coletas){
     if(!acumulado[tipo]) acumulado[tipo] = { tipo, volume:0, coletas:0, destinacao:null };
@@ -2881,23 +2895,9 @@ function extrairLinhasResiduo(texto){
   for(const linha of linhas){
     if(ehCabecalhoDeSecaoDetalhamento(linha)){
       secaoAtual = _resMapearCabecalhoParaTipo(linha);
-      linhasDesdeCabecalho = 0;
       continue;
     }
     if(!secaoAtual) continue;
-    linhasDesdeCabecalho++;
-    // Causa raiz do bug do "20kg fantasma": sem este limite, se o total
-    // real da seção não é reconhecido logo após o cabeçalho (por vir
-    // fragmentado em mais de uma linha pelo pdf.js), secaoAtual ficava
-    // "aceso" indefinidamente e acabava casando com um número não
-    // relacionado, muito mais adiante no texto (ex: fragmento de rótulo
-    // do eixo Y de um gráfico). Ao estourar a janela, a seção é
-    // abandonada (fica de fora do relatório) em vez de roubar um valor
-    // de outro lugar do texto.
-    if(linhasDesdeCabecalho > MAX_LINHAS_ATE_TOTAL_SECAO){
-      secaoAtual = null;
-      continue;
-    }
     if(_ehLinhaTotalSecaoDetalhamento(linha)){
       const partes = linha.split(/\s+/);
       const qtdColetas = parseInt(partes[0].replace(/\./g,'').replace(',','.'));
@@ -2915,14 +2915,9 @@ function extrairLinhasResiduo(texto){
     acumulado[tipo].volume = volume; // Granel já entrega o total, não é incremental
   });
 
-  // Uma seção só entra aqui via somar() (total reconhecido, mesmo que
-  // zero) ou via granel (peso > 0 sempre, por construção). "coletas"
-  // não-nulo é o sinal de "foi de fato lido no texto": distingue um
-  // resíduo CONFIRMADO como zero (ex: RSS = 0,00 no relatório real) de
-  // um resíduo nunca encontrado. Ambos tinham volume<=0 antes, e a
-  // condição antiga (`volume>0 || coletas>0`) descartava os dois casos
-  // igual — fazendo RSS=0 desaparecer do relatório em vez de aparecer
-  // como zero real.
+  // "coletas" não-nulo = a linha de total da seção foi de fato lida no
+  // texto. Distingue um resíduo CONFIRMADO como zero (ex: RSS = 0,00) de
+  // um resíduo nunca encontrado.
   return Object.values(acumulado).filter(r=>r.volume>0 || r.coletas!==null);
 }
 
@@ -4332,6 +4327,9 @@ function renderResultadoAnaliseResiduos(){
       <button class="btn btn-primary" style="margin-top:12px" onclick="renderModContent('residuos','dashres')">← Voltar ao Dashboard</button></div>`;
   }
 
+  // Conferência cruzada com o detalhamento (também completa a contagem de
+  // coletas dos recicláveis a partir das retiradas do próprio PDF).
+  const conc = _resConciliarComDetalhamento(p.linhas, p.detalhamento);
   const volumeTotal = p.linhas.reduce((s,l)=>s+(l.volume||0),0);
   const tiposCount = p.linhas.length;
   const coletasCount = p.linhas.reduce((s,l)=>s+(l.coletas||0),0);
@@ -4351,8 +4349,15 @@ function renderResultadoAnaliseResiduos(){
     if(l.volume==null || (l.volume<=0 && l.coletas==null)) pendencias.push({campo:'volume:'+l.id, texto:`Volume do resíduo "${l.tipo}" não identificado.`});
   });
 
+  conc.divergencias.forEach(d=>pendencias.push({
+    campo:'usarDetalhe:'+d.id, rotulo:'Usar '+fmt(d.soma)+' kg',
+    texto:`${d.tipo}: o total lido (${fmt(d.lido)} kg) não confere com a soma das retiradas do detalhamento (${fmt(d.soma)} kg).`}));
+  conc.faltando.forEach(f=>pendencias.push({
+    campo:'addDetalhe:'+f.tipo, rotulo:'Adicionar',
+    texto:`${f.tipo} tem ${fmt(f.soma)} kg nas retiradas do detalhamento, mas não foi lido no resumo.`}));
+
   const totalCategorias = p.linhas.length;
-  const categoriasComPendencia = new Set(pendencias.filter(pd=>pd.campo.startsWith('destinacao:')||pd.campo.startsWith('volume:')).map(pd=>pd.campo.split(':')[1])).size;
+  const categoriasComPendencia = new Set(pendencias.filter(pd=>pd.campo.startsWith('destinacao:')||pd.campo.startsWith('volume:')||pd.campo.startsWith('usarDetalhe:')).map(pd=>pd.campo.split(':')[1])).size;
   const categoriasOk = totalCategorias - categoriasComPendencia;
 
   return `
@@ -4382,7 +4387,7 @@ function renderResultadoAnaliseResiduos(){
     ${pendencias.length?`<div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
       ${pendencias.map(pd=>`<div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#7A5C00;background:#fff;border-radius:6px;padding:6px 10px">
         <span>⚠ ${pd.texto}</span>
-        <button class="btn btn-outline btn-sm" onclick="resCorrigirCampo('${pd.campo}')">Corrigir</button>
+        <button class="btn btn-outline btn-sm" onclick="resCorrigirCampo('${pd.campo}')">${pd.rotulo||'Corrigir'}</button>
       </div>`).join('')}
     </div>`:''}
   </div>
@@ -4453,6 +4458,22 @@ function _resRenderGraficoDestinacaoSimples(linhas){
 // uma tela de edição geral com todas as linhas.
 function resCorrigirCampo(campo){
   const p = _resPreviaAtual;
+  // Itens vindos da conferência cruzada: aplicam direto, sem formulário.
+  if(campo.startsWith('usarDetalhe:')){
+    const id = campo.split(':')[1];
+    const dv = _resConciliarComDetalhamento(p.linhas, p.detalhamento).divergencias.find(x=>x.id===id);
+    const l = p.linhas.find(x=>x.id===id);
+    if(l && dv){ l.volume = dv.soma; l.coletas = dv.coletas; }
+    renderModContent('residuos','resultadoAnalise');
+    return;
+  }
+  if(campo.startsWith('addDetalhe:')){
+    const tipo = campo.slice('addDetalhe:'.length);
+    const f = _resConciliarComDetalhamento(p.linhas, p.detalhamento).faltando.find(x=>x.tipo===tipo);
+    if(f) p.linhas.push({id:'tmp'+Math.random().toString(36).slice(2), tipo:f.tipo, volume:f.soma, destinacao:null, coletas:f.coletas});
+    renderModContent('residuos','resultadoAnalise');
+    return;
+  }
   const area = document.getElementById('res-corrigir-campo-area');
   if(!area) return;
 
@@ -4564,6 +4585,20 @@ function resConfirmarESalvar(){
     return;
   }
 
+  // Conferência cruzada: não grava em silêncio se o que foi lido diverge
+  // do detalhamento do próprio relatório.
+  {
+    const conc = _resConciliarComDetalhamento(p.linhas, p.detalhamento);
+    if(conc.divergencias.length || conc.faltando.length){
+      const kg = v=>v.toLocaleString('pt-BR',{maximumFractionDigits:1});
+      const resumo = [
+        ...conc.divergencias.map(d=>`• ${d.tipo}: resumo ${kg(d.lido)} kg × retiradas ${kg(d.soma)} kg`),
+        ...conc.faltando.map(f=>`• ${f.tipo}: ${kg(f.soma)} kg só no detalhamento`)
+      ].join('\n');
+      if(!confirm(`Os dados lidos não conferem integralmente com o detalhamento do relatório:\n\n${resumo}\n\nSalvar mesmo assim?\n(Cancelar volta à conferência, onde cada item pode ser corrigido.)`)) return;
+    }
+  }
+
   // Fluxo de SUBSTITUIÇÃO: verifica se o mês do novo PDF corresponde à
   // competência que o usuário está tentando substituir. Se não bater,
   // nunca substitui silenciosamente — oferece cancelar ou importar como
@@ -4654,6 +4689,181 @@ function resConfirmarESalvar(){
 
 
 // ═══════════════════════════════════════════════════════
+// CONFERÊNCIA CRUZADA + REPROCESSAMENTO
+//
+// A leitura do RESUMO/TOTAIS (texto corrido do pdf.js) e a leitura do
+// DETALHAMENTO por posição de coluna (_resDetalharPdfArrayBuffer) são
+// independentes. Se as duas concordam, o dado é confiável; se divergem,
+// o sistema NÃO grava em silêncio — mostra a diferença ao usuário.
+// ═══════════════════════════════════════════════════════
+function _resSomaPorTipoDetalhe(detalhamento){
+  const r = {};
+  ((detalhamento && detalhamento.linhas) || []).forEach(l=>{
+    if(!l || !l.tipoResiduo) return;
+    const x = r[l.tipoResiduo] || (r[l.tipoResiduo] = {kg:0, coletas:0, linhas:0});
+    x.kg += (l.pesoKg||0);
+    x.coletas += (l.qtdColetas||0);
+    x.linhas++;
+  });
+  return r;
+}
+// Compara cada tipo lido com a soma das retiradas do mesmo tipo.
+// Efeito colateral intencional e seguro: quando a contagem de coletas não
+// foi lida do texto (null), preenche com a soma de QTDE COLETAS das
+// retiradas do próprio PDF (ex.: recicláveis do Granel).
+function _resConciliarComDetalhamento(linhas, detalhamento){
+  const soma = _resSomaPorTipoDetalhe(detalhamento);
+  const divergencias = [], faltando = [];
+  (linhas||[]).forEach(l=>{
+    const d = soma[l.tipo];
+    if(!d) return;
+    if(l.coletas==null) l.coletas = d.coletas;
+    if(Math.abs(d.kg - (l.volume||0)) > 0.5){
+      divergencias.push({tipo:l.tipo, id:l.id, lido:(l.volume||0), soma:d.kg, coletas:d.coletas});
+    }
+  });
+  Object.entries(soma).forEach(([tipo,d])=>{
+    if(d.kg > 0 && !(linhas||[]).some(l=>l.tipo===tipo)){
+      faltando.push({tipo, soma:d.kg, coletas:d.coletas});
+    }
+  });
+  return {divergencias, faltando};
+}
+
+// Monta (sem gravar nada) o que mudaria ao reler o PDF original.
+function _resMontarReprocessamento(antigos, previa, detalhamento){
+  const linhas = previa.linhas.map(l=>({...l}));
+  const conc = _resConciliarComDetalhamento(linhas, detalhamento);
+  // Tipos que só existem no detalhamento do próprio PDF entram marcados.
+  conc.faltando.forEach(f=>linhas.push({
+    id:'tmp'+Math.random().toString(36).slice(2), tipo:f.tipo, volume:f.soma,
+    destinacao:null, coletas:f.coletas, origem:'detalhamento'
+  }));
+  // A destinação não vem do PDF: preserva a que o usuário já informou.
+  const destAnt = {};
+  antigos.forEach(m=>{ if(m.destinacao) destAnt[m.tipoResiduo] = m.destinacao; });
+  linhas.forEach(l=>{ if(!l.destinacao && destAnt[l.tipo]) l.destinacao = destAnt[l.tipo]; });
+
+  const antMap = {};
+  antigos.forEach(m=>{ antMap[m.tipoResiduo] = m; });
+  const tipos = [...new Set([...antigos.map(m=>m.tipoResiduo), ...linhas.map(l=>l.tipo)])];
+  const comparacao = tipos.map(tipo=>{
+    const a = antMap[tipo];
+    const n = linhas.find(l=>l.tipo===tipo);
+    const antes  = a ? (a.volumeKg||0) : null;
+    const depois = n ? (n.volume||0)   : null;
+    let situacao;
+    if(antes==null) situacao = 'novo';
+    else if(depois==null) situacao = 'removido';
+    else if(Math.abs(antes-depois) < 0.05) situacao = 'igual';
+    else situacao = 'corrigido';
+    const dv = conc.divergencias.find(d=>d.tipo===tipo);
+    const aviso = dv ? `soma das retiradas = ${dv.soma.toLocaleString('pt-BR',{maximumFractionDigits:1})} kg`
+                : (n && n.origem==='detalhamento' ? 'lido do detalhamento' : '');
+    return {tipo, antes, depois, situacao, aviso};
+  });
+  return {linhasFinais: linhas, comparacao, divergencias: conc.divergencias};
+}
+
+let _resReprocessoPendente = null;
+
+async function resReprocessarMedicao(pdfId){
+  const pdf = (DB.get('pdfsMedicaoResiduos')||[]).find(p=>p.id===pdfId);
+  if(!pdf || !pdf.conteudoBase64){
+    alert('O PDF original desta medição não está guardado no sistema. Use "Substituir" para anexar o arquivo novamente.');
+    return;
+  }
+  openModal('Reprocessar leitura','<div style="font-size:13px;color:var(--muted);padding:12px 0">⏳ Relendo o PDF original…</div>','');
+  try{
+    const buf = _resDataUrlParaArrayBuffer(pdf.conteudoBase64);
+    const texto = await _extrairTextoPdf(buf.slice(0));
+    const previa = interpretarMedicaoPdf(texto);
+    let detalhamento = null;
+    try{ detalhamento = await _resDetalharPdfArrayBuffer(buf.slice(0)); }
+    catch(e){ console.error('Falha ao ler o detalhamento do PDF', e); }
+    if(!previa.linhas.length){
+      openModal('Reprocessar leitura','<div style="font-size:13px;padding:12px 0">Não foi possível ler os resíduos deste PDF (pode ser uma imagem). Nada foi alterado.</div>',
+        '<button class="btn btn-outline" onclick="resAbrirHistoricoImportacoes()">Voltar</button>');
+      return;
+    }
+    const antigos = (DB.get('medicoesResiduos')||[]).filter(m=>m.arquivoOrigemId===pdfId);
+    const r = _resMontarReprocessamento(antigos, previa, detalhamento);
+    _resReprocessoPendente = {pdfId, previa, detalhamento, antigos, ...r};
+    openModal('Reprocessar leitura — '+_resMesLabel(pdf.mesReferencia),
+      _resRenderReprocessamento(pdf, _resReprocessoPendente),
+      '<button class="btn btn-outline" onclick="_resReprocessoPendente=null;resAbrirHistoricoImportacoes()">Cancelar</button>'+
+      '<button class="btn btn-primary" onclick="resAplicarReprocessamento()">Aplicar correção</button>', true);
+  } catch(e){
+    console.error('Erro ao reprocessar medição', e);
+    openModal('Reprocessar leitura','<div style="font-size:13px;color:var(--red);padding:12px 0">❌ Não foi possível reprocessar este PDF. Nada foi alterado.</div>',
+      '<button class="btn btn-outline" onclick="resAbrirHistoricoImportacoes()">Voltar</button>');
+  }
+}
+
+function _resRenderReprocessamento(pdf, r){
+  const fmt = v => v==null ? '—' : v.toLocaleString('pt-BR',{maximumFractionDigits:1})+' kg';
+  const COR = {igual:'#6B7280', corrigido:'#B45309', novo:'#1D4ED8', removido:'#B91C1C'};
+  const ROT = {igual:'sem mudança', corrigido:'será corrigido', novo:'será adicionado', removido:'será removido'};
+  const mesDoc = r.previa.mesReferencia;
+  const avisoMes = (mesDoc && mesDoc !== pdf.mesReferencia)
+    ? `<div style="font-size:12px;color:#B91C1C;background:#FEF2F2;border-radius:8px;padding:10px 12px;margin-bottom:12px">⚠ O mês escrito no documento é <b>${r.previa.mesReferenciaLabel}</b>, mas esta medição está gravada em <b>${_resMesLabel(pdf.mesReferencia)}</b>. Esta ação mantém a competência gravada e não move dados entre meses. Para mudar de mês, exclua e importe o PDF novamente.</div>`
+    : '';
+  const avisoDiv = r.divergencias.length
+    ? `<div style="font-size:12px;color:#7A5C00;background:#FFF9E6;border-radius:8px;padding:10px 12px;margin-bottom:12px">⚠ A soma das retiradas do detalhamento não confere com o total escrito no relatório em: <b>${r.divergencias.map(d=>d.tipo).join(', ')}</b>. É aplicado o total escrito no relatório; confira com o PDF antes de aplicar.</div>`
+    : '';
+  const totAntes = r.comparacao.reduce((s,c)=>s+(c.antes||0),0);
+  const totDepois = r.comparacao.reduce((s,c)=>s+(c.depois||0),0);
+  return `
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">O PDF original (<b>${pdf.nome||'—'}</b>) foi relido com a leitura atual. Compare com o que está gravado hoje. Nada muda até você clicar em <b>Aplicar correção</b>. As destinações já informadas são mantidas.</div>
+    ${avisoMes}${avisoDiv}
+    <div class="data-table-wrap"><table><thead><tr>
+      <th>Resíduo</th><th style="text-align:right">Gravado hoje</th><th style="text-align:right">Leitura do PDF</th><th>Situação</th>
+    </tr></thead><tbody>
+    ${r.comparacao.map(c=>`<tr>
+      <td><b>${c.tipo}</b></td>
+      <td style="text-align:right">${fmt(c.antes)}</td>
+      <td style="text-align:right;font-weight:700">${fmt(c.depois)}</td>
+      <td style="color:${COR[c.situacao]};font-size:12px">${ROT[c.situacao]}${c.aviso?` <span style="color:#7A5C00">· ${c.aviso}</span>`:''}</td>
+    </tr>`).join('')}
+    <tr style="border-top:2px solid var(--line)"><td><b>Total</b></td>
+      <td style="text-align:right"><b>${fmt(totAntes)}</b></td><td style="text-align:right"><b>${fmt(totDepois)}</b></td><td></td></tr>
+    </tbody></table></div>`;
+}
+
+function resAplicarReprocessamento(){
+  const r = _resReprocessoPendente;
+  if(!r) return;
+  const pdf = (DB.get('pdfsMedicaoResiduos')||[]).find(p=>p.id===r.pdfId);
+  if(!pdf) return;
+  const todas = DB.get('medicoesResiduos')||[];
+  const ref = r.antigos[0] || {};
+  const restantes = todas.filter(m=>m.arquivoOrigemId!==r.pdfId);
+  const agora = new Date().toISOString();
+  r.linhasFinais.forEach(l=>{
+    restantes.push({
+      id: uid(),
+      mesReferencia: ref.mesReferencia || pdf.mesReferencia,
+      unidade: ref.unidade || pdf.unidade || r.previa.unidade || '',
+      cnpj: ref.cnpj || r.previa.cnpj || '',
+      fornecedor: ref.fornecedor || pdf.fornecedor || r.previa.fornecedor || '',
+      periodo: ref.periodo || r.previa.periodo || '',
+      tipoResiduo: l.tipo,
+      volumeKg: l.volume,
+      destinacao: l.destinacao || '',
+      qtdColetas: l.coletas || 0,
+      arquivoOrigemId: r.pdfId,
+      dataImportacao: ref.dataImportacao || pdf.dataImportacao || agora,
+      reprocessadoEm: agora,
+    });
+  });
+  DB.set('medicoesResiduos', restantes);
+  if(r.detalhamento) _resSalvarDetalhe(r.pdfId, r.detalhamento);
+  _resReprocessoPendente = null;
+  renderModContent('residuos','dashres');
+  resAbrirHistoricoImportacoes();
+}
+
+// ═══════════════════════════════════════════════════════
 // HISTÓRICO DE IMPORTAÇÕES — visualizar/baixar o PDF original de cada
 // competência já importada, garantindo rastreabilidade.
 // ═══════════════════════════════════════════════════════
@@ -4678,6 +4888,7 @@ function renderHistoricoMedicoesResiduos(){
       </div>
       <div style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="btn btn-outline btn-sm" onclick="resVisualizarPdfMedicao('${p.id}')">👁️ Visualizar</button>
+        <button class="btn btn-outline btn-sm" onclick="resReprocessarMedicao('${p.id}')" title="Relê o PDF original com a leitura atual e mostra o que mudaria">♻️ Reprocessar</button>
         <button class="btn btn-outline btn-sm" onclick="resAbrirSubstituirMedicao('${p.id}')">🔄 Substituir</button>
         <button class="btn btn-outline btn-sm" onclick="resExcluirMedicao('${p.id}')" style="color:var(--red)">🗑️ Excluir</button>
       </div>
