@@ -160,6 +160,210 @@ tbody td{padding:10px 14px;font-size:12px;color:var(--txt);}
 .dsh-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-bottom:16px;}
 .dsh-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
 @media(max-width:1000px){.dsh-grid,.dsh-grid-2{grid-template-columns:1fr;}}
+/* ── Documentação de Resíduos (MTR/CDF) — relatório consolidado como protagonista; só tokens já existentes do sistema ── */
+.dr-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:16px;}
+.dr-tabs2-bar{display:inline-flex;background:#F5F5F5;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:14px;}
+.dr-tab2{display:flex;align-items:center;gap:8px;padding:12px 42px;border:none;border-bottom:3px solid transparent;background:transparent;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;}
+.dr-tab2:hover{color:var(--black);}
+.dr-tab2.active{background:#fff;color:var(--black);border-bottom-color:var(--yellow);}
+.dr-tab2 svg{width:16px;height:16px;}
+.dr-nav{display:flex;align-items:center;gap:14px;padding:10px 12px;}
+.dr-ano{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.dr-ano span{font-size:14px;font-weight:800;color:var(--navy);min-width:42px;text-align:center;}
+.dr-ano button{width:28px;height:28px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-size:15px;color:var(--muted);}
+.dr-ano button:hover{border-color:var(--black);color:var(--black);}
+.dr-mes-list{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;flex:1;min-width:0;}
+.dr-mes{flex:1 1 0;min-width:70px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 6px;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;color:#444;cursor:pointer;white-space:nowrap;text-align:center;}
+.dr-mes:hover{border-color:var(--black);}
+.dr-mes.active{background:var(--yellow);border-color:var(--yellow);color:var(--black);font-weight:700;}
+.dr-mes-ano{font-weight:700;color:var(--navy);flex:0 0 auto;padding:9px 14px;}
+.dr-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:6px;vertical-align:middle;}
+.dr-dot.ok{background:var(--green);}
+.dr-alerta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#FFF8E6;border:1px solid #FFE066;color:#8A5A00;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:12px;}
+@media(max-width:800px){.dr-nav{flex-direction:column;align-items:stretch;}}
+
+/* resumo do período (canto superior direito) */
+.dr-resumo{display:flex;align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;flex:0 1 auto;}
+.dr-resumo-mes{display:flex;align-items:center;gap:10px;padding:10px 16px;border-right:1px solid var(--line);}
+.dr-resumo-ico{width:30px;height:30px;color:var(--navy);display:flex;align-items:center;justify-content:center;}
+.dr-resumo-ico svg{width:24px;height:24px;}
+.dr-resumo-label{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:3px;}
+.dr-resumo-it{display:flex;align-items:center;gap:10px;padding:10px 20px;border-right:1px solid var(--line);}
+.dr-resumo-it:last-child{border-right:none;}
+.dr-resumo-it b{display:block;font-size:12px;color:var(--navy);}
+.dr-resumo-it span.ok{font-size:11px;color:var(--green);}
+.dr-resumo-it span.pend{font-size:11px;color:#8A5A00;}
+.dr-resumo-st{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff !important;flex-shrink:0;}
+.dr-resumo-st.ok{background:var(--green);}
+.dr-resumo-st.pend{background:#E67700;}
+@media(max-width:700px){.dr-resumo{flex-wrap:wrap;}}
+
+/* relatório consolidado */
+.dr-rel{position:relative;padding:16px 18px;}
+.dr-rel.dr-drag{outline:2px dashed var(--black);outline-offset:-6px;}
+.dr-drop-dica{display:none;position:absolute;inset:0;background:rgba(255,255,255,.88);align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--navy);border-radius:12px;pointer-events:none;}
+.dr-rel.dr-drag .dr-drop-dica{display:flex;}
+.dr-rel-cab{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+.dr-rel-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.dr-rel-btns .btn svg{width:14px;height:14px;}
+.dr-tit{display:flex;align-items:center;gap:8px;}
+.dr-tit-ico{display:inline-flex;width:18px;height:18px;color:var(--navy);}
+.dr-tit-ico svg{width:18px;height:18px;}
+.dr-cons-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+.dr-periodo{font-size:15px;font-weight:800;color:var(--navy);margin-top:4px;}
+.dr-resumo-txt{font-size:12px;color:var(--muted);margin:2px 0 12px;}
+.dr-resumo-txt b{color:var(--navy);}
+.dr-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px;}
+.dr-kpi{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;background:#FAFAFA;border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-family:'Inter',sans-serif;}
+button.dr-kpi{cursor:pointer;}
+button.dr-kpi:hover{border-color:var(--black);}
+.dr-kpi span{font-size:10.5px;font-weight:600;color:var(--muted);}
+.dr-kpi b{font-size:21px;font-weight:800;color:var(--navy);line-height:1.15;}
+.dr-kpi em{font-size:10px;font-style:normal;color:#8A5A00;}
+.dr-kpi.warn b{color:#8A5A00;}
+.dr-kpi.on{border-color:var(--black);background:#FEF9C3;}
+.dr-prog{font-size:11.5px;color:var(--blue);margin:6px 0 8px;}
+.dr-res{position:relative;border:1px solid var(--line);background:#FAFAFA;border-radius:10px;padding:10px 34px 10px 14px;margin:6px 0 12px;font-size:12px;}
+.dr-res-linhas{display:flex;flex-wrap:wrap;gap:6px 18px;}
+.dr-res .ok{color:#065F46;font-weight:600;}
+.dr-res .av{color:#8A5A00;font-weight:600;}
+.dr-res .dr-x{position:absolute;top:8px;right:8px;}
+.dr-res-sub{font-size:11px;color:var(--muted);margin-right:6px;}
+.dr-chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;}
+.dr-msg{display:flex;align-items:center;gap:8px;font-size:12px;margin:0 0 14px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;}
+.dr-msg.erro{color:var(--red);}
+.dr-msg.ok{color:#065F46;background:#F0FDF4;border-color:#BBF7D0;}
+.dr-msg.info{color:var(--blue);}
+.dr-msg-topo{background:#FFF8E6;border:1px solid #FFE066;color:#8A5A00;border-radius:8px;padding:9px 12px;font-size:12px;margin-bottom:12px;}
+.dr-x{border:none;background:transparent;cursor:pointer;color:var(--muted);padding:2px;display:inline-flex;}
+.dr-x:hover{color:var(--red);}
+.dr-x svg{width:15px;height:15px;}
+.dr-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+.dr-busca{flex:1 1 240px;min-width:180px;padding:8px 10px;font-size:12px;}
+.dr-sel2{font-size:12px;height:34px;padding:4px 8px;max-width:210px;}
+
+/* tabelas */
+.dr-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.dr-tbl thead th{text-align:left;font-size:9.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.02em;padding:9px 8px;background:#FAFAFA;border-bottom:1px solid var(--line);}
+.dr-tbl td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.dr-tbl tbody tr:last-child td{border-bottom:none;}
+.dr-th-ord{cursor:pointer;user-select:none;}
+.dr-th-ord:hover,.dr-th-ord.on{color:var(--black);}
+.dr-mes-col{font-weight:600;color:var(--navy);white-space:nowrap;}
+.dr-tbl-lista{table-layout:fixed;font-size:10.5px;}
+.dr-tbl-lista col.c-mes{width:64px;} .dr-tbl-lista col.c-num{width:88px;} .dr-tbl-lista col.c-data{width:84px;} .dr-tbl-lista col.c-qtd{width:80px;}
+.dr-tbl-lista col.c-cdf{width:110px;} .dr-tbl-lista col.c-vinc{width:116px;} .dr-tbl-lista col.c-st{width:84px;} .dr-tbl-lista col.c-ac{width:98px;}
+.dr-tbl-lista th,.dr-tbl-lista td{padding:10px 6px;}
+.dr-tbl-lista td{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dr-tbl-lista td:last-child{overflow:visible;}
+.dr-tbl-lista .dr-ib{width:24px;height:24px;}
+.dr-tbl-lista .dr-acoes{gap:4px;}
+.dr-tbl .badge{white-space:nowrap;}
+.dr-linha{cursor:pointer;}
+.dr-linha:hover td{background:#FAFAFA;}
+.dr-vaz td{color:var(--light);}
+.dr-quebra{word-break:break-all;}
+.dr-acoes{display:flex;gap:6px;justify-content:flex-end;position:relative;align-items:center;}
+.dr-ib{width:30px;height:30px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;}
+.dr-ib:hover{border-color:var(--black);color:var(--black);}
+.dr-ib:disabled{opacity:.4;cursor:default;}
+.dr-ib svg{width:14px;height:14px;}
+.dr-assoc-btn{border:1px solid var(--black);background:#fff;border-radius:8px;padding:3px 8px;font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;cursor:pointer;white-space:nowrap;}
+.dr-assoc-btn:hover{background:var(--yellow);}
+.dr-menu{display:none;position:absolute;top:34px;right:0;background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);padding:4px;z-index:40;min-width:186px;}
+.dr-menu.open{display:block;}
+.dr-menu button{display:flex;align-items:center;gap:8px;width:100%;border:none;background:transparent;padding:8px 10px;border-radius:6px;font-family:'Inter',sans-serif;font-size:12px;color:var(--txt);cursor:pointer;text-align:left;}
+.dr-menu button:hover{background:#F5F5F5;}
+.dr-menu button.perigo{color:var(--red);}
+.dr-menu button svg{width:14px;height:14px;}
+.dr-nd{color:var(--light);}
+.dr-ni{color:var(--light);font-style:italic;font-weight:400;}
+.dr-cod{color:var(--muted);font-weight:500;}
+.dr-vazio{text-align:center;color:var(--muted);font-size:12px;}
+.dr-vazio-card{padding:22px 8px;}
+.dr-pager{display:flex;align-items:center;justify-content:center;gap:10px;font-size:11px;color:var(--muted);padding:12px 0 2px;}
+.dr-resto{font-size:11px;color:var(--muted);text-align:center;padding:8px 0 2px;}
+@media(max-width:1100px){.dr-tbl-mtr th:nth-child(1),.dr-tbl-mtr td:nth-child(1),.dr-tbl-cdf th:nth-child(1),.dr-tbl-cdf td:nth-child(1){display:none;}}
+@media(max-width:850px){.dr-tbl-mtr th:nth-child(6),.dr-tbl-mtr td:nth-child(6),.dr-tbl-cdf th:nth-child(5),.dr-tbl-cdf td:nth-child(5){display:none;}}
+
+/* evolução anual e card secundário */
+.dr-evo{margin:4px 0 14px;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.dr-evo-tit{font-size:12px;font-weight:700;color:var(--navy);padding:9px 12px;background:#FAFAFA;border-bottom:1px solid var(--line);}
+.dr-tbl-evo td{padding:8px 12px;}
+.dr-sec{margin-top:16px;}
+.dr-card-cab{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.dr-tbl-sec{font-size:11.5px;}
+
+/* arquivos, ícones e chips */
+.dr-ficon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dr-ficon svg{width:16px;height:16px;}
+.dr-ficon.pdf{background:#FEE2E2;color:#991B1B;}
+.dr-ficon.img{background:#DBEAFE;color:#1D4ED8;}
+.dr-arq-nome{font-weight:600;color:var(--navy);word-break:break-all;}
+.dr-arq-sub{font-size:10.5px;color:var(--muted);}
+.dr-arq-linha{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.dr-chip{display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:3px 9px;font-size:11px;font-weight:600;border:none;font-family:'Inter',sans-serif;}
+.dr-chip.ok{background:#D1FAE5;color:#065F46;cursor:pointer;}
+.dr-chip.ok:hover{background:#BBF7D0;}
+.dr-chip.med{background:#DBEAFE;color:#1D4ED8;}
+.dr-chip.sem{background:#FEF9C3;color:#854D0E;}
+
+/* detalhe do MTR/CDF (modal) */
+.dr-det-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;}
+.dr-det-sec{border-top:1px solid var(--line);padding:12px 0 4px;}
+.dr-det-sec h4{font-size:10.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:0 0 8px;}
+.dr-dgrid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 16px;}
+.dr-dc span{display:block;font-size:10px;font-weight:600;color:var(--muted);margin-bottom:2px;}
+.dr-dc b{font-size:12.5px;font-weight:500;color:var(--navy);word-break:break-word;}
+.dr-dc.larga{grid-column:span 3;}
+.dr-cdf-it{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:4px 0;font-size:12px;}
+.dr-div{margin-top:10px;border:1px solid #FFE066;background:#FFF8E6;border-radius:8px;padding:10px 12px;}
+.dr-div-tit{font-size:12px;font-weight:700;color:#8A5A00;margin-bottom:6px;}
+.dr-div-tit span{font-weight:400;}
+.dr-det-nota{font-size:11px;color:var(--muted);margin-top:10px;}
+.dr-sugestao{background:#F0FDF4;border:1px solid #BBF7D0;color:#065F46;border-radius:8px;padding:8px 12px;font-size:12px;margin-bottom:10px;}
+.dr-assoc-lista{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:8px;}
+.dr-assoc-it{display:grid;grid-template-columns:20px 110px 80px 1fr 90px;gap:8px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer;}
+.dr-assoc-it:last-child{border-bottom:none;}
+.dr-assoc-it:hover{background:#FAFAFA;}
+.dr-assoc-it.on{background:#FEF9C3;}
+@media(max-width:700px){.dr-dgrid3{grid-template-columns:repeat(2,minmax(0,1fr));}.dr-dc.larga{grid-column:span 2;}}
+
+/* conferência / edição */
+.dr-ed-card{border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px;background:#fff;}
+.dr-ed-card-cab{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--navy);}
+.dr-ed-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px 12px;}
+.dr-ed-grid .form-group{margin-bottom:8px;}
+.dr-ed-card details{margin-top:6px;}
+.dr-ed-card summary{font-size:12px;cursor:pointer;color:var(--blue);margin-bottom:8px;}
+
+/* vínculos CDF→MTR e relatório de resíduos */
+.dr-vinc details{margin-top:2px;}
+.dr-vinc summary{font-size:12px;cursor:pointer;color:var(--blue);margin-bottom:6px;}
+.dr-dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px 16px;}
+.dr-dcel span{display:block;font-size:10px;font-weight:600;color:var(--muted);margin-bottom:3px;}
+.dr-dcel b{font-size:12px;font-weight:500;color:var(--navy);word-break:break-word;line-height:1.35;}
+.dr-dtbl{width:100%;border-collapse:collapse;font-size:12px;}
+.dr-dtbl th{text-align:left;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;padding:6px 8px;border-bottom:1px solid var(--line);}
+.dr-dtbl td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top;word-break:break-word;}
+.dr-dtbl tbody tr:last-child td{border-bottom:none;}
+.dr-rel-nota{font-size:11px;color:var(--muted);margin-bottom:8px;}
+.dr-rel-mes{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px;background:#fff;}
+.dr-rel-mes-tit{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px;}
+.dr-rel-grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px;}
+.dr-rel-bloco{background:#FAFAFA;border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0;}
+.dr-rel-tipo{font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.dr-rel-arq{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;margin-bottom:8px;word-break:break-all;}
+.dr-rel-pend{color:#8A5A00;font-size:12px;}
+.dr-rel-sub{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.dr-rel-link{font-size:11px;color:var(--blue);}
+.dr-rel-scroll{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:8px;background:#fff;margin-top:6px;}
+.dr-rel-cdf{border-top:1px solid var(--line);padding:8px 0;}
+.dr-rel-cdf:first-of-type{border-top:none;padding-top:0;}
+.dr-rel-bloco details{margin-top:6px;}
+.dr-rel-bloco summary{font-size:12px;cursor:pointer;color:var(--blue);margin-bottom:6px;}
+
+.modal .btn svg,.dr-arq-linha .btn svg{width:14px;height:14px;vertical-align:-2px;margin-right:2px;}
 /* Rótulos de valor dos gráficos do Dashboard de Resíduos — mesmo padrão em todos */
 .res-val{font-family:'Inter',sans-serif;font-weight:700;font-variant-numeric:tabular-nums;color:#1F2937;}
 .res-val-svg{font-family:'Inter',sans-serif;font-weight:700;font-variant-numeric:tabular-nums;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-linejoin:round;pointer-events:none;}
@@ -1260,7 +1464,7 @@ function renderPortalGrid(){
 
 const MODULE_MENUS = {
   bebedouros:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'equipamentos',icon:'🥤',label:'Equipamentos'},{key:'filtros',icon:'🔄',label:'Controle de Filtros'},{key:'historico',icon:'📋',label:'Histórico de Problemas'},{key:'documentacao',icon:'📄',label:'Gestão de Documentação'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
-  residuos:[{key:'dashres',icon:'📊',label:'Dashboard de Resíduos'},{key:'dash2',icon:'🚚',label:'Dashboard de Gestão de Coletas'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'procedimentos',icon:'📁',label:'Procedimentos'}],
+  residuos:[{key:'dashres',icon:'📊',label:'Dashboard de Resíduos'},{key:'dash2',icon:'🚚',label:'Dashboard de Gestão de Coletas'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'docres',icon:'📁',label:'Documentação de Resíduos'},{key:'procedimentos',icon:'📁',label:'Procedimentos'}],
   estoque:[{key:'dashboard',icon:'🏠',label:'Visão Geral'},{key:'movimentacoes',icon:'⇄',label:'Movimentações'},{key:'itens',icon:'📦',label:'Produtos'},{key:'saldo',icon:'🗄️',label:'Estoque Atual'},{key:'consumo',icon:'📊',label:'Consumo por Item'},{key:'historico',icon:'🕘',label:'Histórico'},{key:'config',icon:'⚙️',label:'Configurações'}],
   checklist:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'lancamento',icon:'➕',label:'Novo Lançamento'},{key:'painel',icon:'📋',label:'Painel Mensal'}],
   grancoffee:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'maquinas',icon:'☕',label:'Máquinas'},{key:'chamados',icon:'🔔',label:'Chamados'},{key:'doses',icon:'📊',label:'Controle de Doses'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
@@ -1966,6 +2170,7 @@ function renderResiduos(page){
   if(page==='sobdemanda') return renderSobDemanda();
   if(page==='ncs')       return renderNaoConformidades();
   if(page==='dash2')     return renderDashboardGerencial();
+  if(page==='docres') return renderDocumentacaoResiduos();
   if(page==='procedimentos') return `<div class="content-header"><div><div class="content-title">Procedimentos e Documentos</div></div>
     <div class="content-actions"><button class="btn btn-primary" onclick="abrirFormProcedimento()">+ Adicionar</button></div></div>${renderProcedimentos()}`;
   return renderDashboardResiduos();
@@ -3387,6 +3592,7 @@ function _resRenderRelatorioDetalhado(f){
     <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${d.linhas.length} registro(s) · <b style="color:var(--navy)">${fmtKg(d.totalConsolidado)} kg</b> no total</div>
     ${avisoCarregando}${avisoDivergencia}${avisoSemDetalhe}${d.foraDoDashboard.length ? `<div style="background:#FFF8E6;border-radius:8px;padding:10px 12px;font-size:12px;color:#8A5A00;margin-bottom:10px">
       O PDF desta medição também traz retiradas que não constam no dashboard: ${d.foraDoDashboard.map(x=>`<b>${esc(x.tipo)}</b> (${_resMesLabel(x.mesReferencia)} · ${fmtKg(x.kg)} kg)`).join('; ')}. Elas não estão incluídas nas linhas nem no total acima.</div>` : ''}
+    ${_resRenderDocumentacaoPeriodo((f.mesesReferencia&&f.mesesReferencia.length)?f.mesesReferencia:[...new Set(d.consolidados.map(m=>m.mesReferencia).filter(Boolean))])}
     ${tabela}
   </div>`;
 }
@@ -10248,6 +10454,2021 @@ function filtrarHistoricoBeb(){
 }
 
 // ═══════════════════════════════════════════════════════
+// DOCUMENTAÇÃO DE RESÍDUOS — MTR e CDF
+//
+// A página é orientada pelo RELATÓRIO CONSOLIDADO; o upload é só a entrada dos dados.
+//
+// MÊS DE REFERÊNCIA = DATA DE EMISSÃO lida no próprio documento (nunca o mês clicado, nunca a data do upload):
+//   • MTR: cada MTR pertence ao mês da sua data de emissão.
+//   • CDF: pertence ao mês da sua emissão (na falta, ao início do período informado ou ao mês do MTR vinculado).
+//   • Documento sem data legível NÃO entra em mês nenhum até alguém preencher (nada é chutado).
+//
+// O CDF é integrado ao MTR: cada CDF aponta para os MTRs a que se refere (lidos do próprio documento ou
+// associados à mão). A conferência MTR × CDF só SINALIZA divergências — nunca altera os dados.
+//
+// Armazenamento (sem Firebase Storage, plano Spark):
+//   • documentosResiduos/{id}  → UM registro por documento (metadados + dados lidos).
+//   • portal_facilities_arquivos/docsResiduos/{id}/{uploadId} → arquivo original em Base64 fatiado (~1 MB), sob demanda.
+// ═══════════════════════════════════════════════════════
+const DOCRES_TIPOS = ['MTR','CDF'];
+const DOCRES_MAX_BYTES = 10 * 1024 * 1024;
+const DOCRES_MAX_TXT = '10 MB';
+const DOCRES_PAGINA = 25;
+const DOCRES_MIME_POR_EXT = {pdf:'application/pdf', jpg:'image/jpeg', jpeg:'image/jpeg', png:'image/png'};
+const DOCRES_MIMES_OK = ['application/pdf','image/jpeg','image/png'];
+const DOCRES_MESES_LONGOS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+const DOCRES_STATUS_TXT = {completa:'Documentação completa', pendente:'Documentação pendente', sem:'Sem documentação anexada'};
+const fbDocsResiduos = firebase.database().ref('portal_facilities_arquivos/docsResiduos');
+const _docResCacheSessao = {};   // uploadId -> dataURL (só Ver/Baixar; nunca no envio em lote)
+
+const _docResEstado = {tipo:'MTR', ano:null, mes:null, visao:'mes', pagina:0, busca:'', filtro:'todos', fTransp:'', fDest:'', fRes:'', maisFiltros:false,
+  ordem:{campo:'dataEmissao', dir:'desc'}, enviando:false, progresso:'', resultado:null, msg:null, falhas:[], duplicados:[]};
+
+const DOCRES_ICONES = {
+  documento: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/>',
+  documentoOk: '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m9 15 2 2 4-4"/>',
+  olho: '<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  baixar: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+  nuvem: '<path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m16 16-4-4-4 4"/>',
+  lixeira: '<path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>',
+  mais: '<circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/>',
+  fechar: '<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  tabela: '<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/>',
+  chevronDireita: '<path d="m9 18 6-6-6-6"/>',
+  grafico: '<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',
+  pasta: '<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>',
+  calendario: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/>',
+  substituir: '<path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/>',
+  link: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+};
+function _docResIcone(nome){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${DOCRES_ICONES[nome]||''}</svg>`;
+}
+
+// ───────── Funções puras ─────────
+function _docResMesLongo(chave){
+  const [a,m] = String(chave||'').split('-');
+  const i = (parseInt(m,10)||0)-1;
+  return i>=0 && i<12 ? `${DOCRES_MESES_LONGOS[i]}/${a}` : '—';
+}
+function _docResMesDaData(iso){ return /^\d{4}-\d{2}-\d{2}$/.test(String(iso||'')) ? iso.slice(0,7) : ''; }
+function _docResChaveSelecionada(){ return `${_docResEstado.ano}-${String(_docResEstado.mes).padStart(2,'0')}`; }
+function _docResFmtTamanho(bytes){
+  const b = Number(bytes)||0;
+  if(b < 1024) return b+' B';
+  if(b < 1024*1024) return Math.round(b/1024)+' KB';
+  return (b/1024/1024).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+' MB';
+}
+function _docResTxtQtd(n, tipo){ return `${n} ${tipo}${n>1?'s':''} anexado${n>1?'s':''}`; }
+function _docResValidarArquivo(file){
+  const nome = String((file&&file.name)||'');
+  const ext = (nome.split('.').pop()||'').toLowerCase();
+  const mime = DOCRES_MIMES_OK.includes(file&&file.type) ? file.type : DOCRES_MIME_POR_EXT[ext];
+  if(!mime) return {ok:false, erro:'formato não suportado (use PDF, JPG ou PNG)'};
+  if(!file.size) return {ok:false, erro:'arquivo vazio'};
+  if(file.size > DOCRES_MAX_BYTES) return {ok:false, erro:`${_docResFmtTamanho(file.size)} — o limite é ${DOCRES_MAX_TXT}`};
+  return {ok:true, mime};
+}
+function _docResNormalizarDataUrl(dataUrl, mime){
+  const i = String(dataUrl).indexOf(',');
+  return 'data:'+mime+';base64,'+String(dataUrl).slice(i+1);
+}
+function _docResDataUrlParaBlob(dataUrl, mime){
+  const partes = String(dataUrl||'').split(',');
+  if(partes.length < 2) return null;
+  try{
+    const bin = atob(partes[1]);
+    const bytes = new Uint8Array(bin.length);
+    for(let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    const tipo = mime || (partes[0].match(/data:([^;]+)/)||[])[1] || 'application/octet-stream';
+    return new Blob([bytes], {type: tipo});
+  }catch(e){ console.error('Falha ao decodificar o documento Base64:', e); return null; }
+}
+function _docResMsgErro(err){
+  const cod = String((err&&(err.code||err.message))||'').toLowerCase();
+  if(cod.includes('permission')) return '❌ Sem permissão para gravar em "portal_facilities_arquivos" no Firebase. Libere esse caminho nas Regras do Realtime Database.';
+  return '❌ Não foi possível salvar o documento. Verifique sua conexão e tente novamente.';
+}
+
+// ── Peso / quantidade: kg tem prioridade; unidades diferentes NUNCA são somadas ──
+function _docResPesoKg(r){
+  if(r && r.peso>0) return r.peso;
+  return (r && r.unidade==='kg' && r.quantidade>0) ? r.quantidade : null;
+}
+function _docResTemQuantidade(r){ return !!r && (r.peso>0 || r.quantidade>0); }
+// Texto "2.400 kg" (peso em kg, se houver; senão a quantidade na unidade do documento). '' se não informado.
+function _docResQtdTexto(r){
+  const kg = _docResPesoKg(r);
+  const fmt = n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:3});
+  if(kg!==null) return `${fmt(kg)} kg`;
+  return (r && r.quantidade>0) ? `${fmt(r.quantidade)} ${r.unidade||''}`.trim() : '';
+}
+// Dados incompletos: o que o relatório precisa para responder "o quê, quanto, quem, quando".
+function _docResIncompleto(r, tipo){
+  if(!r) return true;
+  if(tipo==='CDF') return !r.numero || !r.dataEmissao || !r.destinador;
+  return !r.numero || !r.dataEmissao || !r.transportador || !r.destinador || !r.tipoResiduo || !_docResTemQuantidade(r);
+}
+const _docResNaoInf = v=> v ? v : 'Não informado';
+
+// ── Conferência MTR × CDF (só sinaliza; nunca altera dados) ──
+function _docResNorm(s){
+  return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]+/g,' ')
+    .replace(/\b(ltda|s a|sa|me|epp|eireli|cia|ind|com)\b/g,' ').replace(/\s+/g,' ').trim();
+}
+function _docResMesmoNome(a,b){
+  const x=_docResNorm(a), y=_docResNorm(b);
+  return !x || !y || x===y || x.includes(y) || y.includes(x);
+}
+const _docResTokensResiduo = s=> _docResNorm(s).split(' ').filter(t=>t.length>=4 && !['residuo','residuos','material','resto','restos'].includes(t));
+function _docResResiduoCompativel(a,b){
+  const x=_docResTokensResiduo(a), y=_docResTokensResiduo(b);
+  if(!x.length || !y.length) return true;                                  // sem informação suficiente: não acusa
+  return x.some(t=>y.some(u=>t===u || t.startsWith(u) || u.startsWith(t)));
+}
+const _docResFmtKg = n=> `${Number(n).toLocaleString('pt-BR',{maximumFractionDigits:3})} kg`;
+const _docResDataCurta = iso=> iso ? iso.split('-').reverse().join('/') : '';
+// Compara um CDF com os MTRs a que ele se refere. Retorna {porMtr: Map(numero → [div]), cdf:[div]}.
+function _docResConferirCdf(cdf, mtrs){
+  const out = {porMtr:new Map(), cdf:[]};
+  const add = (m, d)=>{ const dd = {...d, cdfNumero:cdf.numero||''}; out.cdf.push(dd); if(m){ if(!out.porMtr.has(m.numero)) out.porMtr.set(m.numero,[]); out.porMtr.get(m.numero).push(dd); } };
+  mtrs.forEach(m=>{
+    if(!_docResMesmoNome(m.destinador, cdf.destinador)) add(m,{campo:'Destinador', mtr:m.destinador, cdf:cdf.destinador});
+    if(!_docResResiduoCompativel(m.tipoResiduo, cdf.tipoResiduo)) add(m,{campo:'Resíduo', mtr:m.tipoResiduo, cdf:cdf.tipoResiduo});
+    if(m.dataEmissao && cdf.dataEmissao && cdf.dataEmissao < m.dataEmissao) add(m,{campo:'Data', mtr:'MTR emitido em '+_docResDataCurta(m.dataEmissao), cdf:'CDF emitido em '+_docResDataCurta(cdf.dataEmissao)+' (antes do MTR)'});
+    if(m.dataEmissao && cdf.periodoIni && cdf.periodoFim && (m.dataEmissao < cdf.periodoIni || m.dataEmissao > cdf.periodoFim))
+      add(m,{campo:'Período', mtr:'MTR emitido em '+_docResDataCurta(m.dataEmissao), cdf:'CDF cobre '+_docResDataCurta(cdf.periodoIni)+' a '+_docResDataCurta(cdf.periodoFim)});
+  });
+  const kgCdf = _docResPesoKg(cdf);
+  const toler = (a,b)=> Math.abs(a-b) > Math.max(1, 0.005*Math.max(a,b));
+  if(kgCdf!==null && mtrs.length){
+    const kgs = mtrs.map(_docResPesoKg);
+    if(mtrs.length===1 && kgs[0]!==null && toler(kgs[0], kgCdf)) add(mtrs[0], {campo:'Quantidade', mtr:_docResFmtKg(kgs[0]), cdf:_docResFmtKg(kgCdf)});
+    else if(mtrs.length>1 && kgs.every(k=>k!==null) && (cdf.mtrs||[]).length===mtrs.length){        // soma só quando TODOS os MTRs do CDF estão no sistema
+      const soma = kgs.reduce((s,k)=>s+k,0);
+      if(toler(soma, kgCdf)) mtrs.forEach(m=>add(m,{campo:'Quantidade (soma)', mtr:`${_docResFmtKg(soma)} em ${mtrs.length} MTRs`, cdf:_docResFmtKg(kgCdf)}));
+    }
+  }
+  return out;
+}
+
+// ───────── Dados: um registro por documento ─────────
+function _docResMapa(){
+  const v = DB.get('documentosResiduos');
+  const mapa = {};
+  if(!v) return mapa;
+  (Array.isArray(v) ? v : Object.values(v)).forEach(r=>{ if(r && r.id && r.tipo) mapa[r.id] = r; });
+  return mapa;
+}
+function _docResLista(){ return Object.values(_docResMapa()); }
+let _docResMigrando = null;
+function _docResMigrarLegado(){
+  const v = DB.get('documentosResiduos');
+  const legado = Array.isArray(v) || (v && typeof v==='object' && Object.keys(v).some(k=>/^\d+$/.test(k)));
+  if(!legado) return Promise.resolve();
+  if(_docResMigrando) return _docResMigrando;
+  const mapa = _docResMapa();
+  _docResMigrando = fbRoot.child('documentosResiduos').set(mapa)
+    .then(()=>{ DB_CACHE['documentosResiduos'] = mapa; })
+    .catch(e=>console.warn('Migração da lista de documentos de resíduos adiada:', e))
+    .finally(()=>{ _docResMigrando = null; });
+  return _docResMigrando;
+}
+async function _docResGravarRegistro(rec){
+  await fbRoot.child('documentosResiduos').child(rec.id).set(rec);
+  DB_CACHE['documentosResiduos'] = {..._docResMapa(), [rec.id]: rec};
+}
+async function _docResAtualizarCampos(id, campos){
+  await fbRoot.child('documentosResiduos').child(id).update(campos);
+  const mapa = {..._docResMapa()};
+  if(mapa[id]) mapa[id] = {...mapa[id], ...campos};
+  DB_CACHE['documentosResiduos'] = mapa;
+}
+async function _docResRemoverRegistro(id){
+  await fbRoot.child('documentosResiduos').child(id).remove();
+  const mapa = {..._docResMapa()}; delete mapa[id];
+  DB_CACHE['documentosResiduos'] = mapa;
+}
+
+// ───────── Índice: classifica tudo pela DATA DE EMISSÃO e cruza MTR × CDF ─────────
+function _docResLinhaCdf(d, mes, mesDerivado){
+  const ex = d.extracao || {};
+  return {docId:d.id, docNome:d.nome, mes, mesDerivado:!!mesDerivado, numero:ex.numero||'', transportador:ex.transportador||'', transportadorCod:ex.transportadorCod||'',
+    destinador:ex.destinador||'', destinadorCod:ex.destinadorCod||'', destinadorCnpj:ex.destinadorCnpj||'', dataEmissao:ex.dataEmissao||'', periodoIni:ex.periodoIni||'', periodoFim:ex.periodoFim||'',
+    tipoResiduo:ex.tipoResiduo||'', quantidade:ex.quantidade||0, unidade:ex.unidade||'', peso:ex.peso||0, mtrs:ex.mtrs||[], revisado:!!ex.revisado, statusLeitura:ex.status||''};
+}
+function _docResIndice(){
+  const ix = {docs:_docResLista(), docPorId:new Map(), mtrsPorMes:{}, cdfsPorMes:{}, cdfLinhasPorMes:{}, pendentes:[], cdfPorMtr:new Map(), mtrPorNumero:new Map(), divMtr:new Map(), divCdf:new Map(), cdfLinhas:[]};
+  ix.docs.forEach(d=>{ ix.docPorId.set(d.id, d); });
+  // 1ª passada: MTRs (o mês vem da data de emissão)
+  ix.docs.filter(d=>d.tipo==='MTR').forEach(d=>{
+    const ex = d.extracao || {}; const rows = ex.mtrs || [];
+    if(!rows.length){ ix.pendentes.push({doc:d, motivo: ex.status==='imagem' ? 'imagem' : 'nao_lida'}); return; }
+    let semData = false;
+    rows.forEach(r=>{
+      const mes = _docResMesDaData(r.dataEmissao) || d.mesReferencia || '';   // mesReferencia: só registros da versão antiga
+      const item = {...r, docId:d.id, docNome:d.nome, mes, revisado:!!ex.revisado, statusLeitura:ex.status||''};
+      if(mes) (ix.mtrsPorMes[mes] = ix.mtrsPorMes[mes] || []).push(item); else semData = true;
+      if(r.numero && !ix.mtrPorNumero.has(r.numero)) ix.mtrPorNumero.set(r.numero, item);
+    });
+    if(semData) ix.pendentes.push({doc:d, motivo:'sem_data'});
+  });
+  // 2ª passada: CDFs (mês pela emissão; na falta, início do período ou mês do 1º MTR vinculado)
+  ix.docs.filter(d=>d.tipo==='CDF').forEach(d=>{
+    const ex = d.extracao || {};
+    let mes = _docResMesDaData(ex.dataEmissao), derivado = false;
+    if(!mes){ mes = _docResMesDaData(ex.periodoIni); derivado = !!mes; }
+    if(!mes){ const m1 = (ex.mtrs||[]).map(n=>ix.mtrPorNumero.get(n)).find(x=>x&&x.mes); if(m1){ mes = m1.mes; derivado = true; } }
+    if(!mes && d.mesReferencia) mes = d.mesReferencia;
+    const linha = _docResLinhaCdf(d, mes, derivado);
+    ix.cdfLinhas.push(linha);
+    if(mes){
+      (ix.cdfsPorMes[mes] = ix.cdfsPorMes[mes] || []).push(d);
+      (ix.cdfLinhasPorMes[mes] = ix.cdfLinhasPorMes[mes] || []).push(linha);
+    } else ix.pendentes.push({doc:d, motivo: (ex.status==='nao_lida'||ex.status==='imagem'||ex.status==='indisponivel') ? 'nao_lida' : 'sem_data'});
+    (ex.mtrs||[]).forEach(n=>{
+      if(!ix.cdfPorMtr.has(n)) ix.cdfPorMtr.set(n, []);
+      ix.cdfPorMtr.get(n).push({docId:d.id, numero:ex.numero||''});
+    });
+    // conferência com os MTRs a que o CDF se refere
+    const mtrs = (ex.mtrs||[]).map(n=>ix.mtrPorNumero.get(n)).filter(Boolean);
+    const conf = _docResConferirCdf(linha, mtrs);
+    if(conf.cdf.length) ix.divCdf.set(d.id, conf.cdf);
+    conf.porMtr.forEach((divs,n)=>{ ix.divMtr.set(n, [...(ix.divMtr.get(n)||[]), ...divs]); });
+  });
+  const ord = (a,b)=>String(b.dataEmissao||'').localeCompare(String(a.dataEmissao||'')) || String(a.numero||'').localeCompare(String(b.numero||''));
+  Object.values(ix.mtrsPorMes).forEach(l=>l.sort(ord));
+  Object.values(ix.cdfLinhasPorMes).forEach(l=>l.sort(ord));
+  return ix;
+}
+function _docResStatusMes(mes, ix){
+  const nMtr = (ix.mtrsPorMes[mes]||[]).length, nCdf = (ix.cdfsPorMes[mes]||[]).length;
+  return {nMtr, nCdf, mtr:nMtr>0, cdf:nCdf>0, rotulo:(nMtr&&nCdf) ? 'completa' : ((nMtr||nCdf) ? 'pendente' : 'sem')};
+}
+// Situação do CDF de um MTR: 'anexado' | 'sem' | 'divergencia'
+function _docResSituacaoCdfDoMtr(r, ix){
+  if(!ix.cdfPorMtr.has(r.numero)) return 'sem';
+  return (ix.divMtr.get(r.numero)||[]).length ? 'divergencia' : 'anexado';
+}
+// Situação de um CDF: 'naoassoc' | 'divergencia' | 'associado'
+function _docResSituacaoCdf(r, ix){
+  if(!(r.mtrs||[]).length) return 'naoassoc';
+  return (ix.divCdf.get(r.docId)||[]).length ? 'divergencia' : 'associado';
+}
+
+// ───────── Relatório: linhas do período, KPIs, filtros, ordenação, evolução anual ─────────
+function _docResLinhasPeriodo(ix, tipo, visao, chave, ano){
+  const fonte = tipo==='MTR' ? ix.mtrsPorMes : ix.cdfLinhasPorMes;
+  const meses = visao==='ano' ? Object.keys(fonte).filter(m=>m.startsWith(ano+'-')) : [chave];
+  return meses.flatMap(m=>fonte[m]||[]);
+}
+function _docResKpis(linhas, ix, tipo){
+  if(tipo==='MTR'){
+    let kg = 0, outras = 0;
+    linhas.forEach(r=>{ const p = _docResPesoKg(r); if(p!==null) kg += p; else if(r.quantidade>0) outras++; });
+    const comCdf = linhas.filter(r=>ix.cdfPorMtr.has(r.numero)).length;
+    return {total:linhas.length, peso:Math.round(kg*1000)/1000, pesoOutras:outras, comCdf, semCdf:linhas.length-comCdf,
+      incompletos:linhas.filter(r=>_docResIncompleto(r,'MTR')).length, divergencias:linhas.filter(r=>(ix.divMtr.get(r.numero)||[]).length).length};
+  }
+  let kg = 0, outras = 0; const vinc = new Set();
+  linhas.forEach(r=>{ const p = _docResPesoKg(r); if(p!==null) kg += p; else if(r.quantidade>0) outras++; (r.mtrs||[]).forEach(n=>vinc.add(n)); });
+  return {total:linhas.length, peso:Math.round(kg*1000)/1000, pesoOutras:outras, mtrsVinculados:vinc.size,
+    naoAssociados:linhas.filter(r=>!(r.mtrs||[]).length).length, incompletos:linhas.filter(r=>_docResIncompleto(r,'CDF')).length,
+    divergencias:linhas.filter(r=>(ix.divCdf.get(r.docId)||[]).length).length};
+}
+function _docResAplicarFiltros(linhas, ix, E){
+  let l = linhas;
+  if(E.filtro && E.filtro!=='todos'){
+    l = l.filter(r=>{
+      if(E.filtro==='validos') return !_docResIncompleto(r,E.tipo) && !!r.revisado;
+      if(E.filtro==='conferir') return !_docResIncompleto(r,E.tipo) && !r.revisado;
+      if(E.tipo==='MTR'){
+        if(E.filtro==='comcdf') return ix.cdfPorMtr.has(r.numero);
+        if(E.filtro==='semcdf') return !ix.cdfPorMtr.has(r.numero);
+        if(E.filtro==='incompletos') return _docResIncompleto(r,'MTR');
+        if(E.filtro==='divergencia') return (ix.divMtr.get(r.numero)||[]).length>0;
+      } else {
+        if(E.filtro==='associados') return (r.mtrs||[]).length>0;
+        if(E.filtro==='naoassoc') return !(r.mtrs||[]).length;
+        if(E.filtro==='incompletos') return _docResIncompleto(r,'CDF');
+        if(E.filtro==='divergencia') return (ix.divCdf.get(r.docId)||[]).length>0;
+      }
+      return true;
+    });
+  }
+  if(E.fTransp) l = l.filter(r=>r.transportador===E.fTransp);
+  if(E.fDest) l = l.filter(r=>r.destinador===E.fDest);
+  if(E.fRes) l = l.filter(r=>r.tipoResiduo===E.fRes);
+  const q = String(E.busca||'').trim().toLowerCase();
+  if(q) l = l.filter(r=>{
+    const cdfs = E.tipo==='MTR' ? (ix.cdfPorMtr.get(r.numero)||[]).map(c=>c.numero) : (r.mtrs||[]);
+    return [r.numero, r.transportador, r.destinador, r.tipoResiduo, r.docNome, ...cdfs].some(v=>String(v||'').toLowerCase().includes(q));
+  });
+  return l;
+}
+const _docResRankCdf = (r, ix, tipo)=> tipo==='MTR' ? {divergencia:0, sem:1, anexado:2}[_docResSituacaoCdfDoMtr(r,ix)] : {divergencia:0, naoassoc:1, associado:2}[_docResSituacaoCdf(r,ix)];
+function _docResOrdenar(linhas, ordem, ix, tipo){
+  const dir = ordem.dir==='asc' ? 1 : -1;
+  const chaveTxt = {mes:'mes', numero:'numero', transportador:'transportador', destinador:'destinador', tipoResiduo:'tipoResiduo', dataEmissao:'dataEmissao'};
+  const val = r=>{
+    if(ordem.campo==='peso') return _docResPesoKg(r) ?? -1;
+    if(ordem.campo==='cdf') return _docResRankCdf(r, ix, tipo);
+    if(ordem.campo==='status') return _docResIncompleto(r,tipo) ? 0 : (r.revisado ? 2 : 1);
+    return String(r[chaveTxt[ordem.campo]||'dataEmissao']||'').toLowerCase();
+  };
+  return [...linhas].sort((a,b)=>{
+    const x=val(a), y=val(b);
+    const c = (typeof x==='number' && typeof y==='number') ? x-y : String(x).localeCompare(String(y),'pt-BR',{numeric:true});
+    return c*dir || String(b.dataEmissao||'').localeCompare(String(a.dataEmissao||'')) || String(a.numero||'').localeCompare(String(b.numero||''));
+  });
+}
+// Evolução mês a mês do ano (visão anual)
+function _docResEvolucaoAnual(ix, ano, tipo){
+  return Array.from({length:12},(_,i)=>{
+    const mes = `${ano}-${String(i+1).padStart(2,'0')}`;
+    const mtr = ix.mtrsPorMes[mes]||[], cdf = ix.cdfLinhasPorMes[mes]||[];
+    const k = _docResKpis(mtr, ix, 'MTR');
+    const kc = _docResKpis(cdf, ix, 'CDF');
+    // a divergência envolve um CDF: conta-se uma vez só (pelo CDF), não no MTR e de novo no CDF
+    return {mes, mtrs:mtr.length, peso:k.peso, cdfs:cdf.length, semCdf:k.semCdf, incompletos:k.incompletos+kc.incompletos, divergencias:kc.divergencias,
+      naoAssociados:kc.naoAssociados, pendencias:k.semCdf+k.incompletos+kc.incompletos+kc.divergencias+kc.naoAssociados};
+  });
+}
+
+// ───────── Firebase: arquivo fatiado ─────────
+async function _docResGravarPartes(recId, uploadId, dataUrl, meta){
+  const ref = fbDocsResiduos.child(recId).child(uploadId);
+  const total = Math.max(1, Math.ceil(dataUrl.length/PDF_PARTE_CHARS));
+  for(let i=0;i<total;i++) await ref.child('partes').child('p'+i).set(dataUrl.slice(i*PDF_PARTE_CHARS,(i+1)*PDF_PARTE_CHARS));
+  await ref.child('meta').set({...meta, totalPartes: total});   // por último: só existe se todas as partes foram gravadas
+  return total;
+}
+async function _docResObterDataUrl(rec){
+  if(!rec || !rec.uploadId) return null;
+  if(_docResCacheSessao[rec.uploadId]) return _docResCacheSessao[rec.uploadId];
+  const snap = await fbDocsResiduos.child(rec.id).child(rec.uploadId).once('value');
+  const v = snap.val();
+  if(!v || !v.meta || !v.partes) return null;
+  let dataUrl = '';
+  for(let i=0;i<v.meta.totalPartes;i++){
+    const parte = v.partes['p'+i];
+    if(typeof parte !== 'string') return null;
+    dataUrl += parte;
+  }
+  _docResCacheSessao[rec.uploadId] = dataUrl;
+  return dataUrl;
+}
+
+// ───────── Tela: o RELATÓRIO CONSOLIDADO é o protagonista ─────────
+function _docResIniciarEstado(){
+  if(_docResEstado.ano === null){
+    const h = new Date();
+    _docResEstado.ano = h.getFullYear();
+    _docResEstado.mes = h.getMonth()+1;
+  }
+}
+function renderDocumentacaoResiduos(){
+  _docResIniciarEstado();
+  _docResMigrarLegado();
+  return `<div id="docres-root">${_docResCorpo()}</div>`;
+}
+function _docResRedesenhar(){
+  const el = document.getElementById('docres-root');
+  if(el) el.innerHTML = _docResCorpo();
+}
+// Só a tabela + paginação (preserva o foco do campo de busca)
+function _docResRedesenharTabela(){
+  const el = document.getElementById('dr-rel-corpo');
+  if(el) el.innerHTML = _docResCorpoTabela(_docResIndice());
+}
+
+const _docResVal = v=> v ? _resAttrEsc(v) : '<span class="dr-nd">—</span>';
+const _docResNI = v=> v ? _resAttrEsc(v) : '<span class="dr-ni">Não informado</span>';
+const _docResDataBr = iso=> iso ? fmtDate(iso) : '<span class="dr-nd">—</span>';
+const _docResNomeCod = (nome,cod)=> nome ? (cod ? `${nome} - ${cod}` : nome) : '';
+const _docResPl = (n,s,p)=> n===1 ? s : p;
+function _docResEmpresaHtml(nome, cod){
+  if(!nome) return '<span class="dr-ni">Não informado</span>';
+  return `${_resAttrEsc(nome)}${cod?` <span class="dr-cod">(${_resAttrEsc(cod)})</span>`:''}`;
+}
+function _docResQtdHtml(r){ const t = _docResQtdTexto(r); return t ? _resAttrEsc(t) : '<span class="dr-nd">—</span>'; }
+function _docResDataHoraAs(iso){
+  if(!iso) return '—';
+  try{ const d = new Date(iso); return d.toLocaleDateString('pt-BR')+' às '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }catch{ return '—'; }
+}
+
+// ── Selos de situação (ícone + texto, no padrão de badges do sistema) ──
+function _docResBadgeCdfMtr(r, ix){
+  const s = _docResSituacaoCdfDoMtr(r, ix);
+  if(s==='anexado'){ const c = ix.cdfPorMtr.get(r.numero); return `<span class="badge badge-green" title="CDF ${_resAttrEsc(c.map(x=>x.numero||'(sem nº)').join(', '))}">✓ CDF anexado</span>`; }
+  if(s==='divergencia'){
+    const t = (ix.divMtr.get(r.numero)||[]).map(d=>`${d.campo} — MTR: ${d.mtr} · CDF: ${d.cdf}`).join('\n');
+    return `<span class="badge badge-red" title="${_resAttrEsc(t)}">⚠ Divergência</span>`;
+  }
+  return '<span class="badge badge-yellow" title="Nenhum CDF associado a este MTR">⚠ Sem CDF</span>';
+}
+function _docResBadgeSituacaoCdf(r, ix){
+  const s = _docResSituacaoCdf(r, ix);
+  if(s==='associado') return '<span class="badge badge-green" title="Associado a MTR">✓ Associado</span>';
+  if(s==='divergencia'){
+    const t = (ix.divCdf.get(r.docId)||[]).map(d=>`${d.campo} — MTR: ${d.mtr} · CDF: ${d.cdf}`).join('\n');
+    return `<span class="badge badge-red" title="${_resAttrEsc(t)}">⚠ Divergência</span>`;
+  }
+  return '<span class="badge badge-yellow" title="Não foi possível identificar o MTR relacionado">⚠ CDF não associado</span>';
+}
+function _docResBadgeStatus(r, tipo){
+  if(['nao_lida','imagem','indisponivel'].includes(r.statusLeitura)) return '<span class="badge badge-red" title="Os dados não foram lidos — preencha manualmente">Preencher</span>';
+  if(_docResIncompleto(r, tipo)) return '<span class="badge badge-yellow" title="Faltam dados (número, emissão, transportador, destinador, resíduo ou quantidade)">Incompleto</span>';
+  if(r.revisado) return '<span class="badge badge-green" title="Dados conferidos">✓ Válido</span>';
+  return '<span class="badge badge-gray" title="Lido automaticamente — confira com o documento">Conferir</span>';
+}
+
+function _docResCorpo(){
+  const E = _docResEstado;
+  const ix = _docResIndice();
+  const chave = _docResChaveSelecionada();
+  const st = _docResStatusMes(chave, ix);
+  const periodo = _docResLinhasPeriodo(ix, E.tipo, E.visao, chave, E.ano);
+  const kpis = _docResKpis(periodo, ix, E.tipo);
+
+  const abas = DOCRES_TIPOS.map(t=>`<button class="dr-tab2${t===E.tipo?' active':''}" onclick="docResTipo('${t}')">${_docResIcone(t==='MTR'?'documentoOk':'documento')} ${t}</button>`).join('');
+  const meses = Array.from({length:12},(_,i)=>`${E.ano}-${String(i+1).padStart(2,'0')}`);
+  const chips = meses.map(m=>{
+    const s = _docResStatusMes(m, ix);
+    const dica = `${_docResMesLongo(m)} — ${s.nMtr?`✓ ${_docResTxtQtd(s.nMtr,'MTR')}`:'⚠ MTR pendente'} · ${s.nCdf?`✓ ${_docResTxtQtd(s.nCdf,'CDF')}`:'⚠ CDF pendente'}`;
+    const ponto = (s.nMtr||s.nCdf) ? '<span class="dr-dot ok"></span>' : '';
+    return `<button class="dr-mes${E.visao==='mes'&&m===chave?' active':''}" onclick="docResMes('${m}')" title="${dica}">${_resMesLabel(m)}${ponto}</button>`;
+  }).join('');
+  const nPend = ix.pendentes.length;
+  const alerta = nPend ? `<div class="dr-alerta">⚠ <b>${nPend} documento${nPend>1?'s':''} sem data de emissão legível</b> — ${nPend>1?'não entram':'não entra'} em nenhum mês até a data ser preenchida.
+      <button class="btn btn-outline btn-sm" onclick="docResAbrirPendentes()">Ver pendentes</button></div>` : '';
+  const msg = E.msg ? `<div class="dr-msg ${E.msg.tipo}">${_resAttrEsc(E.msg.texto)} <button class="dr-x" onclick="docResFecharMsg()" title="Fechar">${_docResIcone('fechar')}</button></div>` : '';
+
+  return `
+  <div class="dsh-head">
+    <div class="dsh-titulo">
+      <div class="dsh-titulo-ico">${_docResIcone('pasta')}</div>
+      <div style="min-width:0">
+        <div class="dsh-h1">Documentação de Resíduos</div>
+        <div class="dsh-sub">Gestão e consolidação dos MTRs e CDFs por período. O mês de cada documento é a data de emissão lida nele.</div>
+      </div>
+    </div>
+    ${_docResHtmlResumoMes(chave, st, ix)}
+  </div>
+  <div class="dr-tabs2-bar">${abas}</div>
+  <div class="dr-card dr-nav">
+    <div class="dr-ano"><button onclick="docResAno(-1)" title="Ano anterior">‹</button><span>${E.ano}</span><button onclick="docResAno(1)" title="Próximo ano">›</button></div>
+    <div class="dr-mes-list"><button class="dr-mes dr-mes-ano${E.visao==='ano'?' active':''}" onclick="docResVisaoAno()" title="Consolidado do ano e evolução mês a mês">Ano ${E.ano}</button>${chips}</div>
+  </div>
+  ${alerta}${msg}
+  ${_docResCardRelatorio(E, ix, chave, periodo, kpis)}
+  ${_docResCardSecundario(E, ix, chave, periodo)}
+  <input type="file" id="dr-input" multiple accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" style="display:none" onchange="docResAoEscolher(event)"/>
+  <input type="file" id="dr-input-subst" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" style="display:none" onchange="docResAoEscolherSubstituto(event)"/>`;
+}
+
+// Resumo do período (canto superior direito)
+function _docResHtmlResumoMes(chave, st, ix){
+  const E = _docResEstado;
+  if(E.visao==='ano'){
+    const ev = _docResEvolucaoAnual(ix, E.ano, 'MTR');
+    const nM = ev.reduce((s,x)=>s+x.mtrs,0), nC = ev.reduce((s,x)=>s+x.cdfs,0);
+    const item = (tipo, n)=>`<div class="dr-resumo-it"><span class="dr-resumo-st ${n?'ok':'pend'}">${n?'✓':'!'}</span><div><b>${tipo}</b><span class="${n?'ok':'pend'}">${n} no ano</span></div></div>`;
+    return `<div class="dr-resumo"><div class="dr-resumo-mes"><span class="dr-resumo-ico">${_docResIcone('calendario')}</span>
+      <div><div class="dr-resumo-label">${E.ano}</div><span class="badge badge-gray">Visão anual</span></div></div>${item('MTR',nM)}${item('CDF',nC)}</div>`;
+  }
+  const badgeCls = st.rotulo==='completa' ? 'badge-green' : (st.rotulo==='pendente' ? 'badge-yellow' : 'badge-red');
+  const item = (tipo, n)=>`<div class="dr-resumo-it" title="${n?_docResTxtQtd(n,tipo):tipo+' pendente'}"><span class="dr-resumo-st ${n?'ok':'pend'}">${n?'✓':'!'}</span>
+      <div><b>${tipo}</b><span class="${n?'ok':'pend'}">${n?'Anexado':'Pendente'}</span></div></div>`;
+  return `<div class="dr-resumo"><div class="dr-resumo-mes"><span class="dr-resumo-ico">${_docResIcone('calendario')}</span>
+      <div><div class="dr-resumo-label">${_resMesLabel(chave)}</div><span class="badge ${badgeCls}">${DOCRES_STATUS_TXT[st.rotulo]}</span></div></div>${item('MTR', st.nMtr)}${item('CDF', st.nCdf)}</div>`;
+}
+
+// ───────── Card principal: Relatório Consolidado ─────────
+function _docResCardRelatorio(E, ix, chave, periodo, k){
+  const t = E.tipo;
+  const per = E.visao==='ano' ? `${E.ano} (ano todo)` : _docResMesLongo(chave);
+  const resumo = t==='MTR'
+    ? `<b>${k.total}</b> ${_docResPl(k.total,'MTR emitido','MTRs emitidos')} · ${k.comCdf} com CDF · ${k.semCdf} sem CDF · ${k.incompletos} com dados incompletos`
+    : `<b>${k.total}</b> ${_docResPl(k.total,'CDF emitido','CDFs emitidos')} · ${k.mtrsVinculados} ${_docResPl(k.mtrsVinculados,'MTR vinculado','MTRs vinculados')} · ${k.naoAssociados} ${_docResPl(k.naoAssociados,'não associado','não associados')} · ${k.incompletos} com dados incompletos`;
+  const prog = E.enviando ? `<div class="dr-prog" id="dr-prog">⏳ ${_resAttrEsc(E.progresso)}</div>` : '';
+  return `<div class="dsh-card dr-rel" ondragover="docResArrastar(event,true)" ondragleave="docResArrastar(event,false)" ondrop="docResSoltar(event)">
+    <div class="dr-rel-cab">
+      <div>
+        <div class="dsh-card-title dr-tit"><span class="dr-tit-ico">${_docResIcone('grafico')}</span>Relatório Consolidado — ${t}</div>
+        <div class="dr-cons-sub">Histórico dos documentos processados</div>
+      </div>
+      <div class="dr-rel-btns">
+        <button class="btn btn-primary btn-sm" onclick="docResAbrirSeletor()" ${E.enviando?'disabled':''} title="Você pode enviar vários ${t}s de uma vez (ou arrastar os arquivos para esta área)">${_docResIcone('plus')} Adicionar ${t}</button>
+        <button class="btn btn-outline btn-sm" onclick="docResAbrirExportar()" title="Exportar o relatório (período, filtros e ordenação atuais)">${_docResIcone('baixar')} Exportar</button>
+      </div>
+    </div>
+    ${prog}${_docResHtmlResultado(E)}
+    <div class="dr-periodo">Relatório de ${t}s — ${per}</div>
+    <div class="dr-resumo-txt">${resumo}</div>
+    ${_docResHtmlKpis(k, E)}
+    ${E.visao==='ano' ? _docResHtmlEvolucao(E, ix) : ''}
+    ${periodo.length ? _docResHtmlToolbar(E, ix, periodo) : ''}
+    <div id="dr-rel-corpo">${_docResCorpoTabela(ix)}</div>
+    <div class="dr-drop-dica">Solte os arquivos para adicionar ${t}s</div>
+  </div>`;
+}
+function _docResHtmlKpis(k, E){
+  const fmt = n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:3});
+  const card = (rot, val, o)=>{ o = o||{};
+    const on = o.filtro && o.filtro!=='todos' && E.filtro===o.filtro;
+    return `<${o.filtro?'button':'div'} class="dr-kpi${o.warn&&k[o.chave]>0?' warn':''}${on?' on':''}" ${o.filtro?`onclick="docResFiltro('${on?'todos':o.filtro}')" title="${on?'Remover filtro':'Filtrar a tabela'}"`:''}><span>${rot}</span><b>${val}</b>${o.nota?`<em>${o.nota}</em>`:''}</${o.filtro?'button':'div'}>`;
+  };
+  const peso = card('Peso total', `${fmt(k.peso)} kg`, {nota:k.pesoOutras?`+ ${k.pesoOutras} ${_docResPl(k.pesoOutras,'registro','registros')} em outra unidade (não somado)`:''});
+  if(E.tipo==='MTR') return `<div class="dr-kpis">
+    ${card('MTRs emitidos', k.total, {filtro:'todos'})}${peso}${card('Com CDF', k.comCdf, {filtro:'comcdf'})}
+    ${card('Sem CDF', k.semCdf, {filtro:'semcdf', warn:true, chave:'semCdf'})}${card('Dados incompletos', k.incompletos, {filtro:'incompletos', warn:true, chave:'incompletos'})}
+    ${k.divergencias?card('Divergências', k.divergencias, {filtro:'divergencia', warn:true, chave:'divergencias'}):''}</div>`;
+  return `<div class="dr-kpis">
+    ${card('CDFs emitidos', k.total, {filtro:'todos'})}${peso}${card('MTRs vinculados', k.mtrsVinculados, {filtro:'associados'})}
+    ${card('CDFs não associados', k.naoAssociados, {filtro:'naoassoc', warn:true, chave:'naoAssociados'})}${card('Dados incompletos', k.incompletos, {filtro:'incompletos', warn:true, chave:'incompletos'})}
+    ${k.divergencias?card('Divergências', k.divergencias, {filtro:'divergencia', warn:true, chave:'divergencias'}):''}</div>`;
+}
+// Resumo do envio: só o essencial; o foco volta ao relatório
+function _docResHtmlResultado(E){
+  const r = E.resultado; if(!r) return '';
+  const T = r.tipo;
+  const l = [];
+  if(r.processados) l.push(`<span class="ok">✓ ${r.processados} ${_docResPl(r.processados,'arquivo processado','arquivos processados')}</span>`,
+                           `<span class="ok">✓ ${r.identificados} ${T}${r.identificados===1?'':'s'} ${_docResPl(r.identificados,'identificado','identificados')}</span>`);
+  if(T==='MTR' && r.adicionados) l.push(`<span class="ok">✓ ${r.adicionados} ${_docResPl(r.adicionados,'registro adicionado','registros adicionados')}</span>`);
+  if(T==='CDF'){
+    if(r.associados) l.push(`<span class="ok">✓ ${r.associados} ${_docResPl(r.associados,'associado a MTR','associados a MTR')}</span>`);
+    if(r.naoAssociados) l.push(`<span class="av">⚠ ${r.naoAssociados} ${_docResPl(r.naoAssociados,'CDF não associado','CDFs não associados')} <a href="#" class="dr-rel-link" onclick="docResFiltro('naoassoc');return false">filtrar</a></span>`);
+  }
+  if(r.falhas) l.push(`<span class="av">⚠ ${r.falhas} ${_docResPl(r.falhas,'arquivo não pôde ser processado','arquivos não puderam ser processados')} <a href="#" class="dr-rel-link" onclick="docResAbrirFalhas();return false">Ver detalhes</a></span>`);
+  if(r.duplicados) l.push(`<span class="av">↺ ${r.duplicados} ${_docResPl(r.duplicados,`${T} já cadastrado`,`${T}s já cadastrados`)} <a href="#" class="dr-rel-link" onclick="docResAbrirDuplicados();return false">Ver detalhes</a></span>`);
+  if(r.semData) l.push(`<span class="av">⚠ ${r.semData} sem data de emissão <a href="#" class="dr-rel-link" onclick="docResAbrirPendentes();return false">Ver pendentes</a></span>`);
+  const meses = Object.entries(r.porMes).sort((a,b)=>b[0].localeCompare(a[0]))
+    .map(([m,q])=>`<button class="dr-chip ok" onclick="docResMes('${m}')" title="Abrir ${_docResMesLongo(m)}">${_resMesLabel(m)} · ${q}</button>`).join('');
+  return `<div class="dr-res"><div class="dr-res-linhas">${l.join('')}</div>
+    ${meses?`<div class="dr-chips"><span class="dr-res-sub">Classificados pela data de emissão:</span>${meses}</div>`:''}
+    <button class="dr-x" onclick="docResFecharResultado()" title="Fechar resumo">${_docResIcone('fechar')}</button></div>`;
+}
+function _docResOpcoesFiltro(E){
+  return E.tipo==='MTR'
+    ? [['todos','Todos'],['comcdf','Com CDF'],['semcdf','Sem CDF'],['divergencia','Divergência de CDF'],['incompletos','Dados incompletos'],['conferir','A conferir'],['validos','Válidos (conferidos)']]
+    : [['todos','Todos'],['associados','Associados'],['naoassoc','Não associados'],['divergencia','Divergência'],['incompletos','Dados incompletos'],['conferir','A conferir'],['validos','Válidos (conferidos)']];
+}
+function _docResHtmlToolbar(E, ix, periodo){
+  const uniq = f=>[...new Set(periodo.map(r=>r[f]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const sel = (id, rot, campo, atual, evt)=>`<select class="filter-select dr-sel2" onchange="${evt}(this.value)" title="${rot}"><option value="">${rot}: todos</option>${uniq(campo).map(v=>`<option value="${_resAttrEsc(v)}"${atual===v?' selected':''}>${_resAttrEsc(v)}</option>`).join('')}</select>`;
+  const filtrando = E.busca || E.filtro!=='todos' || E.fTransp || E.fDest || E.fRes;
+  return `<div class="dr-toolbar">
+      <input class="form-input dr-busca" id="dr-busca" placeholder="${E.tipo==='MTR'?'Buscar MTR, transportador, destinador…':'Buscar CDF, MTR, destinador…'}" value="${_resAttrEsc(E.busca)}" oninput="docResBuscar(this.value)"/>
+      <select class="filter-select dr-sel2" onchange="docResFiltro(this.value)" title="Situação">${_docResOpcoesFiltro(E).map(([v,t])=>`<option value="${v}"${E.filtro===v?' selected':''}>${t}</option>`).join('')}</select>
+      <button class="btn btn-outline btn-sm" onclick="docResMaisFiltros()">${E.maisFiltros?'Menos filtros ▴':'Mais filtros ▾'}</button>
+      ${filtrando?`<button class="btn btn-outline btn-sm" onclick="docResLimparFiltros()">Limpar</button>`:''}
+    </div>
+    ${E.maisFiltros?`<div class="dr-toolbar">${sel('t','Transportador','transportador',E.fTransp,'docResFiltroTransp')}${sel('d','Destinador','destinador',E.fDest,'docResFiltroDest')}${sel('r','Resíduo','tipoResiduo',E.fRes,'docResFiltroRes')}</div>`:''}`;
+}
+// Visão anual: evolução mês a mês
+function _docResHtmlEvolucao(E, ix){
+  const ev = _docResEvolucaoAnual(ix, E.ano, E.tipo);
+  const fmt = n=>Number(n).toLocaleString('pt-BR',{maximumFractionDigits:3});
+  const pend = x=>{
+    const p = [];
+    if(x.semCdf) p.push(`${x.semCdf} sem CDF`);
+    if(x.incompletos) p.push(`${x.incompletos} ${_docResPl(x.incompletos,'incompleto','incompletos')}`);
+    if(x.divergencias) p.push(`${x.divergencias} ${_docResPl(x.divergencias,'divergência','divergências')}`);
+    if(x.naoAssociados) p.push(`${x.naoAssociados} ${_docResPl(x.naoAssociados,'CDF não associado','CDFs não associados')}`);
+    return p.length ? `<span class="badge badge-yellow">${p.join(' · ')}</span>` : '<span class="dr-nd">—</span>';
+  };
+  return `<div class="dr-evo"><div class="dr-evo-tit">Evolução mensal — ${E.ano}</div>
+    <table class="dr-tbl dr-tbl-evo"><thead><tr><th>Mês</th><th>MTRs</th><th>Peso total</th><th>CDFs</th><th>Pendências</th></tr></thead><tbody>
+    ${ev.map(x=>`<tr class="dr-linha${x.mtrs||x.cdfs?'':' dr-vaz'}" onclick="docResMes('${x.mes}')" title="Abrir ${_docResMesLongo(x.mes)}">
+      <td class="dr-mes-col">${_docResMesLongo(x.mes)}</td><td>${x.mtrs||'<span class="dr-nd">—</span>'}</td><td>${x.peso?fmt(x.peso)+' kg':'<span class="dr-nd">—</span>'}</td><td>${x.cdfs||'<span class="dr-nd">—</span>'}</td>
+      <td>${x.mtrs||x.cdfs?pend(x):'<span class="dr-nd">sem documentos</span>'}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+// ── Tabela principal ──
+function _docResSeta(campo){ const o = _docResEstado.ordem; return o.campo===campo ? (o.dir==='asc'?' ▲':' ▼') : ''; }
+function _docResTh(campo, rotulo, extra){
+  return `<th class="dr-th-ord${_docResEstado.ordem.campo===campo?' on':''}" onclick="docResOrdenar('${campo}')" title="Ordenar" ${extra||''}>${rotulo}${_docResSeta(campo)}</th>`;
+}
+function _docResCorpoTabela(ix){
+  const E = _docResEstado; const chave = _docResChaveSelecionada();
+  const periodo = _docResLinhasPeriodo(ix, E.tipo, E.visao, chave, E.ano);
+  if(!periodo.length){
+    const per = E.visao==='ano' ? String(E.ano) : _docResMesLongo(chave);
+    return `<div class="dr-vazio dr-vazio-card"><span class="badge badge-yellow">⚠ ${E.tipo} pendente</span>
+      <div style="margin-top:8px">Nenhum ${E.tipo} emitido em ${per}.</div>
+      <div style="font-size:11px;margin-top:2px">Use <b>Adicionar ${E.tipo}</b> — cada documento entra no mês da sua data de emissão.</div></div>`;
+  }
+  const linhas = _docResOrdenar(_docResAplicarFiltros(periodo, ix, E), E.ordem, ix, E.tipo);
+  if(!linhas.length) return `<div class="dr-vazio dr-vazio-card">Nenhum resultado para os filtros atuais.</div>`;
+  const paginas = Math.max(1, Math.ceil(linhas.length/DOCRES_PAGINA));
+  E.pagina = Math.min(Math.max(0,E.pagina), paginas-1);
+  const fatia = linhas.slice(E.pagina*DOCRES_PAGINA, (E.pagina+1)*DOCRES_PAGINA);
+  const filtrado = linhas.length !== periodo.length;
+  const pager = linhas.length>DOCRES_PAGINA ? `<div class="dr-pager">
+      <button class="dr-ib" onclick="docResPagina(-1)" ${E.pagina===0?'disabled':''}>‹</button>
+      <span>${E.pagina*DOCRES_PAGINA+1}–${Math.min((E.pagina+1)*DOCRES_PAGINA, linhas.length)} de ${linhas.length}${filtrado?` (filtrado de ${periodo.length})`:''}</span>
+      <button class="dr-ib" onclick="docResPagina(1)" ${E.pagina>=paginas-1?'disabled':''}>›</button></div>`
+    : (filtrado?`<div class="dr-pager"><span>${linhas.length} de ${periodo.length}</span></div>`:'');
+  return (E.tipo==='MTR' ? _docResTabelaMtr(fatia, ix) : _docResTabelaCdf(fatia, ix)) + pager;
+}
+function _docResBotoesLinha(doc, menuId){
+  return `<div class="dr-acoes">
+    <button class="dr-ib" title="Visualizar o documento" onclick="docResVer('${doc.id}')">${_docResIcone('olho')}</button>
+    <button class="dr-ib" title="Baixar" onclick="docResBaixar('${doc.id}')">${_docResIcone('baixar')}</button>
+    <button class="dr-ib" title="Mais opções" onclick="docResMenu(event,'${menuId}')">${_docResIcone('mais')}</button>
+    ${_docResMenuAcoes(doc, menuId)}
+  </div>`;
+}
+function _docResMenuAcoes(doc, menuId){
+  const eh = doc.tipo==='MTR';
+  return `<div class="dr-menu" id="${menuId}">
+    <button onclick="docResAbrirDetalheDoc('${doc.id}')">${_docResIcone('tabela')} Ver detalhes</button>
+    <button onclick="docResEditarDados('${doc.id}')">${_docResIcone('documentoOk')} Conferir / editar dados</button>
+    ${doc.tipo==='CDF'?`<button onclick="docResAbrirAssociar('${doc.id}')">${_docResIcone('link')} Associar ao MTR</button>`:''}
+    <button onclick="docResPedirSubstituicao('${doc.id}')">${_docResIcone('substituir')} Substituir arquivo</button>
+    ${doc.mime==='application/pdf'?`<button onclick="docResReler('${doc.id}')">${_docResIcone('documento')} Reler documento</button>`:''}
+    <button class="perigo" onclick="docResPedirExclusao('${doc.id}')">${_docResIcone('lixeira')} Excluir documento</button>
+  </div>`;
+}
+function _docResTabelaMtr(fatia, ix){
+  return `<table class="dr-tbl dr-tbl-lista dr-tbl-mtr"><colgroup><col class="c-mes"><col class="c-num"><col class="c-data"><col><col><col><col class="c-qtd"><col class="c-cdf"><col class="c-st"><col class="c-ac"></colgroup><thead><tr>
+    ${_docResTh('mes','Mês/Ano')}${_docResTh('numero','Nº do MTR')}${_docResTh('dataEmissao','Data de emissão')}${_docResTh('transportador','Transportador')}${_docResTh('destinador','Destinador')}${_docResTh('tipoResiduo','Resíduo')}${_docResTh('peso','Qtd./Peso')}${_docResTh('cdf','CDF')}${_docResTh('status','Status')}<th style="text-align:right">Ações</th></tr></thead><tbody>
+    ${fatia.map((r,i)=>{
+      const doc = ix.docPorId.get(r.docId);
+      return `<tr class="dr-linha" onclick="docResAbrirDetalhe(event,'${_resAttrEsc(r.docId)}','${_resAttrEsc(r.numero||'')}')">
+        <td class="dr-mes-col">${r.mes?_resMesLabel(r.mes):'—'}</td><td><b>${_docResVal(r.numero)}</b></td><td style="white-space:nowrap">${_docResDataBr(r.dataEmissao)}</td>
+        <td class="dr-nome" title="${_resAttrEsc(r.transportador)}">${_docResVal(r.transportador)}</td><td class="dr-nome" title="${_resAttrEsc(r.destinador)}">${_docResVal(r.destinador)}</td>
+        <td class="dr-nome" title="${_resAttrEsc(r.tipoResiduo)}">${_docResVal(r.tipoResiduo)}</td><td style="white-space:nowrap">${_docResQtdHtml(r)}</td>
+        <td>${_docResBadgeCdfMtr(r, ix)}</td><td>${_docResBadgeStatus(r,'MTR')}</td>
+        <td>${doc?_docResBotoesLinha(doc, `dr-menu-${r.docId}-${i}`):''}</td></tr>`;
+    }).join('')}
+  </tbody></table>`;
+}
+function _docResTabelaCdf(fatia, ix){
+  return `<table class="dr-tbl dr-tbl-lista dr-tbl-cdf"><colgroup><col class="c-mes"><col class="c-num"><col class="c-data"><col><col><col class="c-qtd"><col class="c-vinc"><col class="c-cdf"><col class="c-st"><col class="c-ac"></colgroup><thead><tr>
+    ${_docResTh('mes','Mês/Ano')}${_docResTh('numero','Nº do CDF')}${_docResTh('dataEmissao','Data de emissão')}${_docResTh('destinador','Destinador')}${_docResTh('tipoResiduo','Resíduo')}${_docResTh('peso','Qtd./Peso')}<th>MTRs vinculados</th>${_docResTh('cdf','Situação')}${_docResTh('status','Status')}<th style="text-align:right">Ações</th></tr></thead><tbody>
+    ${fatia.map((r,i)=>{
+      const doc = ix.docPorId.get(r.docId); const n = (r.mtrs||[]).length;
+      return `<tr class="dr-linha" onclick="docResAbrirDetalhe(event,'${_resAttrEsc(r.docId)}','')">
+        <td class="dr-mes-col">${r.mes?_resMesLabel(r.mes):'—'}</td><td><b>${_docResVal(r.numero)}</b></td><td style="white-space:nowrap">${_docResDataBr(r.dataEmissao)}</td>
+        <td class="dr-nome" title="${_resAttrEsc(r.destinador)}">${_docResVal(r.destinador)}</td><td class="dr-nome" title="${_resAttrEsc(r.tipoResiduo)}">${_docResVal(r.tipoResiduo)}</td>
+        <td style="white-space:nowrap">${_docResQtdHtml(r)}</td>
+        <td>${n?`${n} ${_docResPl(n,'MTR','MTRs')}`:`<span class="dr-nao-abrir"><button class="dr-assoc-btn" onclick="docResAbrirAssociar('${_resAttrEsc(r.docId)}')">Associar ao MTR</button></span>`}</td>
+        <td>${_docResBadgeSituacaoCdf(r, ix)}</td><td>${_docResBadgeStatus(r,'CDF')}</td>
+        <td>${doc?_docResBotoesLinha(doc, `dr-menu-${r.docId}-${i}`):''}</td></tr>`;
+    }).join('')}
+  </tbody></table>`;
+}
+
+// ───────── Card secundário: situação dos CDFs (aba MTR) / MTRs sem CDF (aba CDF) ─────────
+function _docResCardSecundario(E, ix, chave, periodo){
+  const per = E.visao==='ano' ? String(E.ano) : _docResMesLongo(chave);
+  if(E.tipo==='MTR'){
+    const cdfs = _docResLinhasPeriodo(ix, 'CDF', E.visao, chave, E.ano).sort((a,b)=>String(b.dataEmissao||'').localeCompare(String(a.dataEmissao||'')));
+    const corpo = cdfs.length ? `<table class="dr-tbl dr-tbl-sec"><thead><tr><th>CDF nº</th><th>Emissão</th><th>Destinador</th><th>MTRs vinculados</th><th>Qtd./Peso</th><th>Situação</th><th style="text-align:right">Ações</th></tr></thead><tbody>
+      ${cdfs.slice(0,8).map(r=>{ const n=(r.mtrs||[]).length; return `<tr class="dr-linha" onclick="docResAbrirDetalhe(event,'${_resAttrEsc(r.docId)}','')">
+        <td><b>${_docResVal(r.numero)}</b></td><td style="white-space:nowrap">${_docResDataBr(r.dataEmissao)}</td><td class="dr-nome">${_docResVal(r.destinador)}</td>
+        <td>${n?`${n} ${_docResPl(n,'MTR','MTRs')}`:'<span class="dr-nd">—</span>'}</td><td style="white-space:nowrap">${_docResQtdHtml(r)}</td><td>${_docResBadgeSituacaoCdf(r, ix)}</td>
+        <td><div class="dr-acoes dr-nao-abrir">${n?'':`<button class="dr-assoc-btn" onclick="docResAbrirAssociar('${_resAttrEsc(r.docId)}')">Associar ao MTR</button>`}
+          <button class="dr-ib" title="Visualizar" onclick="docResVer('${_resAttrEsc(r.docId)}')">${_docResIcone('olho')}</button></div></td></tr>`; }).join('')}
+      </tbody></table>${cdfs.length>8?`<div class="dr-resto"><a href="#" class="dr-rel-link" onclick="docResTipo('CDF');return false">Ver os ${cdfs.length} CDFs na aba CDF</a></div>`:''}`
+      : `<div class="dr-vazio dr-vazio-card">Nenhum CDF emitido em ${per}.</div>`;
+    return `<div class="dsh-card dr-sec"><div class="dr-card-cab"><div class="dsh-card-title dr-tit"><span class="dr-tit-ico">${_docResIcone('documentoOk')}</span>Situação dos CDFs — ${per}</div></div>${corpo}</div>`;
+  }
+  const mtrs = _docResLinhasPeriodo(ix, 'MTR', E.visao, chave, E.ano);
+  const sem = mtrs.filter(r=>!ix.cdfPorMtr.has(r.numero)).sort((a,b)=>String(b.dataEmissao||'').localeCompare(String(a.dataEmissao||'')));
+  const corpo = !mtrs.length ? `<div class="dr-vazio dr-vazio-card">Nenhum MTR emitido em ${per}.</div>`
+    : (!sem.length ? `<div class="dr-vazio dr-vazio-card"><span class="badge badge-green">✓ Todos os ${mtrs.length} MTRs de ${per} possuem CDF</span></div>`
+    : `<table class="dr-tbl dr-tbl-sec"><thead><tr><th>MTR nº</th><th>Emissão</th><th>Transportador</th><th>Resíduo</th><th>Qtd./Peso</th><th style="text-align:right">Ações</th></tr></thead><tbody>
+      ${sem.slice(0,8).map(r=>`<tr class="dr-linha" onclick="docResAbrirDetalhe(event,'${_resAttrEsc(r.docId)}','${_resAttrEsc(r.numero||'')}')">
+        <td><b>${_docResVal(r.numero)}</b></td><td style="white-space:nowrap">${_docResDataBr(r.dataEmissao)}</td><td class="dr-nome">${_docResVal(r.transportador)}</td><td class="dr-nome">${_docResVal(r.tipoResiduo)}</td>
+        <td style="white-space:nowrap">${_docResQtdHtml(r)}</td><td><div class="dr-acoes dr-nao-abrir"><button class="dr-ib" title="Visualizar" onclick="docResVer('${_resAttrEsc(r.docId)}')">${_docResIcone('olho')}</button></div></td></tr>`).join('')}
+      </tbody></table>${sem.length>8?`<div class="dr-resto"><a href="#" class="dr-rel-link" onclick="docResTipo('MTR');docResFiltro('semcdf');return false">Ver os ${sem.length} MTRs sem CDF no relatório de MTRs</a></div>`:''}`);
+  return `<div class="dsh-card dr-sec"><div class="dr-card-cab"><div class="dsh-card-title dr-tit"><span class="dr-tit-ico">${_docResIcone('documento')}</span>MTRs sem CDF — ${per}${sem.length?` <span class="badge badge-yellow">${sem.length}</span>`:''}</div></div>${corpo}</div>`;
+}
+
+// ───────── Navegação, filtros e ordenação ─────────
+function _docResResetarVista(){ const E = _docResEstado; E.pagina = 0; E.busca = ''; E.filtro = 'todos'; E.fTransp = ''; E.fDest = ''; E.fRes = ''; E.maisFiltros = false; E.msg = null; }
+function docResTipo(t){
+  if(!DOCRES_TIPOS.includes(t)) return;
+  const E = _docResEstado; E.tipo = t; E.resultado = null; E.falhas = []; E.duplicados = []; _docResResetarVista();
+  _docResRedesenhar();
+}
+function docResMes(chave){
+  const [a,m] = String(chave).split('-').map(n=>parseInt(n,10));
+  if(!a || !m) return;
+  const E = _docResEstado; E.ano = a; E.mes = m; E.visao = 'mes'; _docResResetarVista();
+  _docResRedesenhar();
+}
+function docResVisaoAno(){ const E = _docResEstado; E.visao = 'ano'; _docResResetarVista(); _docResRedesenhar(); }
+function docResAno(delta){ const E = _docResEstado; E.ano += delta; _docResResetarVista(); _docResRedesenhar(); }
+function docResBuscar(v){ const E = _docResEstado; E.busca = String(v||''); E.pagina = 0; _docResRedesenharTabela(); }
+function docResFiltro(v){ const E = _docResEstado; E.filtro = v || 'todos'; E.pagina = 0; _docResRedesenhar(); }
+function docResFiltroTransp(v){ const E = _docResEstado; E.fTransp = v; E.pagina = 0; _docResRedesenhar(); }
+function docResFiltroDest(v){ const E = _docResEstado; E.fDest = v; E.pagina = 0; _docResRedesenhar(); }
+function docResFiltroRes(v){ const E = _docResEstado; E.fRes = v; E.pagina = 0; _docResRedesenhar(); }
+function docResMaisFiltros(){ const E = _docResEstado; E.maisFiltros = !E.maisFiltros; _docResRedesenhar(); }
+function docResLimparFiltros(){ const E = _docResEstado; E.busca = ''; E.filtro = 'todos'; E.fTransp = ''; E.fDest = ''; E.fRes = ''; E.pagina = 0; _docResRedesenhar(); }
+function docResOrdenar(campo){
+  const E = _docResEstado; const o = E.ordem;
+  if(o.campo===campo) o.dir = o.dir==='asc' ? 'desc' : 'asc';
+  else { o.campo = campo; o.dir = (campo==='dataEmissao'||campo==='mes'||campo==='peso') ? 'desc' : 'asc'; }
+  E.pagina = 0; _docResRedesenharTabela(); const th = document.querySelector('.dr-tbl-lista thead'); if(th) _docResRedesenhar();
+}
+function docResPagina(delta){ _docResEstado.pagina += delta; _docResRedesenharTabela(); }
+function docResFecharResultado(){ _docResEstado.resultado = null; _docResRedesenhar(); }
+function docResFecharMsg(){ _docResEstado.msg = null; _docResRedesenhar(); }
+// Usado pelo relatório de resíduos: abre esta tela já no tipo e mês certos.
+function docResIrPara(tipo, chave){
+  _docResIniciarEstado();
+  const [a,m] = String(chave).split('-').map(n=>parseInt(n,10));
+  const E = _docResEstado;
+  if(DOCRES_TIPOS.includes(tipo)) E.tipo = tipo;
+  if(a && m){ E.ano = a; E.mes = m; }
+  E.visao = 'mes'; _docResResetarVista();
+  closeModalDirect();
+  renderModContent('residuos','docres');
+}
+function docResMenu(ev, menuId){
+  ev.stopPropagation();
+  const alvo = document.getElementById(menuId);
+  const abrir = alvo && !alvo.classList.contains('open');
+  document.querySelectorAll('.dr-menu.open').forEach(m=>m.classList.remove('open'));
+  if(abrir) alvo.classList.add('open');
+}
+document.addEventListener('click', ()=>{
+  document.querySelectorAll('.dr-menu.open').forEach(m=>m.classList.remove('open'));
+});
+function docResAbrirExportar(){
+  const ix = _docResIndice(); const n = _docResLinhasDoRelatorio(ix).length;
+  openModal('Exportar relatório',
+    `<div style="font-size:13px;margin-bottom:8px">Serão exportados os <b>${n}</b> ${_docResEstado.tipo==='MTR'?'MTRs':'CDFs'} do relatório atual — período, filtros e ordenação como estão na tela — com os dados estruturados e a situação dos CDFs (não apenas os nomes dos arquivos).</div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
+     <button class="btn btn-outline" onclick="docResExportar('csv')" ${n?'':'disabled'}>CSV</button>
+     <button class="btn btn-primary" onclick="docResExportar('xlsx')" ${n?'':'disabled'}>Excel (.xlsx)</button>`);
+}
+
+// ───────── Detalhe (modal) ─────────
+function docResAbrirDetalhe(ev, docId, numero){
+  if(ev && ev.target && ev.target.closest && ev.target.closest('.dr-acoes, .dr-nao-abrir')) return;   // cliques nos botões da linha não abrem o detalhe
+  docResAbrirDetalheDoc(docId, numero);
+}
+function docResAbrirDetalheDoc(docId, numero){
+  const ix = _docResIndice(); const doc = ix.docPorId.get(docId); if(!doc) return;
+  if(doc.tipo==='MTR'){
+    const r = Array.from(Object.values(ix.mtrsPorMes)).flat().find(x=>x.docId===docId && (numero===undefined || numero==='' || x.numero===numero));
+    if(r) _docResModalMtr(r, ix, doc);
+  } else {
+    const r = ix.cdfLinhas.find(x=>x.docId===docId);
+    if(r) _docResModalCdf(r, ix, doc);
+  }
+}
+const _docResDc = (rot, val, larga)=>`<div class="dr-dc${larga?' larga':''}"><span>${rot}</span><b>${val}</b></div>`;
+function _docResHtmlArquivoOriginal(doc){
+  return `<div class="dr-det-sec"><h4>Arquivo original</h4>
+    <div class="dr-arq-linha"><span class="dr-ficon ${doc.mime==='application/pdf'?'pdf':'img'}">${_docResIcone('documento')}</span>
+      <div style="min-width:0;flex:1"><div class="dr-arq-nome">${_resAttrEsc(doc.nome)}</div><div class="dr-arq-sub">${_docResFmtTamanho(doc.tamanho)} · enviado em ${_docResDataHoraAs(doc.dataUpload)}</div></div>
+      <button class="btn btn-outline btn-sm" onclick="docResVer('${doc.id}')">${_docResIcone('olho')} Visualizar</button>
+      <button class="btn btn-outline btn-sm" onclick="docResBaixar('${doc.id}')">${_docResIcone('baixar')} Baixar</button></div></div>`;
+}
+function _docResHtmlDivergencias(divs){
+  if(!divs.length) return '';
+  return `<div class="dr-div"><div class="dr-div-tit">⚠ Divergência para análise <span>(os dados originais não foram alterados)</span></div>
+    <table class="dr-tbl"><thead><tr><th>Campo</th><th>MTR</th><th>CDF</th></tr></thead><tbody>${divs.map(d=>`<tr><td><b>${_resAttrEsc(d.campo)}</b></td><td>${_resAttrEsc(d.mtr)}</td><td>${_resAttrEsc(d.cdf)}${d.cdfNumero?` <span class="dr-nd">(CDF ${_resAttrEsc(d.cdfNumero)})</span>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function _docResModalMtr(r, ix, doc){
+  const sitCdf = _docResSituacaoCdfDoMtr(r, ix); const cdfs = ix.cdfPorMtr.get(r.numero) || [];
+  const divs = ix.divMtr.get(r.numero) || [];
+  const cdfHtml = cdfs.length
+    ? cdfs.map(c=>{ const l = ix.cdfLinhas.find(x=>x.docId===c.docId); return `<div class="dr-cdf-it"><span class="badge ${sitCdf==='divergencia'?'badge-red':'badge-green'}">${sitCdf==='divergencia'?'⚠ Divergência':'✓ CDF anexado'}</span> <b>${_resAttrEsc(c.numero||'(sem nº)')}</b>
+        ${l?`<span class="dr-nd">emitido em ${l.dataEmissao?fmtDate(l.dataEmissao):'—'} · ${_resAttrEsc(_docResQtdTexto(l)||'quantidade não informada')}</span>`:''}
+        <button class="btn btn-outline btn-sm" onclick="docResAbrirDetalheDoc('${_resAttrEsc(c.docId)}')">Abrir CDF</button></div>`; }).join('')
+    : `<span class="badge badge-yellow">⚠ Sem CDF</span> <span class="dr-nd">Não anexado — envie o CDF na aba CDF; ele será associado por este nº de MTR.</span>`;
+  const b = _docResBadgeStatus(r,'MTR');
+  openModal(`MTR nº ${r.numero||'—'}`,
+    `<div class="dr-det">
+      <div class="dr-det-top">${b} ${_docResBadgeCdfMtr(r, ix)} <span class="dr-nd">${r.mes?_docResMesLongo(r.mes):''}</span></div>
+      <div class="dr-det-sec"><h4>Identificação</h4><div class="dr-dgrid3">${_docResDc('Data de emissão', r.dataEmissao?fmtDate(r.dataEmissao):'<span class="dr-ni">Não informado</span>')}${_docResDc('Status do MTR', _docResNI(r.statusMtr))}${_docResDc('Encerramento / recebimento', r.dataEncerramento?fmtDate(r.dataEncerramento):'<span class="dr-ni">Não informado</span>')}</div></div>
+      <div class="dr-det-sec"><h4>Gerador</h4><div class="dr-dgrid3">${_docResDc('Gerador', _docResEmpresaHtml(r.gerador,r.geradorCod))}${_docResDc('CNPJ', _docResNI(r.geradorCnpj))}${_docResDc('Unidade / local de geração', _docResNI(r.geradorUnidade))}</div></div>
+      <div class="dr-det-sec"><h4>Transportador</h4><div class="dr-dgrid3">${_docResDc('Transportador', _docResEmpresaHtml(r.transportador,r.transportadorCod))}${_docResDc('CNPJ', _docResNI(r.transportadorCnpj))}${_docResDc('Veículo', _docResNI(r.veiculo))}${_docResDc('Condutor', _docResNI(r.condutor))}</div></div>
+      <div class="dr-det-sec"><h4>Destinador</h4><div class="dr-dgrid3">${_docResDc('Destinador', _docResEmpresaHtml(r.destinador,r.destinadorCod))}${_docResDc('CNPJ', _docResNI(r.destinadorCnpj))}${_docResDc('Unidade de destinação', _docResNI(r.destinadorUnidade))}</div></div>
+      <div class="dr-det-sec"><h4>Resíduo</h4><div class="dr-dgrid3">${_docResDc('Resíduo', _docResNI(r.tipoResiduo))}${_docResDc('Código', _docResNI(r.codigoResiduo))}${_docResDc('Classe', _docResNI(r.classe))}
+        ${_docResDc('Estado físico', _docResNI(r.estadoFisico))}${_docResDc('Quantidade', r.quantidade>0?_resAttrEsc(`${Number(r.quantidade).toLocaleString('pt-BR',{maximumFractionDigits:3})} ${r.unidade||''}`.trim()):'<span class="dr-ni">Não informado</span>')}
+        ${_docResDc('Peso', _docResPesoKg(r)!==null?_resAttrEsc(_docResFmtKg(_docResPesoKg(r))):'<span class="dr-ni">Não informado</span>')}${_docResDc('Tecnologia / tipo de destinação', _docResNI(r.tecnologia), true)}</div></div>
+      <div class="dr-det-sec"><h4>CDF</h4>${cdfHtml}${_docResHtmlDivergencias(divs)}</div>
+      ${_docResHtmlArquivoOriginal(doc)}
+    </div>`,
+    `<button class="btn btn-outline" onclick="docResEditarDados('${doc.id}')">Conferir / editar dados</button>
+     <button class="btn btn-outline" onclick="docResPedirSubstituicao('${doc.id}')">${_docResIcone('substituir')} Substituir</button>
+     <button class="btn btn-outline" style="color:var(--red)" onclick="docResPedirExclusao('${doc.id}')">Excluir</button>
+     <button class="btn btn-primary" onclick="closeModalDirect()">Fechar</button>`, true);
+}
+function _docResModalCdf(r, ix, doc){
+  const divs = ix.divCdf.get(r.docId) || [];
+  const sit = _docResSituacaoCdf(r, ix);
+  const vinc = (r.mtrs||[]).map(n=>{ const m = ix.mtrPorNumero.get(n);
+    return `<div class="dr-cdf-it"><b>${_resAttrEsc(n)}</b> ${m?`<span class="dr-nd">emitido em ${m.dataEmissao?fmtDate(m.dataEmissao):'—'} · ${_resAttrEsc(_docResQtdTexto(m)||'quantidade não informada')}</span> <button class="btn btn-outline btn-sm" onclick="docResAbrirDetalheDoc('${_resAttrEsc(m.docId)}','${_resAttrEsc(n)}')">Abrir MTR</button>`
+      :`<span class="badge badge-yellow">sem MTR anexado</span>`}
+      <button class="dr-x" onclick="docResRemoverAssociacao('${doc.id}','${_resAttrEsc(n)}')" title="Remover esta associação">${_docResIcone('fechar')}</button></div>`; }).join('');
+  openModal(`CDF nº ${r.numero||'—'}`,
+    `<div class="dr-det">
+      <div class="dr-det-top">${_docResBadgeStatus(r,'CDF')} ${_docResBadgeSituacaoCdf(r, ix)} <span class="dr-nd">${r.mes?_docResMesLongo(r.mes):''}${r.mesDerivado?' (mês deduzido do período/MTR — sem data de emissão lida)':''}</span></div>
+      <div class="dr-det-sec"><h4>Identificação</h4><div class="dr-dgrid3">${_docResDc('Data de emissão', r.dataEmissao?fmtDate(r.dataEmissao):'<span class="dr-ni">Não informado</span>')}
+        ${_docResDc('Período', r.periodoIni&&r.periodoFim?`${fmtDate(r.periodoIni)} a ${fmtDate(r.periodoFim)}`:'<span class="dr-ni">Não informado</span>')}</div></div>
+      <div class="dr-det-sec"><h4>Transportador e destinador</h4><div class="dr-dgrid3">${_docResDc('Transportador', _docResEmpresaHtml(r.transportador,r.transportadorCod))}${_docResDc('Destinador', _docResEmpresaHtml(r.destinador,r.destinadorCod))}${_docResDc('CNPJ do destinador', _docResNI(r.destinadorCnpj))}</div></div>
+      <div class="dr-det-sec"><h4>Resíduo</h4><div class="dr-dgrid3">${_docResDc('Resíduo', _docResNI(r.tipoResiduo))}${_docResDc('Quantidade / peso', _docResQtdHtml(r))}</div></div>
+      <div class="dr-det-sec"><h4>MTRs vinculados</h4>${vinc || `<div class="dr-msg-topo">⚠ Não foi possível identificar automaticamente o MTR relacionado a este documento.</div>`}
+        <button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="docResAbrirAssociar('${doc.id}')">${_docResIcone('link')} Associar ao MTR</button>${_docResHtmlDivergencias(divs)}</div>
+      ${_docResHtmlArquivoOriginal(doc)}
+    </div>`,
+    `<button class="btn btn-outline" onclick="docResEditarDados('${doc.id}')">Conferir / editar dados</button>
+     <button class="btn btn-outline" onclick="docResPedirSubstituicao('${doc.id}')">${_docResIcone('substituir')} Substituir</button>
+     <button class="btn btn-outline" style="color:var(--red)" onclick="docResPedirExclusao('${doc.id}')">Excluir</button>
+     <button class="btn btn-primary" onclick="closeModalDirect()">Fechar</button>`, true);
+}
+
+// ───────── Pendentes (documentos sem data de emissão legível) ─────────
+function docResAbrirPendentes(){
+  const ix = _docResIndice();
+  const MOT = {sem_data:'Sem data de emissão legível', nao_lida:'Dados não lidos (PDF sem texto ou formato não reconhecido)', imagem:'Imagem — preencha os dados'};
+  const corpo = ix.pendentes.length
+    ? `<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Estes documentos <b>não entram em nenhum mês</b> porque a data de emissão não foi lida. Abra <b>Preencher dados</b>, confira com o documento e informe a data — ele passa a valer no mês dessa data.</div>
+       <table class="dr-tbl"><thead><tr><th>Tipo</th><th>Arquivo</th><th>Situação</th><th style="text-align:right">Ações</th></tr></thead><tbody>
+       ${ix.pendentes.map(p=>`<tr><td><b>${p.doc.tipo}</b></td><td class="dr-quebra">${_resAttrEsc(p.doc.nome)}</td><td>${MOT[p.motivo]||''}</td>
+         <td><div class="dr-acoes"><button class="btn btn-outline btn-sm" onclick="docResVer('${p.doc.id}')">Ver</button><button class="btn btn-primary btn-sm" onclick="docResEditarDados('${p.doc.id}')">Preencher dados</button></div></td></tr>`).join('')}
+       </tbody></table>`
+    : '<div class="dr-vazio">Nenhum documento pendente.</div>';
+  openModal('Documentos sem data de emissão', corpo, `<button class="btn btn-outline" onclick="closeModalDirect()">Fechar</button>`, true);
+}
+
+
+// ───────── Envio: selecionou → processa na hora; a tela volta para o relatório ─────────
+function docResAbrirSeletor(){ const i = document.getElementById('dr-input'); if(i) i.click(); }
+function docResAoEscolher(ev){
+  const fs = Array.from(ev.target.files || []);
+  ev.target.value = '';
+  if(fs.length) _docResIniciarLote(fs);
+}
+function docResArrastar(ev, ligar){
+  ev.preventDefault();
+  if(ev.currentTarget && ev.currentTarget.classList) ev.currentTarget.classList.toggle('dr-drag', !!ligar);
+}
+function docResSoltar(ev){
+  ev.preventDefault();
+  if(ev.currentTarget && ev.currentTarget.classList) ev.currentTarget.classList.remove('dr-drag');
+  const fs = Array.from((ev.dataTransfer && ev.dataTransfer.files) || []);
+  if(fs.length) _docResIniciarLote(fs);
+}
+function _docResAtualizarProgresso(){
+  const el = document.getElementById('dr-prog');
+  if(el) el.textContent = _docResEstado.progresso;
+}
+// Meses (pela data de emissão) em que um documento entrou, e se ficou algo sem data.
+function _docResMesesDoRegistro(rec){
+  const ex = rec.extracao || {}; const meses = {}; let semData = false;
+  if(rec.tipo==='MTR'){
+    const rows = ex.mtrs || [];
+    if(!rows.length) semData = true;
+    rows.forEach(r=>{ const m = _docResMesDaData(r.dataEmissao); if(m) meses[m] = (meses[m]||0)+1; else semData = true; });
+  } else {
+    const m = _docResMesDaData(ex.dataEmissao) || _docResMesDaData(ex.periodoIni); if(m) meses[m] = 1; else semData = true;
+  }
+  return {meses, semData};
+}
+// Motivo pelo qual o documento NÃO pode virar registro (vazio = pode).
+function _docResMotivoFalha(tipo, ex){
+  if(['nao_lida','imagem','indisponivel'].includes(ex.status)) return ex.motivo || 'documento não pôde ser lido';
+  if(tipo==='MTR' && !(ex.mtrs||[]).some(m=>m.dataEmissao)) return ex.motivo || 'dados insuficientes: data de emissão não identificada';
+  return '';
+}
+// Duplicidade pelo NÚMERO do MTR/CDF (e, na falta de número, pelo mesmo arquivo).
+function _docResDetectarDuplicado(tipo, file, ex, ignorarId){
+  const docs = _docResLista().filter(d=>d.tipo===tipo && d.id!==ignorarId);
+  const info = (d, motivo, numero)=>{
+    const e = d.extracao || {}; const row = tipo==='MTR' ? ((e.mtrs||[]).find(m=>m.numero===numero) || (e.mtrs||[])[0] || {}) : e;
+    const data = row.dataEmissao || '';
+    return {motivo, numero:numero||'', nome:d.nome, docId:d.id, dataEmissao:data, mes:_docResMesDaData(data) || d.mesReferencia || ''};
+  };
+  if(tipo==='MTR'){
+    for(const n of (ex.mtrs||[]).map(m=>m.numero).filter(Boolean)){
+      const d = docs.find(d=>((d.extracao&&d.extracao.mtrs)||[]).some(m=>m.numero===n));
+      if(d) return info(d,'numero',n);
+    }
+  } else if(ex.numero){
+    const d = docs.find(d=>d.extracao && d.extracao.numero===ex.numero);
+    if(d) return info(d,'numero',ex.numero);
+  }
+  const igual = docs.find(d=>d.nome===file.name && d.tamanho===file.size);
+  if(igual) return info(igual,'arquivo',tipo==='MTR' ? (((igual.extracao||{}).mtrs||[])[0]||{}).numero : (igual.extracao||{}).numero);
+  return null;
+}
+// Lê, valida, confere duplicidade e grava UM documento (lote, substituição e cadastro manual).
+// → {status:'ok'|'falha'|'duplicado', ...}
+async function _docResProcessarArquivo(tipo, file, mime, opc){
+  opc = opc || {};
+  await _docResMigrarLegado();
+  const dataUrl = _docResNormalizarDataUrl(await _lerArquivoComoBase64(file), mime);
+  // A leitura nunca trava o envio: falha/demora vira "não lido".
+  let extracao;
+  try{ extracao = await _docResExtrairComLimite(tipo, await _docResLerArrayBuffer(file), mime); }
+  catch(e){ console.error('Leitura dos dados falhou', e); extracao = {lidoEm:new Date().toISOString(), revisado:false, status:'nao_lida', motivo:'arquivo ilegível', ...(tipo==='MTR'?{mtrs:[]}:{numero:'',transportador:'',destinador:'',dataEmissao:'',mtrs:[]})}; }
+  if(!opc.forcarPendente){
+    const motivo = _docResMotivoFalha(tipo, extracao);
+    if(motivo) return {status:'falha', motivo};
+  }
+  const dup = _docResDetectarDuplicado(tipo, file, extracao, opc.substituirId);
+  if(dup) return {status:'duplicado', ...dup};
+  const id = opc.substituirId || uid(), uploadId = uid();
+  const antigo = opc.substituirId ? _docResMapa()[opc.substituirId] : null;
+  const meta = {nome:file.name, tamanho:file.size, mime, dataUpload:new Date().toISOString()};
+  try{
+    await _docResGravarPartes(id, uploadId, dataUrl, meta);
+    const registro = {id, tipo, nome:meta.nome, tamanho:meta.tamanho, mime, dataUpload:meta.dataUpload, uploadId, extracao};
+    await _docResGravarRegistro(registro);
+    if(antigo && antigo.uploadId && antigo.uploadId!==uploadId){
+      fbDocsResiduos.child(id).child(antigo.uploadId).remove().catch(e=>console.warn('Falha ao limpar o arquivo anterior', e));
+    }
+    return {status:'ok', registro, ..._docResMesesDoRegistro(registro)};
+  }catch(err){
+    fbDocsResiduos.child(id).child(uploadId).remove().catch(()=>{});   // não deixa partes órfãs
+    throw err;
+  }
+}
+async function _docResIniciarLote(arquivos){
+  const E = _docResEstado;
+  if(E.enviando || !arquivos.length) return;
+  const tipo = E.tipo;
+  E.enviando = true; E.msg = null; E.resultado = null; E.falhas = []; E.duplicados = []; E.progresso = 'Preparando…';
+  _docResRedesenhar();
+  const res = {tipo, total:arquivos.length, processados:0, identificados:0, adicionados:0, porMes:{}, associados:0, naoAssociados:0, semData:0, falhas:0, duplicados:0};
+  try{
+    await _docResMigrarLegado();
+    for(let i=0;i<arquivos.length;i++){
+      const file = arquivos[i];
+      E.progresso = `Processando ${i+1}/${arquivos.length} — ${file.name}`; _docResAtualizarProgresso();
+      const v = _docResValidarArquivo(file);
+      if(!v.ok){ E.falhas.push({nome:file.name, motivo:v.erro, manual:false}); res.falhas++; continue; }
+      try{
+        const r = await _docResProcessarArquivo(tipo, file, v.mime);
+        if(r.status==='falha'){ E.falhas.push({nome:file.name, file, mime:v.mime, motivo:r.motivo, manual:true}); res.falhas++; }
+        else if(r.status==='duplicado'){ E.duplicados.push({nome:file.name, file, mime:v.mime, ...r}); res.duplicados++; }
+        else{
+          const ex = r.registro.extracao || {};
+          res.processados++;
+          res.identificados += tipo==='MTR' ? (ex.mtrs||[]).length : 1;
+          Object.entries(r.meses).forEach(([m,q])=>{ res.porMes[m] = (res.porMes[m]||0)+q; res.adicionados += q; });
+          if(r.semData) res.semData++;
+          if(tipo==='CDF'){ if((ex.mtrs||[]).length) res.associados++; else res.naoAssociados++; }
+        }
+      }catch(err){
+        console.error('Erro ao enviar documento de resíduos', err);
+        E.falhas.push({nome:file.name, motivo:'erro ao salvar (verifique a conexão)', manual:false}); res.falhas++;
+        if(/permission/i.test(String((err&&(err.code||err.message))||''))){ E.msg = {tipo:'erro', texto:_docResMsgErro(err)}; break; }   // sem permissão: não adianta tentar os outros
+      }
+      await new Promise(r=>setTimeout(r,0));   // deixa a tela respirar
+    }
+  } finally {
+    E.enviando = false; E.progresso = ''; E.resultado = res; E.pagina = 0;
+    // foco no relatório: fica no período atual se algo entrou nele; senão vai ao mês onde entrou a maioria
+    const chave = _docResChaveSelecionada(); const meses = Object.keys(res.porMes);
+    const naTela = meses.some(m=> E.visao==='ano' ? m.startsWith(E.ano+'-') : m===chave);
+    if(meses.length && !naTela){
+      const topo = Object.entries(res.porMes).sort((a,b)=>b[1]-a[1])[0][0]; const [a,m] = topo.split('-').map(Number);
+      E.ano = a; E.mes = m; E.visao = 'mes';
+    }
+    _docResRedesenhar();
+  }
+}
+
+// ───────── Arquivos com problema: motivo + cadastro manual (nada é inventado) ─────────
+function docResAbrirFalhas(){
+  const E = _docResEstado;
+  const corpo = E.falhas.length ? `<div class="dr-msg-topo">⚠ Não foi possível processar ${E.falhas.length>1?'estes documentos':'este documento'}. Nenhum registro foi criado com dados inventados.</div>
+    <table class="dr-tbl"><thead><tr><th>Arquivo</th><th>Motivo</th><th style="text-align:right">Ação</th></tr></thead><tbody>
+    ${E.falhas.map((f,i)=>`<tr><td class="dr-quebra">${_resAttrEsc(f.nome)}</td><td>${_resAttrEsc(f.motivo)}</td>
+      <td style="text-align:right">${f.manual?`<button class="btn btn-outline btn-sm" onclick="docResCadastrarManual(${i})">Cadastrar manualmente</button>`:'<span class="dr-nd">—</span>'}</td></tr>`).join('')}
+    </tbody></table>
+    <div class="dr-det-nota">"Cadastrar manualmente" guarda o arquivo e abre a conferência para você digitar os dados do documento.</div>` : '<div class="dr-vazio">Nenhum problema pendente.</div>';
+  openModal('Arquivos que não puderam ser processados', corpo, `<button class="btn btn-outline" onclick="closeModalDirect()">Fechar</button>`, true);
+}
+async function docResCadastrarManual(i){
+  const E = _docResEstado; const f = E.falhas[i]; if(!f || !f.file) return;
+  closeModalDirect();
+  E.enviando = true; E.progresso = `Guardando ${f.nome}…`; _docResRedesenhar();
+  let id = null;
+  try{
+    const r = await _docResProcessarArquivo(E.tipo, f.file, f.mime, {forcarPendente:true});
+    if(r.status==='duplicado') E.msg = {tipo:'erro', texto:`${E.tipo} nº ${r.numero||''} já cadastrado.`};
+    else { id = r.registro.id; E.falhas.splice(i,1); if(E.resultado) E.resultado.falhas = Math.max(0, E.resultado.falhas-1); }
+  }catch(err){ console.error('Erro no cadastro manual', err); E.msg = {tipo:'erro', texto:_docResMsgErro(err)}; }
+  E.enviando = false; E.progresso = ''; _docResRedesenhar();
+  if(id) docResEditarDados(id);
+}
+
+// ───────── MTR/CDF já cadastrado: mostrar o existente e oferecer substituir ─────────
+function docResAbrirDuplicados(){
+  const E = _docResEstado;
+  const t = E.tipo;
+  const corpo = E.duplicados.length ? `<div class="dr-msg-topo">↺ ${t} já cadastrado — nenhum registro duplicado foi criado.</div>
+    <table class="dr-tbl"><thead><tr><th>Nº do ${t}</th><th>Data de emissão</th><th>Período</th><th>Arquivo existente</th><th style="text-align:right">Ação</th></tr></thead><tbody>
+    ${E.duplicados.map((d,i)=>`<tr><td><b>${_docResVal(d.numero)}</b></td><td>${_docResDataBr(d.dataEmissao)}</td><td>${d.mes?_docResMesLongo(d.mes):'—'}</td>
+      <td class="dr-quebra">${_resAttrEsc(d.nome)}<div class="dr-arq-sub">novo arquivo: ${_resAttrEsc(d.file.name)}</div></td>
+      <td style="text-align:right"><button class="btn btn-primary btn-sm" onclick="docResSubstituirDuplicado(${i})">Substituir arquivo</button></td></tr>`).join('')}
+    </tbody></table>` : '<div class="dr-vazio">Nenhum duplicado pendente.</div>';
+  openModal(`${t} já cadastrado`, corpo, `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>`, true);
+}
+async function docResSubstituirDuplicado(i){
+  const E = _docResEstado; const d = E.duplicados[i]; if(!d) return;
+  closeModalDirect();
+  E.enviando = true; E.progresso = 'Substituindo o arquivo…'; E.msg = null; _docResRedesenhar();
+  try{
+    const r = await _docResProcessarArquivo(E.tipo, d.file, d.mime, {substituirId:d.docId});
+    if(r.status==='ok'){ E.duplicados.splice(i,1); if(E.resultado) E.resultado.duplicados = Math.max(0, E.resultado.duplicados-1); E.msg = {tipo:'ok', texto:`${E.tipo} nº ${d.numero||''} atualizado com o novo arquivo.`}; }
+    else E.msg = {tipo:'erro', texto: r.status==='falha' ? `Não foi possível processar o novo arquivo: ${r.motivo}.` : 'Substituição cancelada: o novo arquivo conflita com outro registro.'};
+  }catch(err){ console.error('Erro ao substituir duplicado', err); E.msg = {tipo:'erro', texto:_docResMsgErro(err)}; }
+  E.enviando = false; E.progresso = ''; _docResRedesenhar();
+}
+
+// ───────── Substituir ─────────
+function docResPedirSubstituicao(id){
+  const d = _docResMapa()[id]; if(!d) return;
+  openModal(`Substituir este ${d.tipo}?`,
+    `<div style="font-size:13px;margin-bottom:10px">O novo arquivo substituirá o documento atualmente associado a este registro.</div>
+     <div style="font-size:12px;color:var(--muted)">Documento atual: <b>${_resAttrEsc(d.nome)}</b></div>
+     <div style="font-size:12px;color:var(--muted);margin-top:6px">Os dados serão lidos de novo, o vínculo com o período seguirá a data de emissão do novo arquivo e o consolidado será atualizado.</div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
+     <button class="btn btn-primary" onclick="docResConfirmarSubstituicao('${d.id}')">Substituir</button>`);
+}
+function docResConfirmarSubstituicao(id){
+  closeModalDirect();
+  const inp = document.getElementById('dr-input-subst');
+  if(inp){ inp._docResAlvo = id; inp.click(); }
+}
+function docResAoEscolherSubstituto(ev){
+  const inp = ev.target; const id = inp._docResAlvo; const f = inp.files && inp.files[0];
+  inp.value = ''; inp._docResAlvo = null;
+  if(!f || !id) return;
+  const v = _docResValidarArquivo(f);
+  if(!v.ok){ _docResEstado.msg = {tipo:'erro', texto:`Arquivo recusado: ${v.erro}.`}; _docResRedesenhar(); return; }
+  _docResExecutarSubstituicao(id, f, v.mime);
+}
+async function _docResExecutarSubstituicao(id, file, mime){
+  const E = _docResEstado; const rec = _docResMapa()[id];
+  if(!rec || E.enviando) return;
+  E.enviando = true; E.progresso = 'Substituindo o arquivo…'; E.msg = null; _docResRedesenhar();
+  try{
+    const r = await _docResProcessarArquivo(rec.tipo, file, mime, {substituirId:id});
+    if(r.status==='duplicado') E.msg = {tipo:'erro', texto:`Substituição cancelada: ${r.motivo==='numero'?`o nº ${r.numero} já está cadastrado em "${r.nome}"`:'este arquivo já está cadastrado'}.`};
+    else if(r.status==='falha') E.msg = {tipo:'erro', texto:`Substituição cancelada — não foi possível processar o novo arquivo: ${r.motivo}. O documento atual foi mantido.`};
+    else E.msg = {tipo:'ok', texto:'Arquivo substituído. Os dados foram lidos novamente — confira.'};
+  }catch(err){ console.error('Erro ao substituir documento', err); E.msg = {tipo:'erro', texto:_docResMsgErro(err)}; }
+  finally{ E.enviando = false; E.progresso = ''; _docResRedesenhar(); }
+}
+
+// ───────── Ver / Baixar / Excluir ─────────
+function docResVer(id){
+  const rec = _docResMapa()[id];
+  if(!rec){ alert('❌ Documento não encontrado. Tente recarregar a página.'); return; }
+  const janela = window.open('','_blank');   // abre já no clique, senão o navegador bloqueia como pop-up
+  if(!janela){ alert('❌ O navegador bloqueou a abertura da nova aba. Permita pop-ups para este site e tente novamente.'); return; }
+  try{ janela.document.write('<p style="font-family:sans-serif;padding:24px;color:#555">⏳ Carregando documento…</p>'); }catch(e){}
+  _docResObterDataUrl(rec).then(dataUrl=>{
+    const blob = dataUrl ? _docResDataUrlParaBlob(dataUrl, rec.mime) : null;
+    if(!blob || blob.size===0){ janela.close(); alert('❌ O arquivo não foi encontrado ou está corrompido. Tente substituí-lo.'); return; }
+    const url = URL.createObjectURL(blob);
+    janela.location.href = url;
+    setTimeout(()=>URL.revokeObjectURL(url), 60000);
+  }).catch(err=>{
+    console.error('Erro ao carregar documento de resíduos', err);
+    janela.close();
+    alert('❌ Falha ao carregar o documento. Verifique sua conexão e tente novamente.');
+  });
+}
+function docResBaixar(id){
+  const rec = _docResMapa()[id];
+  if(!rec) return;
+  _docResObterDataUrl(rec).then(dataUrl=>{
+    const blob = dataUrl ? _docResDataUrlParaBlob(dataUrl, rec.mime) : null;
+    if(!blob){ alert('❌ Documento não encontrado ou corrompido.'); return; }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = rec.nome || rec.tipo;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 60000);
+  }).catch(err=>{
+    console.error('Erro ao baixar documento de resíduos', err);
+    alert('❌ Falha ao baixar o documento. Tente novamente.');
+  });
+}
+function docResPedirExclusao(id){
+  const d = _docResMapa()[id]; if(!d) return;
+  const ex = d.extracao || {};
+  const n = d.tipo==='MTR' ? (ex.mtrs||[]).length : 0;
+  const nome = d.tipo==='MTR' && n===1 && ex.mtrs[0].numero ? `MTR nº ${ex.mtrs[0].numero}` : (d.tipo==='CDF' && ex.numero ? `CDF nº ${ex.numero}` : 'documento');
+  openModal(`Excluir o ${nome}?`,
+    `<div style="font-size:13px;margin-bottom:10px">Esta ação removerá o arquivo original e os dados lidos${n>1?` dos ${n} MTRs deste arquivo`:''} do relatório. Não pode ser desfeita.</div>
+     <div style="font-size:12px;color:var(--muted)">Arquivo: <b>${_resAttrEsc(d.nome)}</b></div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
+     <button class="btn btn-red" onclick="docResExcluir('${d.id}')">Excluir</button>`);
+}
+async function docResExcluir(id){
+  closeModalDirect();
+  const E = _docResEstado;
+  try{
+    await _docResRemoverRegistro(id);
+    fbDocsResiduos.child(id).remove().catch(e=>console.warn('Falha ao remover o arquivo do documento excluído', e));
+    E.msg = {tipo:'ok', texto:'Documento excluído.'};
+  }catch(err){
+    console.error('Erro ao excluir documento de resíduos', err);
+    E.msg = {tipo:'erro', texto:'❌ Não foi possível excluir o documento. Tente novamente.'};
+  }
+  _docResRedesenhar();
+}
+
+// ───────── CDF × MTR: associação manual ─────────
+let _docResAssoc = null;   // {cdfId, busca, sel}
+function _docResSugestaoPorNomeDoArquivo(cdf, ix){
+  const nums = (String(cdf.nome||'').match(/\d{7,12}/g)||[]);
+  return nums.find(n=>ix.mtrPorNumero.has(n)) || '';
+}
+function docResAbrirAssociar(cdfId){
+  const d = _docResMapa()[cdfId]; if(!d) return;
+  const ix = _docResIndice();
+  const sug = _docResSugestaoPorNomeDoArquivo(d, ix);
+  _docResAssoc = {cdfId, busca:'', sel:sug};
+  const ex = d.extracao || {};
+  const aviso = (ex.mtrs||[]).length
+    ? `<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Este CDF já está associado a ${(ex.mtrs).length} MTR${ex.mtrs.length>1?'s':''}. Escolha outro MTR para acrescentar.</div>`
+    : `<div class="dr-msg-topo">⚠ Não foi possível identificar automaticamente o MTR relacionado a este documento.</div>`;
+  openModal('Associar ao MTR',
+    `${aviso}
+     ${sug?`<div class="dr-sugestao">O nome do arquivo cita o MTR <b>${_resAttrEsc(sug)}</b> — já selecionado abaixo. Confira antes de confirmar.</div>`:''}
+     <input class="form-input" id="dr-assoc-busca" placeholder="Buscar MTR por número, transportador ou resíduo…" oninput="docResAssociarBuscar(this.value)" style="margin-bottom:10px"/>
+     <div id="dr-assoc-lista">${_docResHtmlListaAssociar()}</div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
+     <button class="btn btn-primary" id="dr-assoc-ok" onclick="docResConfirmarAssociacao()" ${sug?'':'disabled'}>Associar</button>`, true);
+}
+function _docResHtmlListaAssociar(){
+  const A = _docResAssoc; if(!A) return '';
+  const ix = _docResIndice(); const cdf = ix.docPorId.get(A.cdfId); const ja = new Set(((cdf&&cdf.extracao&&cdf.extracao.mtrs)||[]));
+  const q = A.busca.trim().toLowerCase();
+  let l = Array.from(ix.mtrPorNumero.values()).filter(r=>!ja.has(r.numero));
+  if(q) l = l.filter(r=>[r.numero,r.transportador,r.destinador,r.tipoResiduo].some(v=>String(v||'').toLowerCase().includes(q)));
+  l.sort((a,b)=>String(b.dataEmissao||'').localeCompare(String(a.dataEmissao||'')));
+  if(!l.length) return '<div class="dr-vazio">Nenhum MTR encontrado.</div>';
+  return `<div class="dr-assoc-lista">${l.slice(0,40).map(r=>`<label class="dr-assoc-it${A.sel===r.numero?' on':''}">
+      <input type="radio" name="dr-assoc" value="${_resAttrEsc(r.numero)}" ${A.sel===r.numero?'checked':''} onchange="docResAssociarEscolher('${_resAttrEsc(r.numero)}')"/>
+      <b>${_resAttrEsc(r.numero)}</b><span>${r.dataEmissao?fmtDate(r.dataEmissao):'—'}</span><span class="dr-quebra">${_resAttrEsc(r.transportador||'—')}</span><span>${_resAttrEsc(_docResQtdTexto(r)||'—')}</span></label>`).join('')}
+    ${l.length>40?`<div class="dr-resto">Mostrando 40 de ${l.length} — refine a busca.</div>`:''}</div>`;
+}
+function docResAssociarBuscar(v){
+  if(!_docResAssoc) return; _docResAssoc.busca = String(v||'');
+  const el = document.getElementById('dr-assoc-lista'); if(el) el.innerHTML = _docResHtmlListaAssociar();
+}
+function docResAssociarEscolher(n){
+  if(!_docResAssoc) return; _docResAssoc.sel = n;
+  const ok = document.getElementById('dr-assoc-ok'); if(ok) ok.disabled = false;
+  const el = document.getElementById('dr-assoc-lista'); if(el) el.innerHTML = _docResHtmlListaAssociar();
+}
+async function docResConfirmarAssociacao(){
+  const A = _docResAssoc; if(!A || !A.sel) return;
+  const rec = _docResMapa()[A.cdfId]; if(!rec) return;
+  const ex = rec.extracao || {};
+  const mtrs = [...new Set([...(ex.mtrs||[]), A.sel])];
+  try{
+    await _docResAtualizarCampos(A.cdfId, {extracao:{...ex, mtrs}});
+    closeModalDirect(); _docResAssoc = null;
+    _docResEstado.msg = {tipo:'ok', texto:`CDF associado ao MTR ${A.sel}.`};
+  }catch(err){ console.error('Erro ao associar CDF', err); _docResEstado.msg = {tipo:'erro', texto:'❌ Não foi possível salvar a associação. Tente novamente.'}; closeModalDirect(); }
+  _docResRedesenhar();
+}
+async function docResRemoverAssociacao(cdfId, numero){
+  const rec = _docResMapa()[cdfId]; if(!rec) return;
+  const ex = rec.extracao || {};
+  try{ await _docResAtualizarCampos(cdfId, {extracao:{...ex, mtrs:(ex.mtrs||[]).filter(n=>n!==numero)}}); _docResEstado.msg = {tipo:'ok', texto:`Associação com o MTR ${numero} removida.`}; }
+  catch(err){ console.error('Erro ao remover associação', err); _docResEstado.msg = {tipo:'erro', texto:'❌ Não foi possível remover a associação.'}; }
+  closeModalDirect(); _docResRedesenhar();
+}
+
+// ───────── Exportar o relatório (período + filtros + ordenação atuais) ─────────
+function _docResLinhasDoRelatorio(ix){
+  const E = _docResEstado; const chave = _docResChaveSelecionada();
+  const per = _docResLinhasPeriodo(ix, E.tipo, E.visao, chave, E.ano);
+  return _docResOrdenar(_docResAplicarFiltros(per, ix, E), E.ordem, ix, E.tipo);
+}
+function _docResLinhasExport(ix, linhas){
+  const E = _docResEstado; const sit = {anexado:'CDF anexado', sem:'Sem CDF', divergencia:'CDF com divergência', associado:'Associado', naoassoc:'CDF não associado'};
+  const dados = r=> _docResIncompleto(r,E.tipo) ? 'Incompleto' : (r.revisado ? 'Válido' : 'Conferir');
+  const div = ds=>(ds||[]).map(d=>`${d.campo}: MTR ${d.mtr} × CDF ${d.cdf}`).join(' | ');
+  const mes = r=>r.mes ? _resMesLabel(r.mes) : '';
+  const dt = iso=>iso ? fmtDate(iso) : '';
+  if(E.tipo==='MTR') return linhas.map(r=>({
+    'Mês/Ano':mes(r), 'MTR nº':r.numero, 'Data de emissão':dt(r.dataEmissao), 'Status do MTR':r.statusMtr||'', 'Data de encerramento/recebimento':dt(r.dataEncerramento),
+    'Gerador':_docResNomeCod(r.gerador,r.geradorCod), 'CNPJ do gerador':r.geradorCnpj||'', 'Unidade/local de geração':r.geradorUnidade||'',
+    'Transportador':_docResNomeCod(r.transportador,r.transportadorCod), 'CNPJ do transportador':r.transportadorCnpj||'', 'Veículo':r.veiculo||'', 'Condutor':r.condutor||'',
+    'Destinador':_docResNomeCod(r.destinador,r.destinadorCod), 'CNPJ do destinador':r.destinadorCnpj||'', 'Unidade de destinação':r.destinadorUnidade||'',
+    'Código do resíduo':r.codigoResiduo||'', 'Resíduo':r.tipoResiduo||'', 'Classe':r.classe||'', 'Estado físico':r.estadoFisico||'',
+    'Quantidade':r.quantidade>0?r.quantidade:'', 'Unidade':r.quantidade>0?(r.unidade||''):'', 'Peso (kg)':_docResPesoKg(r) ?? '', 'Tecnologia/destinação':r.tecnologia||'',
+    'Situação dos dados':dados(r), 'Situação do CDF':sit[_docResSituacaoCdfDoMtr(r,ix)], 'CDF nº':(ix.cdfPorMtr.get(r.numero)||[]).map(c=>c.numero||'(sem nº)').join(' / '),
+    'Divergências':div(ix.divMtr.get(r.numero)), 'Arquivo':r.docNome}));
+  return linhas.map(r=>({
+    'Mês/Ano':mes(r), 'CDF nº':r.numero, 'Data de emissão':dt(r.dataEmissao), 'Período':r.periodoIni&&r.periodoFim?`${dt(r.periodoIni)} a ${dt(r.periodoFim)}`:'',
+    'Transportador':_docResNomeCod(r.transportador,r.transportadorCod), 'Destinador':_docResNomeCod(r.destinador,r.destinadorCod), 'CNPJ do destinador':r.destinadorCnpj||'',
+    'Resíduo':r.tipoResiduo||'', 'Quantidade':r.quantidade>0?r.quantidade:'', 'Unidade':r.quantidade>0?(r.unidade||''):'', 'Peso (kg)':_docResPesoKg(r) ?? '',
+    'MTRs vinculados':(r.mtrs||[]).join(' / '), 'Situação do CDF':sit[_docResSituacaoCdf(r,ix)], 'Situação dos dados':dados(r), 'Divergências':div(ix.divCdf.get(r.docId)), 'Arquivo':r.docNome}));
+}
+function docResExportar(formato){
+  const E = _docResEstado; const ix = _docResIndice(); const chave = _docResChaveSelecionada();
+  const dados = _docResLinhasExport(ix, _docResLinhasDoRelatorio(ix));
+  const base = `${E.tipo}_${E.visao==='ano' ? E.ano : chave}`;
+  if(!dados.length){ alert('Sem dados para exportar neste período/filtro.'); return; }
+  if(formato==='xlsx' && typeof XLSX !== 'undefined'){
+    const ws = XLSX.utils.json_to_sheet(dados); const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, E.tipo); XLSX.writeFile(wb, base+'.xlsx');
+  } else exportCSV(dados, base+'.csv');
+  closeModalDirect();
+}
+
+// ───────── Leitura dos dados do documento (MTR / CDF) ─────────
+// Regra de ouro: NUNCA inventa. Campo não encontrado fica vazio; o resultado
+// sempre passa por conferência/edição do usuário (extracao.revisado).
+// A leitura usa a POSIÇÃO de cada texto na página (rótulo e valor podem estar
+// na mesma linha ou o valor logo abaixo do rótulo, em caixas/colunas).
+const DOCRES_RE_MTR_NUM = /\bMTR\s*(?:n\s*[º°o˚.]{0,2}\s*|n[úu]mero\s*)?[:#\-–]?\s*(\d{7,12})\b/gi;
+const DOCRES_RE_MTR_ROTULO = /\bMTR\s*(?:n\s*[º°o˚.]{0,2}|n[úu]mero)(?![A-Za-zÀ-ú])/i;
+const DOCRES_CORTE_VALOR = /\s{3,}|\s+(?:CNPJ|CPF|Data|Telefone|Fone|Endere[çc]o|Inscri[çc][ãa]o|Respons[áa]vel|Placa|Motorista|Ve[íi]culo|Munic[íi]pio|CEP|UF|E-?mail)\b/i;
+const DOCRES_NOME_REJEITADO = /^(cnpj|cpf|endere|telefone|fone|inscri|licen|ve[íi]culo|placa|motorista|munic|cep|uf|e-?mail|data|respons|n[úu]mero|c[óo]digo|atividade|classe|raz[ãa]o|nome|empresa|denomina|gerador|transportador|destinador|destinat|assinatura|carimbo|obs)\b/i;
+const DOCRES_MESES_NOME = {janeiro:1,fevereiro:2,'março':3,marco:3,abril:4,maio:5,junho:6,julho:7,agosto:8,setembro:9,outubro:10,novembro:11,dezembro:12};
+
+// ── Texto da página, com posição (x,w) de cada fragmento ──
+function _docResAgruparLinhas(itens){
+  const ord = [...itens].sort((a,b)=>(b.y-a.y)||(a.x-b.x));
+  const linhas = [];
+  ord.forEach(it=>{
+    const ult = linhas[linhas.length-1];
+    if(ult && Math.abs(ult.y-it.y) <= 3) ult.itens.push(it); else linhas.push({y:it.y, itens:[it]});
+  });
+  return linhas.map(l=>{
+    l.itens.sort((a,b)=>a.x-b.x);
+    let texto = ''; const marc = [];
+    l.itens.forEach((it,i)=>{
+      if(i>0){ const ant=l.itens[i-1]; const gap=it.x-(ant.x+ant.w); texto += gap>18 ? '   ' : (gap>1.5 ? ' ' : ''); }
+      marc.push({ini:texto.length, fim:texto.length+it.s.length, it});
+      texto += it.s;
+    });
+    return {y:l.y, texto, marc, itens:l.itens};
+  });
+}
+async function _docResLerPaginas(arrayBuffer){
+  const pdf = await pdfjsLib.getDocument({data: arrayBuffer}).promise;
+  const paginas = [];
+  for(let p=1;p<=pdf.numPages;p++){
+    const page = await pdf.getPage(p);
+    const content = await page.getTextContent();
+    const itens = content.items
+      .map(it=>({s:String(it.str||''), x:it.transform[4], y:it.transform[5], w:it.width||0}))
+      .filter(it=>it.s.trim()!=='');
+    paginas.push({numero:p, linhas:_docResAgruparLinhas(itens)});
+  }
+  return paginas;
+}
+function _docResTextoDaPagina(pg){ return pg.linhas.map(l=>l.texto).join('\n'); }
+
+// ── Normalização e validação de valores ──
+function _docResLimparValor(v){
+  v = String(v||'').replace(/^[\s:\-–#]+/,'');
+  const i = v.search(DOCRES_CORTE_VALOR);
+  if(i >= 0) v = v.slice(0,i);
+  return v.replace(/\s+/g,' ').trim();
+}
+function _docResParseData(s){
+  s = String(s||'');
+  const ok = (a,mo,d)=>{
+    if(a<2000||a>2100||mo<1||mo>12||d<1||d>31) return '';
+    const t = new Date(a,mo-1,d); if(t.getMonth()!==mo-1) return '';
+    return `${a}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+  };
+  let m = s.match(/\b(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})\b/);
+  if(m){ const r = ok(+m[3],+m[2],+m[1]); if(r) return r; }
+  m = s.match(/\b(\d{1,2})\s+de\s+([A-Za-zçÇ]+)\s+de\s+(\d{4})\b/i);
+  if(m){ const mo = DOCRES_MESES_NOME[m[2].toLowerCase()]; if(mo){ const r = ok(+m[3],mo,+m[1]); if(r) return r; } }
+  m = s.match(/\b(\d{4})-(\d{2})-(\d{2})\b/);
+  if(m){ const r = ok(+m[1],+m[2],+m[3]); if(r) return r; }
+  return '';
+}
+function _docResValidarNumeroMtr(v){ const m = String(v||'').match(/\b(\d{7,12})\b/); return m ? m[1] : ''; }
+// "SANTA MARIA COMERCIO DE PAPEL LTDA - 48392": o número após o hífen é o código de cadastro no
+// sistema, não faz parte do nome da empresa.
+function _docResLimparNomeEmpresa(v){ return String(v||'').replace(/\s+[-–]\s+\d{2,}\s*$/,'').trim(); }
+// "SANTA MARIA COMERCIO DE PAPEL LTDA - 48392" → {nome:'SANTA MARIA COMERCIO DE PAPEL LTDA', cod:'48392'}
+function _docResSepararNomeCodigo(v){
+  const s = String(v||'').trim(); const m = s.match(/^(.*?)\s+[-–]\s+(\d{2,})\s*$/);
+  return m ? {nome:m[1].trim(), cod:m[2]} : {nome:s, cod:''};
+}
+function _docResValidarNome(v){
+  const bruto = String(v||'').trim();
+  v = _docResLimparNomeEmpresa(bruto);
+  if(v.length < 4 || !/[A-Za-zÀ-ú]{3}/.test(v)) return '';
+  if(/:\s*$/.test(v)) return '';                      // é um rótulo, não um nome
+  if(DOCRES_NOME_REJEITADO.test(v)) return '';
+  if(/^[\d\W]+$/.test(v)) return '';
+  return bruto;
+}
+// Para o palpite sem rótulo: nome de empresa costuma estar em MAIÚSCULAS ou ter sufixo societário.
+function _docResPareceEmpresa(v){
+  v = String(v||'');
+  if(v.length > 90) return false;
+  const letras = (v.match(/[A-Za-zÀ-ú]/g)||[]);
+  const maiusc = (v.match(/[A-ZÀ-Ú]/g)||[]);
+  if(letras.length && maiusc.length/letras.length >= 0.6) return true;
+  return /\b(ltda|s\/?a|s\.a\.?|eireli|epp|me|cia|companhia|cooperativa|associa[çc][ãa]o|ind[úu]stria|com[ée]rcio|servi[çc]os)\b/i.test(v);
+}
+function _docResValidarNumeroCdf(v){
+  v = String(v||'').trim().replace(/[.\-\/]+$/,'');
+  return (/[A-Za-z0-9][A-Za-z0-9\-\/.]{1,24}/.test(v) && (v.match(/\d/g)||[]).length >= 3) ? v.match(/[A-Za-z0-9][A-Za-z0-9\-\/.]{1,24}/)[0].replace(/[.\-\/]+$/,'') : '';
+}
+
+// ── Posição: texto de uma linha dentro de uma faixa horizontal ──
+function _docResTextoNaColuna(linha, xa, xb){
+  const its = linha.itens;
+  let i = its.findIndex(it=>it.x+it.w >= xa && it.x <= xb);
+  if(i < 0) return '';
+  let txt = its[i].s;
+  for(let k=i+1;k<its.length;k++){
+    const gap = its[k].x-(its[k-1].x+its[k-1].w);
+    if(gap > 18 || its[k].x > xb + 40) break;
+    txt += (gap>1.5?' ':'')+its[k].s;
+  }
+  return txt;
+}
+function _docResXDoOffset(linha, offset, fim){
+  const m = linha.marc.find(x=>offset>=x.ini && offset<x.fim) || linha.marc[linha.marc.length-1];
+  return fim ? m.it.x+m.it.w : m.it.x;
+}
+
+// Valor de um rótulo: (a) na mesma linha; (b) abaixo do rótulo, na mesma coluna;
+// (c) na linha seguinte. `validar` devolve o valor normalizado ou ''.
+function _docResValorRotulo(pagina, reRotulo, validar){
+  const L = pagina.linhas;
+  for(let i=0;i<L.length;i++){
+    const m = L[i].texto.match(reRotulo);
+    if(!m) continue;
+    const ini = m.index, fim = m.index+m[0].length;
+    let v = validar(_docResLimparValor(L[i].texto.slice(fim)));
+    if(v) return v;
+    const x0 = _docResXDoOffset(L[i], ini, false), x1 = _docResXDoOffset(L[i], Math.max(ini,fim-1), true);
+    for(let k=1;k<=2 && i+k<L.length;k++){
+      v = validar(_docResLimparValor(_docResTextoNaColuna(L[i+k], x0-6, Math.max(x1,x0+40)+50)));
+      if(v) return v;
+    }
+    if(i+1<L.length){ v = validar(_docResLimparValor(L[i+1].texto)); if(v) return v; }
+  }
+  return '';
+}
+
+// Empresa de uma seção ("Transportador", "Destinador"). Cobre: "Transportador: NOME",
+// seção com "Razão Social" (valor ao lado ou abaixo), nome logo abaixo do título,
+// e seções lado a lado na mesma linha (usa a coluna do título).
+function _docResEmpresa(paginas, reSecao, outrasSecoes){
+  for(const pg of paginas){
+    const L = pg.linhas;
+    for(let i=0;i<L.length;i++){
+      const m = L[i].texto.match(reSecao);
+      if(!m) continue;
+      const t = L[i].texto;
+      const ini = m.index, fim = m.index+m[0].length;
+      // (1) "Transportador: NOME" na mesma linha (exige separador: ":" "-" ou coluna)
+      const inline = t.slice(fim).match(/^(?:\s*[:\-–]\s*|\s{3,})(\S.*)$/);
+      let v = inline ? _docResValidarNome(_docResLimparValor(inline[1])) : '';
+      if(v) return v;
+      // seções lado a lado: usa a coluna do título
+      const outras = (outrasSecoes||[]).filter(re=>re.test(t));
+      if(outras.length){
+        const x0 = _docResXDoOffset(L[i], ini, false);
+        let xFim = x0+260;
+        L[i].marc.forEach(mm=>{ if(mm.it.x > x0+20 && outras.some(re=>re.test(mm.it.s)) && mm.it.x < xFim) xFim = mm.it.x-4; });
+        for(let k=1;k<=4 && i+k<L.length;k++){
+          const c = _docResValidarNome(_docResLimparValor(_docResTextoNaColuna(L[i+k], x0-6, xFim)));
+          if(c) return c;
+        }
+        continue;
+      }
+      // (2) rótulo de nome nas linhas seguintes
+      for(let k=1;k<=10 && i+k<L.length;k++){
+        const lt = L[i+k].texto.trim();
+        if(_docResEhTituloDeSecao(lt, outrasSecoes)) break;
+        const mn = /^(?:raz[ãa]o\s+social|nome(?:\s+da\s+empresa)?|empresa|denomina[çc][ãa]o(?:\s+social)?)\b\s*[:\-]?/i.exec(lt);
+        if(mn){
+          let val = _docResValidarNome(_docResLimparValor(lt.slice(mn[0].length)));
+          if(val) return val;
+          if(L[i+k+1]){ val = _docResValidarNome(_docResLimparValor(L[i+k+1].texto)); if(val) return val; }
+        }
+      }
+      // (3) primeira linha logo abaixo que PAREÇA nome de empresa (maiúsculas ou sufixo societário)
+      for(let k=1;k<=3 && i+k<L.length;k++){
+        const lt = L[i+k].texto.trim();
+        if(_docResEhTituloDeSecao(lt, outrasSecoes)) break;
+        const val = _docResValidarNome(_docResLimparValor(lt));
+        if(val && _docResPareceEmpresa(val)) return val;
+      }
+    }
+  }
+  return '';
+}
+// Título de seção: "Gerador", "Dados do Gerador", "Identificação do Gerador"...
+function _docResEhTituloDeSecao(linhaTexto, regexes){
+  return (regexes||[]).some(re=>new RegExp('^(?:(?:dados|identifica[çc][ãa]o)\\s+d[oa]s?\\s+)?(?:'+re.source+')','i').test(String(linhaTexto||'').trim()));
+}
+const DOCRES_RE_TRANSPORTADOR = /\btransportador(?:a)?\b/i;
+const DOCRES_RE_DESTINADOR = /\bdestinador(?:a)?\b|\bdestinat[áa]rio\b/i;
+const DOCRES_RE_GERADOR = /\bgerador(?:a)?\b/i;
+function _docResDataEmissao(paginas){
+  for(const pg of paginas){
+    const v = _docResValorRotulo(pg, /data\s+d[aeo]s?\s+emiss[ãa]o/i, _docResParseData)
+           || _docResValorRotulo(pg, /\bemiss[ãa]o\s*[:\-–]/i, _docResParseData)
+           || _docResValorRotulo(pg, /\bemitid[oa]\s+em\b/i, _docResParseData);
+    if(v) return v;
+  }
+  return '';
+}
+
+
+// ── Tipo de resíduo e quantidade (tabela de resíduos do documento) ──
+// "2.400,00 kg" | "2400" | "2,4 t" → {quantidade, unidade}. Toneladas viram kg.
+function _docResParseQuantidade(txt){
+  const m = String(txt||'').match(/(\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:,\d+)?)\s*(kg|quilos?|toneladas?|ton|t|litros?|l|m³|m3|un|unid(?:ades?)?)?(?![A-Za-zÀ-ú0-9])/i);
+  if(!m) return null;
+  let q = parseFloat(m[1].replace(/\./g,'').replace(',','.'));
+  if(!(q>0)) return null;
+  let u = (m[2]||'').toLowerCase();
+  if(/^(t|ton|tonelada)/.test(u)){ q = q*1000; u = 'kg'; }
+  else if(/^(kg|quilo)/.test(u)) u = 'kg';
+  else if(/^l/.test(u)) u = 'L';
+  else if(/^m/.test(u)) u = 'm³';
+  else if(/^un/.test(u)) u = 'un';
+  else u = '';
+  return {quantidade: Math.round(q*1000)/1000, unidade: u};
+}
+const DOCRES_FIM_TABELA = /^(total|identifica|observa|respons|assinatura|data\s|transportador|destinador|gerador)/i;
+function _docResExtrairResiduos(pg){
+  const L = pg.linhas; const rows = [];
+  for(let i=0;i<L.length && !rows.length;i++){
+    const cab = L[i].itens;
+    const q = cab.find(it=>/^(quantidade|quant\.?|qtd\.?|qtde\.?)(\s|$|\()/i.test(it.s.trim()));
+    if(!q) continue;
+    const esq = re=>cab.filter(it=>it.x<q.x && re.test(it.s.trim())).pop();
+    const qualquer = re=>cab.find(it=>re.test(it.s.trim()));
+    const d  = esq(/^(descri[çc][ãa]o|res[ií]duo|tipo)/i);
+    const cod = esq(/^c[óo]d(igo)?(\s|$)/i);
+    const cl = qualquer(/^classe(\s|$)/i), es = qualquer(/^estado(\s|$)/i);
+    const pe = qualquer(/^peso(\s|$|\()/i), te = qualquer(/^(tecnologia|tratamento|destina[çc][ãa]o)(\s|$)/i);
+    const u = cab.find(it=>it.x>q.x && /^(unidade|un\.?|unid\.?)(\s|$)/i.test(it.s.trim()));
+    const xs = cab.map(it=>it.x).sort((a,b)=>a-b);
+    const prox = x=>{ const n = xs.find(v=>v>x+5); return n===undefined ? x+260 : n-4; };
+    const cel = (h,L2)=> h ? _docResLimparValor(_docResTextoNaColuna(L2, h.x-4, prox(h.x))) : '';
+    for(let k=i+1;k<L.length && k<=i+14;k++){
+      if(DOCRES_FIM_TABELA.test(L[k].texto.trim())) break;
+      const celQ = _docResTextoNaColuna(L[k], q.x-30, q.x+q.w+30);
+      let pq = _docResParseQuantidade(celQ);
+      if(!pq){ if(rows.length) break; continue; }
+      // unidade em coluna própria: lê quantidade e unidade JUNTAS (2,4 + t → 2.400 kg)
+      if(!pq.unidade && u){ const junto = _docResParseQuantidade(celQ+' '+_docResTextoNaColuna(L[k], u.x-6, u.x+u.w+20)); if(junto) pq = junto; }
+      let peso = 0;
+      if(pe){ const pp = _docResParseQuantidade(_docResTextoNaColuna(L[k], pe.x-20, pe.x+pe.w+30)); if(pp && (pp.unidade==='kg'||pp.unidade==='')) peso = pp.quantidade; }
+      rows.push({tipo:_docResValidarNome(cel(d,L[k])), codigo:cel(cod,L[k]), classe:cel(cl,L[k]), estado:cel(es,L[k]), tecnologia:cel(te,L[k]),
+                 quantidade:pq.quantidade, unidade:pq.unidade||'kg', peso});
+    }
+  }
+  if(!rows.length){                                     // sem tabela: "Quantidade: 2.150 kg" / "Resíduo: Plástico"
+    const vq = _docResValorRotulo(pg, /\bquantidade(?:\s+total)?\s*[:\-–]/i, v=>_docResParseQuantidade(v) ? v : '');
+    const pq = vq ? _docResParseQuantidade(vq) : null;
+    if(pq) rows.push({tipo:_docResValorRotulo(pg, /\b(?:tipo\s+de\s+)?res[ií]duo\s*[:\-–]/i, _docResValidarNome), codigo:'', classe:'', estado:'', tecnologia:'', quantidade:pq.quantidade, unidade:pq.unidade||'kg', peso:0});
+  }
+  return _docResSomarResiduos(rows);
+}
+function _docResSomarResiduos(rows){
+  const vazio = {tipoResiduo:'', quantidade:0, unidade:'', peso:0, codigoResiduo:'', classe:'', estadoFisico:'', tecnologia:'', residuos:[]};
+  if(!rows.length) return vazio;
+  const uniq = f=>[...new Set(rows.map(r=>r[f]).filter(Boolean))];
+  const un = rows[0].unidade;
+  return {
+    tipoResiduo: uniq('tipo').join(' / '),
+    quantidade: Math.round(rows.filter(r=>r.unidade===un).reduce((s,r)=>s+r.quantidade,0)*1000)/1000, unidade: un,
+    peso: Math.round(rows.reduce((s,r)=>s+(r.peso||0),0)*1000)/1000,
+    codigoResiduo: uniq('codigo').join(', '), classe: uniq('classe').join(' / '), estadoFisico: uniq('estado').join(' / '), tecnologia: uniq('tecnologia').join(' / '),
+    residuos: rows.map(r=>({codigo:r.codigo||'', nome:r.tipo||'', classe:r.classe||'', estado:r.estado||'', quantidade:r.quantidade, unidade:r.unidade, peso:r.peso||0, tecnologia:r.tecnologia||''})),
+  };
+}
+
+
+// ── Seções do documento (Gerador / Transportador / Destinador) e campos extras ──
+function _docResLinhasDaSecao(pg, reSecao, outras){
+  const L = pg.linhas;
+  for(let i=0;i<L.length;i++){
+    const tx = L[i].texto.trim();
+    if(!_docResEhTituloDeSecao(tx, [reSecao]) || /[.,;]$/.test(tx) || tx.length>70) continue;   // frase ("...pelo transportador.") não é título
+    const out = [];
+    for(let k=i+1;k<L.length && out.length<30;k++){
+      if(_docResEhTituloDeSecao(L[k].texto, outras)) break;
+      out.push(L[k]);
+    }
+    return {linhas: out};
+  }
+  return null;
+}
+function _docResCampoDaSecao(pg, reSecao, outras, reRotulo, validar){
+  const s = _docResLinhasDaSecao(pg, reSecao, outras);
+  return s ? _docResValorRotulo(s, reRotulo, validar) : '';
+}
+function _docResValidarCnpj(v){
+  const m = String(v||'').match(/\b\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}\b|\b\d{3}\.\d{3}\.\d{3}-\d{2}\b|\b\d{14}\b/);
+  return m ? m[0] : '';
+}
+const DOCRES_RE_CNPJ_ROTULO = /(?:CPF\s*\/\s*)?CNPJ\s*[:\-–]?/i;
+function _docResLocalDaSecao(pg, reSecao, outras){
+  const ender = _docResCampoDaSecao(pg, reSecao, outras, /Endere[çc]o\s*[:\-–]/i, v=>v.length>3 ? v : '');
+  const mun = _docResCampoDaSecao(pg, reSecao, outras, /Munic[íi]pio\s*[:\-–]/i, v=>v.length>1 ? v : '');
+  return [ender, mun].filter(Boolean).join(' — ');
+}
+const DOCRES_STATUS_MTR = /^(emitido|em tr[âa]nsito|recebido|encerrado|cancelado|finalizado|conclu[ií]do|aguardando[\wÀ-ú ]*|pendente|v[áa]lido)\b/i;
+function _docResExtrasMtr(pg){
+  const G = DOCRES_RE_GERADOR, T = DOCRES_RE_TRANSPORTADOR, D = DOCRES_RE_DESTINADOR;
+  const ger = _docResSepararNomeCodigo(_docResEmpresa([pg], G, [T, D]));
+  const campoPlaca = v=>{ const m = String(v||'').match(/\b[A-Z]{3}[- ]?\d[A-Z0-9]\d{2}\b/i); return m ? m[0].toUpperCase() : ''; };
+  const st = _docResValorRotulo(pg, /(?:situa[çc][ãa]o|status)(?:\s+do\s+MTR)?\s*[:\-–]/i, v=>{ const m = String(v||'').match(DOCRES_STATUS_MTR); return m ? m[0].charAt(0).toUpperCase()+m[0].slice(1).toLowerCase() : ''; });
+  return {
+    gerador: ger.nome, geradorCod: ger.cod,
+    geradorCnpj: _docResCampoDaSecao(pg, G, [T, D], DOCRES_RE_CNPJ_ROTULO, _docResValidarCnpj),
+    geradorUnidade: _docResLocalDaSecao(pg, G, [T, D]),
+    transportadorCnpj: _docResCampoDaSecao(pg, T, [G, D], DOCRES_RE_CNPJ_ROTULO, _docResValidarCnpj),
+    veiculo: _docResCampoDaSecao(pg, T, [G, D], /(?:placa|ve[íi]culo)[^:\n]{0,20}[:\-–]/i, campoPlaca),
+    condutor: _docResCampoDaSecao(pg, T, [G, D], /(?:condutor|motorista)(?:\s+d[oa]\s+ve[íi]culo)?\s*[:\-–]/i, _docResValidarNome),
+    destinadorCnpj: _docResCampoDaSecao(pg, D, [G, T], DOCRES_RE_CNPJ_ROTULO, _docResValidarCnpj),
+    destinadorUnidade: _docResLocalDaSecao(pg, D, [G, T]),
+    statusMtr: st,
+    dataEncerramento: _docResValorRotulo(pg, /data\s+d[oe]\s+(?:encerramento|recebimento)/i, _docResParseData),
+  };
+}
+const DOCRES_CAMPOS_MTR = ['transportador','transportadorCod','transportadorCnpj','veiculo','condutor','destinador','destinadorCod','destinadorCnpj','destinadorUnidade',
+  'gerador','geradorCod','geradorCnpj','geradorUnidade','statusMtr','dataEmissao','dataEncerramento','tipoResiduo','codigoResiduo','classe','estadoFisico','tecnologia','quantidade','unidade','peso'];
+const DOCRES_MTR_VAZIO = Object.fromEntries(DOCRES_CAMPOS_MTR.map(k=>[k, (k==='quantidade'||k==='peso')?0:'']));
+
+// ── MTR: um registro por MTR encontrado (um arquivo pode ter vários) ──
+function _docResNumerosMtrDaPagina(pg){
+  const texto = _docResTextoDaPagina(pg);
+  const nums = [];
+  for(const m of texto.matchAll(DOCRES_RE_MTR_NUM)) if(!nums.includes(m[1])) nums.push(m[1]);
+  if(!nums.length){
+    const v = _docResValorRotulo(pg, DOCRES_RE_MTR_ROTULO, _docResValidarNumeroMtr);
+    if(v) nums.push(v);
+  }
+  return nums;
+}
+function _docResExtrairMtrs(paginas){
+  const registros = []; let atual = null;
+  const preencher = (r, c)=>{ DOCRES_CAMPOS_MTR.forEach(k=>{ if(!r[k] && c[k]) r[k] = c[k]; }); if(!(r.residuos||[]).length && (c.residuos||[]).length) r.residuos = c.residuos; };
+  paginas.forEach(pg=>{
+    const campos = ()=>{
+      const t = _docResSepararNomeCodigo(_docResEmpresa([pg], DOCRES_RE_TRANSPORTADOR, [DOCRES_RE_DESTINADOR, DOCRES_RE_GERADOR]));
+      const d = _docResSepararNomeCodigo(_docResEmpresa([pg], DOCRES_RE_DESTINADOR, [DOCRES_RE_TRANSPORTADOR, DOCRES_RE_GERADOR]));
+      return {..._docResExtrasMtr(pg), transportador:t.nome, transportadorCod:t.cod, destinador:d.nome, destinadorCod:d.cod, dataEmissao:_docResDataEmissao([pg]), ..._docResExtrairResiduos(pg)};
+    };
+    const nums = _docResNumerosMtrDaPagina(pg);
+    if(nums.length === 1 && atual && atual.numero === nums[0]){        // página seguinte do MESMO MTR
+      preencher(atual, campos());
+    } else if(nums.length){
+      const c = campos();
+      nums.forEach(n=>{
+        // vários MTRs na mesma página: não dá para saber de quem é cada campo → deixa vazio p/ conferência
+        const unico = nums.length === 1;
+        atual = {numero:n, pagina:pg.numero, ...DOCRES_MTR_VAZIO, residuos:[]};
+        if(unico) preencher(atual, c);
+        registros.push(atual);
+      });
+    } else if(atual){                      // página de continuação do MTR anterior
+      preencher(atual, campos());
+    }
+  });
+  return registros;
+}
+
+// ── CDF: número, transportador, destinador, emissão e MTRs vinculados ──
+function _docResNumeroCdf(paginas){
+  const padroes = [
+    /\bCDF\s*(?:n\s*[º°o˚.]{0,2}\s*|n[úu]mero\s*)[:#\-–]?\s*([A-Za-z0-9][A-Za-z0-9\-\/.]{2,24})/i,
+    /Certificado\s+de\s+Destina[çc][ãa]o\s+Final\s*(?:n\s*[º°o˚.]{0,2}\s*|n[úu]mero\s*)[:#\-–]?\s*([A-Za-z0-9][A-Za-z0-9\-\/.]{2,24})/i,
+    /\bN\s*[º°o˚.]{1,2}\s*do\s*CDF\s*[:#\-–]?\s*([A-Za-z0-9][A-Za-z0-9\-\/.]{2,24})/i,
+  ];
+  for(const pg of paginas){
+    const texto = _docResTextoDaPagina(pg);
+    for(const re of padroes){ const m = texto.match(re); if(m){ const v = _docResValidarNumeroCdf(m[1]); if(v) return v; } }
+  }
+  for(const pg of paginas){
+    const v = _docResValorRotulo(pg, /(?:\bCDF\b|Certificado[^\n]{0,40}?)\s*(?:n\s*[º°o˚.]{0,2}|n[úu]mero)(?![A-Za-zÀ-ú])/i, _docResValidarNumeroCdf);
+    if(v) return v;
+  }
+  return '';
+}
+// MTRs ligados ao CDF: (1) "MTR nº ..." no texto; (2) coluna de MTR sob um cabeçalho
+// "MTR"; (3) números de MTR que o sistema já conhece (MTRs anexados e medições).
+function _docResMtrsDoCdf(paginas, conhecidos){
+  const achados = [];
+  const add = n=>{ n = String(n||'').replace(/\D/g,''); if(n.length>=7 && n.length<=12 && !achados.includes(n)) achados.push(n); };
+  paginas.forEach(pg=>{ for(const m of _docResTextoDaPagina(pg).matchAll(DOCRES_RE_MTR_NUM)) add(m[1]); });
+  paginas.forEach(pg=>{
+    const L = pg.linhas;
+    L.forEach((lin,i)=>{
+      const cab = lin.itens.find(it=>/^\s*(?:N[º°o˚.]*\s*(?:do\s*)?)?MTR[s']?\s*(?:N[º°o˚.]*|n[úu]mero)?\s*$/i.test(it.s));
+      if(!cab) return;
+      const cx = cab.x + cab.w/2;
+      let vazias = 0;
+      for(let k=i+1;k<L.length && vazias<3;k++){
+        const cel = L[k].itens.filter(it=>Math.abs((it.x+it.w/2)-cx) <= 45 && /^\d{7,12}$/.test(it.s.trim()));
+        if(cel.length){ cel.forEach(c=>add(c.s)); vazias = 0; } else vazias++;
+      }
+    });
+  });
+  const tudo = paginas.map(_docResTextoDaPagina).join('\n');
+  (conhecidos||[]).forEach(n=>{ if(n && tudo.includes(n)) add(n); });
+  return achados;
+}
+function _docResExtrairCdf(paginas, conhecidos){
+  const rs = _docResSomarResiduos(paginas.flatMap(pg=>{
+    const r = _docResExtrairResiduos(pg);
+    return r.quantidade ? [{tipo:r.tipoResiduo, quantidade:r.quantidade, unidade:r.unidade, peso:r.peso, codigo:r.codigoResiduo, classe:r.classe, estado:r.estadoFisico, tecnologia:r.tecnologia}] : [];
+  }));
+  const t = _docResSepararNomeCodigo(_docResEmpresa(paginas, DOCRES_RE_TRANSPORTADOR, [DOCRES_RE_DESTINADOR, DOCRES_RE_GERADOR]));
+  const d = _docResSepararNomeCodigo(_docResEmpresa(paginas, DOCRES_RE_DESTINADOR, [DOCRES_RE_TRANSPORTADOR, DOCRES_RE_GERADOR]));
+  const per = _docResPeriodoCdf(paginas);
+  return {
+    numero: _docResNumeroCdf(paginas),
+    transportador: t.nome, transportadorCod: t.cod, destinador: d.nome, destinadorCod: d.cod,
+    destinadorCnpj: paginas.map(pg=>_docResCampoDaSecao(pg, DOCRES_RE_DESTINADOR, [DOCRES_RE_TRANSPORTADOR, DOCRES_RE_GERADOR], DOCRES_RE_CNPJ_ROTULO, _docResValidarCnpj)).find(Boolean) || '',
+    dataEmissao: _docResDataEmissao(paginas), periodoIni: per.ini, periodoFim: per.fim,
+    tipoResiduo: rs.tipoResiduo, quantidade: rs.quantidade, unidade: rs.unidade, peso: rs.peso,
+    mtrs: _docResMtrsDoCdf(paginas, conhecidos),
+  };
+}
+// "Período: 01/04/2026 a 30/04/2026" (quando o CDF informa)
+function _docResPeriodoCdf(paginas){
+  for(const pg of paginas){
+    const t = _docResTextoDaPagina(pg);
+    const m = t.match(/per[íi]odo[^\n\d]{0,25}(\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{4})\s*(?:a|à|até|ate|-|–)\s*(\d{1,2}[\/.\-]\d{1,2}[\/.\-]\d{4})/i);
+    if(m){ const ini = _docResParseData(m[1]), fim = _docResParseData(m[2]); if(ini && fim) return {ini, fim}; }
+  }
+  return {ini:'', fim:''};
+}
+
+// ── Números de MTR que o sistema já conhece ──
+function _docResMapaMtrsAnexados(){
+  const mapa = new Map();
+  _docResLista().filter(d=>d.tipo==='MTR').forEach(d=>{
+    ((d.extracao&&d.extracao.mtrs)||[]).forEach(m=>{ if(m&&m.numero&&!mapa.has(m.numero)) mapa.set(m.numero,{docId:d.id, mes:_docResMesDaData(m.dataEmissao)||d.mesReferencia||''}); });
+  });
+  return mapa;
+}
+function _docResMapaMtrsMedicao(){
+  const mapa = new Map();
+  const det = DB.get('medicoesResiduosDetalhe');
+  if(!det || typeof det!=='object') return mapa;
+  const mesPorPdf = {};
+  (DB.get('medicoesResiduos')||[]).forEach(m=>{ if(m&&m.arquivoOrigemId) mesPorPdf[m.arquivoOrigemId] = m.mesReferencia; });
+  Object.entries(det).forEach(([id,reg])=>{
+    ((reg&&reg.linhas)||[]).forEach(l=>{
+      const n = String((l&&l.mtr)||'').replace(/\D/g,'');
+      if(n.length>=7 && n.length<=12 && !mapa.has(n)) mapa.set(n, mesPorPdf[id]||'');
+    });
+  });
+  return mapa;
+}
+function _docResNumerosConhecidos(){
+  return [...new Set([..._docResMapaMtrsAnexados().keys(), ..._docResMapaMtrsMedicao().keys()])];
+}
+
+// ── Orquestra a leitura de um arquivo ──
+function _docResStatusExtracao(tipo, ex){
+  if(tipo==='MTR'){
+    const l = ex.mtrs||[];
+    if(!l.length) return 'nao_lida';
+    return l.every(m=>m.numero && m.transportador && m.destinador && m.dataEmissao) ? 'lida' : 'parcial';
+  }
+  const campos = [ex.numero, ex.transportador, ex.destinador, ex.dataEmissao];
+  if(!campos.some(Boolean) && !(ex.mtrs||[]).length) return 'nao_lida';
+  return (campos.every(Boolean) && (ex.mtrs||[]).length) ? 'lida' : 'parcial';
+}
+async function _docResExtrairDoArquivo(tipo, arrayBuffer, mime){
+  const base = {lidoEm:new Date().toISOString(), revisado:false};
+  const vazio = tipo==='MTR' ? {mtrs:[]} : {numero:'', transportador:'', transportadorCod:'', destinador:'', destinadorCod:'', dataEmissao:'', tipoResiduo:'', quantidade:0, unidade:'', mtrs:[]};
+  if(mime !== 'application/pdf') return {...base, status:'imagem', motivo:'imagem: a leitura automática só funciona em PDF com texto', ...vazio};
+  if(typeof pdfjsLib === 'undefined') return {...base, status:'indisponivel', motivo:'leitura automática indisponível no momento', ...vazio};
+  let paginas;
+  try{ paginas = await _docResLerPaginas(arrayBuffer); }
+  catch(err){ console.error('Falha ao ler os dados do documento', err); return {...base, status:'nao_lida', motivo:'arquivo ilegível (PDF inválido, protegido ou corrompido)', ...vazio}; }
+  try{
+    const texto = paginas.map(_docResTextoDaPagina).join('\n');
+    if(texto.replace(/\s/g,'').length < 30) return {...base, status:'nao_lida', motivo:'arquivo sem texto legível (possível imagem escaneada)', ...vazio};   // sem texto
+    const dados = tipo==='MTR' ? {mtrs:_docResExtrairMtrs(paginas)} : _docResExtrairCdf(paginas, _docResNumerosConhecidos());
+    const status = _docResStatusExtracao(tipo, dados);
+    let motivo = '';
+    if(status==='nao_lida') motivo = tipo==='MTR' ? 'documento sem identificação de MTR' : 'documento sem identificação de CDF';
+    else if(tipo==='MTR' && !dados.mtrs.some(m=>m.dataEmissao)) motivo = 'dados insuficientes: data de emissão não identificada';
+    return {...base, ...dados, status, ...(motivo?{motivo}:{})};
+  }catch(err){
+    console.error('Falha ao interpretar os dados do documento', err);
+    return {...base, status:'nao_lida', motivo:'dados insuficientes: o documento não pôde ser interpretado', ...vazio};
+  }
+}
+function _docResDataUrlParaArrayBuffer(dataUrl){
+  const b64 = String(dataUrl||'').split(',').pop();
+  const bin = atob(b64); const u8 = new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++) u8[i] = bin.charCodeAt(i);
+  return u8.buffer;
+}
+
+
+// ───────── Dados lidos: selos, vínculos CDF→MTR (usados no relatório de resíduos), releitura ─────────
+const DOCRES_STATUS_EXTRACAO = {
+  lida:         {txt:'Lido automaticamente — confira', cls:'badge-yellow'},
+  parcial:      {txt:'Leitura parcial — complete os campos vazios', cls:'badge-yellow'},
+  nao_lida:     {txt:'Não foi possível ler — preencha manualmente', cls:'badge-red'},
+  imagem:       {txt:'Imagem — preencha manualmente', cls:'badge-gray'},
+  indisponivel: {txt:'Leitura indisponível — preencha manualmente', cls:'badge-gray'},
+};
+function _docResBadgeExtracao(ex){
+  if(!ex) return {txt:'Dados ainda não lidos', cls:'badge-gray'};
+  if(ex.revisado) return {txt:'✓ Conferido', cls:'badge-green'};
+  return DOCRES_STATUS_EXTRACAO[ex.status] || {txt:'Conferir dados', cls:'badge-yellow'};
+}
+function _docResDataTxt(iso){ return iso ? fmtDate(iso) : ''; }
+function _docResQtdTxt(x){ return x && x.quantidade>0 ? `${Number(x.quantidade).toLocaleString('pt-BR',{maximumFractionDigits:3})} ${x.unidade||'kg'}` : ''; }
+function _docResPesoTxt(x){ return x && x.peso>0 ? `${Number(x.peso).toLocaleString('pt-BR',{maximumFractionDigits:3})} kg` : ''; }
+
+function _docResSituacaoMtrs(numeros, ctx){
+  const anex = ctx ? ctx.anex : _docResMapaMtrsAnexados(), med = ctx ? ctx.med : _docResMapaMtrsMedicao();
+  const itens = (numeros||[]).map(n=>{
+    const a = anex.get(n);
+    if(a) return {n, tipo:'anexado', docId:a.docId, mes:a.mes};
+    if(med.has(n)) return {n, tipo:'medicao', mes:med.get(n)};
+    return {n, tipo:'sem'};
+  });
+  return {itens, anexados:itens.filter(x=>x.tipo==='anexado').length, medicao:itens.filter(x=>x.tipo==='medicao').length};
+}
+function _docResChipsMtr(sit){
+  return sit.itens.map(x=>{
+    const n = _resAttrEsc(x.n);
+    if(x.tipo==='anexado') return `<button class="dr-chip ok" onclick="docResAbrirDetalheDoc('${_resAttrEsc(x.docId)}','${n}')" title="MTR anexado${x.mes?' ('+_docResMesLongo(x.mes)+')':''} — clique para ver os detalhes">✓ ${n}</button>`;
+    if(x.tipo==='medicao') return `<span class="dr-chip med" title="Consta nas retiradas da medição${x.mes?' de '+_docResMesLongo(x.mes):''}">${n} · na medição</span>`;
+    return `<span class="dr-chip sem" title="Nenhum MTR anexado com este número">${n} · sem MTR anexado</span>`;
+  }).join('');
+}
+function _docResBlocoVinculos(numeros, aberto){
+  const sit = _docResSituacaoMtrs(numeros);
+  if(!sit.itens.length) return `<div class="dr-vinc"><div class="dr-nd">Nenhum MTR identificado neste CDF.</div></div>`;
+  const resumo = `${sit.itens.length} MTR${sit.itens.length>1?'s':''} · ${sit.anexados} com documento anexado${sit.medicao?` · ${sit.medicao} na medição`:''}`;
+  return `<div class="dr-vinc"><details${aberto?' open':''}><summary>${resumo}</summary><div class="dr-chips">${_docResChipsMtr(sit)}</div></details></div>`;
+}
+
+// ───────── Reler ─────────
+function _docResLerArrayBuffer(file){
+  return new Promise((res,rej)=>{ const r = new FileReader(); r.onload = ()=>res(r.result); r.onerror = ()=>rej(new Error('Falha ao ler o arquivo.')); r.readAsArrayBuffer(file); });
+}
+// A leitura nunca trava: tem limite de tempo e nunca lança erro.
+function _docResExtrairComLimite(tipo, arrayBuffer, mime){
+  const vazio = tipo==='MTR' ? {mtrs:[]} : {numero:'', transportador:'', destinador:'', dataEmissao:'', mtrs:[]};
+  let timer;
+  const limite = new Promise(res=>{ timer = setTimeout(()=>res({lidoEm:new Date().toISOString(), revisado:false, status:'nao_lida', motivo:'a leitura demorou demais', ...vazio}), 45000); });
+  return Promise.race([_docResExtrairDoArquivo(tipo, arrayBuffer.slice(0), mime), limite]).finally(()=>clearTimeout(timer));
+}
+function docResReler(id){
+  const rec = _docResMapa()[id];
+  if(!rec) return;
+  if(rec.extracao && rec.extracao.revisado){
+    openModal('Reler o documento?',
+      `<div style="font-size:13px">Os dados que você conferiu serão substituídos pela nova leitura do documento.</div>`,
+      `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
+       <button class="btn btn-primary" onclick="closeModalDirect();_docResExecutarReleitura('${id}')">Reler documento</button>`);
+    return;
+  }
+  _docResExecutarReleitura(id);
+}
+async function _docResExecutarReleitura(id){
+  const E = _docResEstado; const rec = _docResMapa()[id];
+  if(!rec) return;
+  E.msg = {tipo:'info', texto:'Lendo o documento…'}; _docResRedesenhar();
+  try{
+    const dataUrl = await _docResObterDataUrl(rec);
+    if(!dataUrl) throw new Error('Arquivo não encontrado no armazenamento.');
+    const ex = await _docResExtrairComLimite(rec.tipo, _docResDataUrlParaArrayBuffer(dataUrl), rec.mime);
+    await _docResAtualizarCampos(id, {extracao:ex});
+    E.msg = ex.status==='nao_lida'
+      ? {tipo:'erro', texto:`Não foi possível ler este documento${ex.motivo?` (${ex.motivo})`:''}. Use "Conferir / editar dados" para preencher manualmente.`}
+      : {tipo:'ok', texto:'Documento lido. Confira os dados e a data de emissão.'};
+  }catch(err){
+    console.error('Erro ao reler documento', err);
+    E.msg = {tipo:'erro', texto:'❌ Não foi possível ler o documento. Tente novamente.'};
+  }
+  _docResRedesenhar();
+}
+
+// ───────── Conferência / edição (cartões; os campos extras ficam recolhidos) ─────────
+const DOCRES_ED_MTR_PRINC = [
+  {k:'numero', r:'MTR nº', ph:'só números'}, {k:'dataTxt', r:'Data de emissão', ph:'dd/mm/aaaa'},
+  {k:'transportador', r:'Transportador', ph:'NOME - código'}, {k:'destinador', r:'Destinador', ph:'NOME - código'},
+  {k:'resTxt', r:'Tipo de resíduo'}, {k:'qtdTxt', r:'Quantidade', ph:'ex.: 2.400 kg'},
+];
+const DOCRES_ED_MTR_EXTRA = [
+  {k:'statusMtr', r:'Status do MTR'}, {k:'encTxt', r:'Encerramento / recebimento', ph:'dd/mm/aaaa'},
+  {k:'gerador', r:'Gerador', ph:'NOME - código'}, {k:'geradorCnpj', r:'CNPJ do gerador'}, {k:'geradorUnidade', r:'Unidade / local de geração'},
+  {k:'transportadorCnpj', r:'CNPJ do transportador'}, {k:'veiculo', r:'Veículo (placa)'}, {k:'condutor', r:'Condutor'},
+  {k:'destinadorCnpj', r:'CNPJ do destinador'}, {k:'destinadorUnidade', r:'Unidade de destinação'},
+  {k:'codigoResiduo', r:'Código do resíduo'}, {k:'classe', r:'Classe'}, {k:'estadoFisico', r:'Estado físico'},
+  {k:'pesoTxt', r:'Peso', ph:'ex.: 2.400 kg'}, {k:'tecnologia', r:'Tecnologia / tipo de destinação'},
+];
+const DOCRES_ED_CDF = [
+  {k:'numero', r:'CDF nº'}, {k:'dataTxt', r:'Data de emissão', ph:'dd/mm/aaaa'},
+  {k:'periodoIniTxt', r:'Período — início', ph:'dd/mm/aaaa'}, {k:'periodoFimTxt', r:'Período — fim', ph:'dd/mm/aaaa'},
+  {k:'transportador', r:'Transportador', ph:'NOME - código'}, {k:'destinador', r:'Destinador', ph:'NOME - código'},
+  {k:'destinadorCnpj', r:'CNPJ do destinador'}, {k:'resTxt', r:'Tipo de resíduo'},
+  {k:'qtdTxt', r:'Quantidade', ph:'ex.: 2.400 kg'}, {k:'pesoTxt', r:'Peso', ph:'ex.: 2.400 kg'},
+];
+let _docResEditor = null;   // {id, tipo, linhas|cdf, badgeHtml}
+function _docResLinhaEditorMtr(m){
+  m = m || {};
+  return {numero:m.numero||'', dataTxt:_docResDataTxt(m.dataEmissao), transportador:_docResNomeCod(m.transportador,m.transportadorCod), destinador:_docResNomeCod(m.destinador,m.destinadorCod),
+    resTxt:m.tipoResiduo||'', qtdTxt:_docResQtdTxt(m), statusMtr:m.statusMtr||'', encTxt:_docResDataTxt(m.dataEncerramento),
+    gerador:_docResNomeCod(m.gerador,m.geradorCod), geradorCnpj:m.geradorCnpj||'', geradorUnidade:m.geradorUnidade||'',
+    transportadorCnpj:m.transportadorCnpj||'', veiculo:m.veiculo||'', condutor:m.condutor||'', destinadorCnpj:m.destinadorCnpj||'', destinadorUnidade:m.destinadorUnidade||'',
+    codigoResiduo:m.codigoResiduo||'', classe:m.classe||'', estadoFisico:m.estadoFisico||'', pesoTxt:_docResPesoTxt(m), tecnologia:m.tecnologia||'', pagina:m.pagina||0, residuos:m.residuos||[]};
+}
+function docResEditarDados(id){
+  const rec = _docResMapa()[id];
+  if(!rec) return;
+  const ex = rec.extracao || {};
+  if(rec.tipo==='MTR'){
+    const linhas = (ex.mtrs||[]).map(_docResLinhaEditorMtr);
+    if(!linhas.length) linhas.push(_docResLinhaEditorMtr());
+    _docResEditor = {id, tipo:'MTR', linhas};
+  } else {
+    _docResEditor = {id, tipo:'CDF', cdf:{numero:ex.numero||'', dataTxt:_docResDataTxt(ex.dataEmissao), periodoIniTxt:_docResDataTxt(ex.periodoIni), periodoFimTxt:_docResDataTxt(ex.periodoFim),
+      transportador:_docResNomeCod(ex.transportador,ex.transportadorCod), destinador:_docResNomeCod(ex.destinador,ex.destinadorCod), destinadorCnpj:ex.destinadorCnpj||'',
+      resTxt:ex.tipoResiduo||'', qtdTxt:_docResQtdTxt(ex), pesoTxt:_docResPesoTxt(ex), mtrsTxt:(ex.mtrs||[]).join('\n')}};
+  }
+  const b = _docResBadgeExtracao(rec.extracao);
+  _docResEditor.badgeHtml = `<div style="margin-bottom:10px"><span class="badge ${b.cls}">${b.txt}</span>${ex.motivo?` <span class="dr-nd">${_resAttrEsc(ex.motivo)}</span>`:''}</div>`;
+  openModal(`Dados do ${rec.tipo} — ${rec.nome}`, _docResEditor.badgeHtml+_docResHtmlEditor(),
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
+     <button class="btn btn-primary" onclick="docResSalvarDados()">Salvar dados conferidos</button>`, true);
+}
+function _docResCampoEd(f, idSufixo, valor){
+  return `<div class="form-group"><label class="form-label">${f.r}</label><input class="form-input" id="dr-ed-${f.k}-${idSufixo}" value="${_resAttrEsc(valor||'')}" ${f.ph?`placeholder="${f.ph}"`:''}/></div>`;
+}
+function _docResHtmlEditor(){
+  const ed = _docResEditor;
+  const aviso = `<div style="font-size:12px;color:var(--muted);margin-bottom:10px">Confira com o documento. Campos que o sistema não encontrou ficam vazios — nada foi preenchido por suposição. <b>A data de emissão define o mês do documento.</b></div><div class="dr-msg erro" id="dr-ed-erro" style="margin:0 0 8px"></div>`;
+  if(ed.tipo==='MTR'){
+    return aviso + ed.linhas.map((l,i)=>`<div class="dr-ed-card">
+        <div class="dr-ed-card-cab"><b>MTR ${i+1}</b>${ed.linhas.length>1?`<button class="dr-ib" title="Remover este MTR" onclick="docResEditorRemover(${i})">${_docResIcone('lixeira')}</button>`:''}</div>
+        <div class="dr-ed-grid">${DOCRES_ED_MTR_PRINC.map(f=>_docResCampoEd(f,i,l[f.k])).join('')}</div>
+        <details><summary>Outros dados (gerador, CNPJs, veículo, condutor, status, resíduo…)</summary><div class="dr-ed-grid">${DOCRES_ED_MTR_EXTRA.map(f=>_docResCampoEd(f,i,l[f.k])).join('')}</div></details>
+      </div>`).join('') + `<button class="btn btn-outline btn-sm" style="margin-top:6px" onclick="docResEditorAdicionar()">+ Adicionar MTR</button>`;
+  }
+  const c = ed.cdf;
+  return aviso + `<div class="dr-ed-grid">${DOCRES_ED_CDF.map(f=>_docResCampoEd(f,'c',c[f.k])).join('')}</div>
+    <div class="form-group"><label class="form-label">MTRs vinculados a este CDF <span style="font-weight:400;color:var(--muted)">(um por linha)</span></label>
+      <textarea class="form-textarea" id="dr-ed-mtrsTxt-c" style="min-height:100px">${_resAttrEsc(c.mtrsTxt)}</textarea></div>`;
+}
+function _docResEditorSincronizar(){
+  const ed = _docResEditor; if(!ed) return;
+  const v = id=>{ const el = document.getElementById(id); return el ? el.value : null; };
+  if(ed.tipo==='MTR'){
+    ed.linhas.forEach((l,i)=>{ [...DOCRES_ED_MTR_PRINC, ...DOCRES_ED_MTR_EXTRA].forEach(f=>{ const x = v(`dr-ed-${f.k}-${i}`); if(x!==null) l[f.k] = x; }); });
+  } else {
+    DOCRES_ED_CDF.forEach(f=>{ const x = v(`dr-ed-${f.k}-c`); if(x!==null) ed.cdf[f.k] = x; });
+    const m = v('dr-ed-mtrsTxt-c'); if(m!==null) ed.cdf.mtrsTxt = m;
+  }
+}
+function _docResRedesenharEditor(){
+  const corpo = document.getElementById('modal-body');
+  if(corpo && _docResEditor) corpo.innerHTML = (_docResEditor.badgeHtml||'') + _docResHtmlEditor();
+}
+function docResEditorAdicionar(){ _docResEditorSincronizar(); _docResEditor.linhas.push(_docResLinhaEditorMtr()); _docResRedesenharEditor(); }
+function docResEditorRemover(i){
+  _docResEditorSincronizar();
+  _docResEditor.linhas.splice(i,1);
+  if(!_docResEditor.linhas.length) _docResEditor.linhas.push(_docResLinhaEditorMtr());
+  _docResRedesenharEditor();
+}
+async function docResSalvarDados(){
+  _docResEditorSincronizar();
+  const ed = _docResEditor; if(!ed) return;
+  const erroEl = document.getElementById('dr-ed-erro');
+  const erro = t=>{ if(erroEl) erroEl.textContent = t; };
+  const rec = _docResMapa()[ed.id]; if(!rec) return;
+  const prev = rec.extracao || {};
+  const base = {lidoEm: prev.lidoEm || new Date().toISOString(), revisado:true};
+  const outros = _docResLista().filter(d=>d.tipo===ed.tipo && d.id!==ed.id);
+  const data = (txt, rot)=>{ if(!txt.trim()) return ''; const d = _docResParseData(txt); if(!d) throw new Error(`${rot}: data inválida. Use dd/mm/aaaa.`); return d; };
+  const cnpj = (txt, rot)=>{ if(!txt.trim()) return ''; const c = _docResValidarCnpj(txt); if(!c) throw new Error(`${rot}: CNPJ inválido.`); return c; };
+  const qtd = (txt, rot, padrao)=>{ if(!txt.trim()) return {quantidade:0, unidade:''}; const q = _docResParseQuantidade(txt); if(!q) throw new Error(`${rot}: valor inválido (ex.: 2.400 kg).`); return {quantidade:q.quantidade, unidade:q.unidade||padrao}; };
+  let dados;
+  try{
+    if(ed.tipo==='MTR'){
+      const regs = []; const vistos = new Set();
+      for(const [i,l] of ed.linhas.entries()){
+        if(![...DOCRES_ED_MTR_PRINC, ...DOCRES_ED_MTR_EXTRA].some(f=>String(l[f.k]||'').trim())) continue;
+        const rot = `MTR ${i+1}`;
+        const numero = l.numero.replace(/\D/g,'');
+        if(numero.length<7 || numero.length>12) throw new Error(`${rot}: informe o número do MTR com 7 a 12 dígitos.`);
+        if(vistos.has(numero)) throw new Error(`O MTR ${numero} está repetido.`);
+        vistos.add(numero);
+        const dup = outros.find(d=>((d.extracao&&d.extracao.mtrs)||[]).some(m=>m.numero===numero));
+        if(dup) throw new Error(`O MTR ${numero} já está cadastrado em outro documento (${dup.nome}).`);
+        const tp = _docResSepararNomeCodigo(l.transportador.trim()), ds = _docResSepararNomeCodigo(l.destinador.trim()), ge = _docResSepararNomeCodigo(l.gerador.trim());
+        const q = qtd(l.qtdTxt, `${rot} — quantidade`, 'kg');
+        let peso = 0; if(l.pesoTxt.trim()){ const p = _docResParseQuantidade(l.pesoTxt); if(!p || (p.unidade && p.unidade!=='kg')) throw new Error(`${rot} — peso: informe em kg (ex.: 2.400 kg).`); peso = p.quantidade; }
+        regs.push({numero, pagina:l.pagina||0, dataEmissao:data(l.dataTxt, `${rot} — emissão`), dataEncerramento:data(l.encTxt, `${rot} — encerramento`), statusMtr:l.statusMtr.trim(),
+          transportador:tp.nome, transportadorCod:tp.cod, transportadorCnpj:cnpj(l.transportadorCnpj, `${rot} — CNPJ do transportador`), veiculo:l.veiculo.trim().toUpperCase(), condutor:l.condutor.trim(),
+          destinador:ds.nome, destinadorCod:ds.cod, destinadorCnpj:cnpj(l.destinadorCnpj, `${rot} — CNPJ do destinador`), destinadorUnidade:l.destinadorUnidade.trim(),
+          gerador:ge.nome, geradorCod:ge.cod, geradorCnpj:cnpj(l.geradorCnpj, `${rot} — CNPJ do gerador`), geradorUnidade:l.geradorUnidade.trim(),
+          tipoResiduo:l.resTxt.trim(), codigoResiduo:l.codigoResiduo.trim(), classe:l.classe.trim(), estadoFisico:l.estadoFisico.trim(), tecnologia:l.tecnologia.trim(),
+          quantidade:q.quantidade, unidade:q.unidade, peso, residuos:l.residuos||[]});
+      }
+      dados = {mtrs:regs};
+    } else {
+      const c = ed.cdf;
+      const numeroCdf = c.numero.trim();
+      if(numeroCdf){ const dup = outros.find(d=>d.extracao && d.extracao.numero===numeroCdf); if(dup) throw new Error(`O CDF ${numeroCdf} já está cadastrado em outro documento (${dup.nome}).`); }
+      const nums = []; const ruins = [];
+      c.mtrsTxt.split(/[\s,;]+/).filter(Boolean).forEach(t=>{ const n = t.replace(/\D/g,''); if(n.length>=7&&n.length<=12){ if(!nums.includes(n)) nums.push(n); } else ruins.push(t); });
+      if(ruins.length) throw new Error(`MTR(s) inválido(s): ${ruins.slice(0,4).join(', ')}. Use de 7 a 12 dígitos.`);
+      const tp = _docResSepararNomeCodigo(c.transportador.trim()), ds = _docResSepararNomeCodigo(c.destinador.trim());
+      const q = qtd(c.qtdTxt, 'Quantidade', 'kg');
+      let peso = 0; if(c.pesoTxt.trim()){ const p = _docResParseQuantidade(c.pesoTxt); if(!p || (p.unidade && p.unidade!=='kg')) throw new Error('Peso: informe em kg (ex.: 2.400 kg).'); peso = p.quantidade; }
+      dados = {numero:numeroCdf, dataEmissao:data(c.dataTxt,'Data de emissão'), periodoIni:data(c.periodoIniTxt,'Período — início'), periodoFim:data(c.periodoFimTxt,'Período — fim'),
+        transportador:tp.nome, transportadorCod:tp.cod, destinador:ds.nome, destinadorCod:ds.cod, destinadorCnpj:cnpj(c.destinadorCnpj,'CNPJ do destinador'),
+        tipoResiduo:c.resTxt.trim(), quantidade:q.quantidade, unidade:q.unidade, peso, mtrs:nums};
+    }
+  }catch(e){ return erro(e.message); }
+  const extracao = {...base, ...dados, status:_docResStatusExtracao(ed.tipo, dados)};
+  try{
+    await _docResAtualizarCampos(ed.id, {extracao});
+    closeModalDirect(); _docResEditor = null;
+    const {meses, semData} = _docResMesesDoRegistro({...rec, extracao});
+    const ms = Object.keys(meses).sort().map(_docResMesLongo);
+    _docResEstado.msg = {tipo:'ok', texto: 'Dados conferidos e salvos.'+(ms.length?` Classificado em ${ms.join(', ')} pela data de emissão.`:'')+(semData?' Ainda há item sem data de emissão — segue em pendentes.':'')};
+    _docResRedesenhar();
+  }catch(err){ console.error('Erro ao salvar dados do documento', err); erro('❌ Não foi possível salvar. Verifique sua conexão e tente novamente.'); }
+}
+
+// ───────── Relatório de resíduos: MTRs e CDFs do período (por data de emissão) ─────────
+function _docResLinhaRelMtr(r, ix){
+  return `<tr><td><b>${_docResVal(r.numero)}</b></td><td style="white-space:nowrap">${_docResDataBr(r.dataEmissao)}</td><td>${_docResVal(r.transportador)}</td><td>${_docResVal(r.destinador)}</td>
+    <td>${_docResVal(r.tipoResiduo)}</td><td style="white-space:nowrap">${_docResQtdHtml(r)}</td><td>${_docResBadgeCdfMtr(r, ix)}</td>
+    <td><button class="btn btn-outline btn-sm" onclick="docResVer('${_resAttrEsc(r.docId)}')">Ver</button></td></tr>`;
+}
+function _docResBlocoRelMtr(mes, ix){
+  const ir = txt=>`<a href="#" class="dr-rel-link" onclick="docResIrPara('MTR','${mes}');return false">${txt}</a>`;
+  const l = ix.mtrsPorMes[mes] || [];
+  if(!l.length) return `<div class="dr-rel-bloco"><div class="dr-rel-tipo">MTR</div><div class="dr-rel-pend">⚠ Não anexado para este período. ${ir('Anexar')}</div></div>`;
+  const k = _docResKpis(l, ix, 'MTR');
+  return `<div class="dr-rel-bloco">
+    <div class="dr-rel-tipo">MTR <span class="badge badge-gray">${l.length}</span></div>
+    <div class="dr-rel-sub"><b>${k.total}</b> ${_docResPl(k.total,'MTR emitido','MTRs emitidos')} · ${k.comCdf} com CDF · ${k.semCdf} sem CDF${k.peso?` · ${Number(k.peso).toLocaleString('pt-BR',{maximumFractionDigits:3})} kg`:''}${k.incompletos?` · <span style="color:#8A5A00">${k.incompletos} com dados incompletos</span>`:''}${k.divergencias?` · <span style="color:var(--red)">${k.divergencias} com divergência</span>`:''} ${ir('Abrir relatório de MTRs')}</div>
+    <details><summary>Ver os ${l.length} ${_docResPl(l.length,'MTR','MTRs')}</summary><div class="dr-rel-scroll"><table class="dr-dtbl"><thead><tr><th>MTR nº</th><th>Emissão</th><th>Transportador</th><th>Destinador</th><th>Resíduo</th><th>Qtd./Peso</th><th>CDF</th><th></th></tr></thead><tbody>
+      ${l.map(r=>_docResLinhaRelMtr(r, ix)).join('')}</tbody></table></div></details>
+  </div>`;
+}
+function _docResBlocoRelCdf(mes, ix){
+  const ir = txt=>`<a href="#" class="dr-rel-link" onclick="docResIrPara('CDF','${mes}');return false">${txt}</a>`;
+  const l = ix.cdfLinhasPorMes[mes] || [];
+  if(!l.length) return `<div class="dr-rel-bloco"><div class="dr-rel-tipo">CDF</div><div class="dr-rel-pend">⚠ Não anexado para este período. ${ir('Anexar')}</div></div>`;
+  return `<div class="dr-rel-bloco">
+    <div class="dr-rel-tipo">CDF <span class="badge badge-gray">${l.length}</span></div>
+    ${l.map(x=>`<div class="dr-rel-cdf">
+        <div class="dr-rel-arq"><b>CDF nº ${_docResVal(x.numero)}</b> · ${_docResDataBr(x.dataEmissao)} ${_docResBadgeSituacaoCdf(x, ix)} <button class="btn btn-outline btn-sm" onclick="docResVer('${_resAttrEsc(x.docId)}')">Visualizar</button></div>
+        <div class="dr-dgrid"><div class="dr-dcel"><span>Destinador</span><b>${_docResVal(x.destinador)}</b></div><div class="dr-dcel"><span>Resíduo</span><b>${_docResVal(x.tipoResiduo)}</b></div><div class="dr-dcel"><span>Quantidade / peso</span><b>${_docResQtdHtml(x)}</b></div></div>
+        ${_docResBlocoVinculos(x.mtrs||[])}</div>`).join('')}
+  </div>`;
+}
+// Só CONSULTA os documentos já cadastrados. Não há upload aqui.
+function _resRenderDocumentacaoPeriodo(meses){
+  const lista = [...new Set((meses||[]).filter(Boolean))].sort();
+  if(!lista.length) return '';
+  const ix = _docResIndice();
+  return `<div style="margin:12px 0">
+    <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin:6px 0">DOCUMENTAÇÃO DO PERÍODO</div>
+    <div class="dr-rel-nota">O mês de cada MTR e CDF é a data de emissão lida no documento.</div>
+    ${lista.map(m=>`<div class="dr-rel-mes"><div class="dr-rel-mes-tit">${_resMesLabel(m)}</div>
+      <div class="dr-rel-grade">${_docResBlocoRelMtr(m, ix)}${_docResBlocoRelCdf(m, ix)}</div></div>`).join('')}
+  </div>`;
+}
+
+
+// ═══════════════════════════════════════════════════════
 // INIT — conecta ao Firebase, carrega os dados compartilhados
 // e só então restaura sessão (se ainda válida, < 8h) ou mostra o login.
 // ═══════════════════════════════════════════════════════
@@ -10258,7 +12479,7 @@ if(loginBtn){ loginBtn.disabled = true; loginBtn.textContent = 'Carregando dados
 fbRoot.on('value', (snapshot) => {
   const dados = snapshot.val() || {};
   Object.keys(dados).forEach(k => { DB_CACHE[k] = dados[k]; });
-  ['estoqueMovimentos','estoqueHistorico'].forEach(k=>{ if(!(k in dados)) delete DB_CACHE[k]; });
+  ['estoqueMovimentos','estoqueHistorico','documentosResiduos'].forEach(k=>{ if(!(k in dados)) delete DB_CACHE[k]; });
 
   if(!dbReady){
     dbReady = true;
