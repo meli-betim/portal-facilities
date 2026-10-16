@@ -985,6 +985,78 @@ button.dr-kpi:hover{border-color:var(--black);}
 .est-prev:empty{display:none;}
 .est-meta{font-size:11px;color:var(--light);margin-top:6px;}
 .est-anexo-atual{font-size:12px;margin-bottom:6px;}
+/* ── Nova movimentação: seletor de produtos em grupos, retiradas em lote e revisão ── */
+.est-modal-mv .modal-head{background:#111;border-bottom:none;padding:16px 22px;}
+.est-modal-mv .modal-title{color:#fff;font-family:'Inter',sans-serif;}
+.est-modal-mv .modal-close{color:#fff;}
+.est-mt-tx{display:inline-flex;flex-direction:column;vertical-align:middle;}
+.est-mt-tx b{font-family:'Sora',sans-serif;font-size:16px;font-weight:800;color:#fff;line-height:1.2;}
+.est-mt-tx small{font-size:11px;font-weight:400;color:#BDBDBD;margin-top:2px;}
+.est-mt-ic{display:inline-block;color:var(--yellow);font-size:20px;margin-right:12px;vertical-align:middle;}
+.est-modal-mv .modal-body{padding:18px 24px;}
+.est-pick{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;}
+.est-pick:focus-within,.est-pick:not(.sel){border-color:var(--yellow);}
+.est-pick.sel{padding:8px 10px;}
+.est-pick-busca{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding:2px 2px 10px;margin-bottom:6px;}
+.est-pick-busca input{flex:1;border:none;outline:none;font-size:13px;font-family:'Inter',sans-serif;background:transparent;}
+#em-pick-lista{max-height:300px;overflow-y:auto;}
+.est-pick-g+.est-pick-g{border-top:1px solid var(--line);}
+.est-pick-gh{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;text-align:left;padding:10px 4px;cursor:pointer;font-family:'Inter',sans-serif;}
+.est-pick-gh.sem-btn{cursor:default;justify-content:space-between;}
+.est-pick-gh>span:not(.est-chev):not(.est-pick-n){flex:1;display:flex;flex-direction:column;}
+.est-pick-gh b{font-size:13px;color:#111;}
+.est-pick-gh small{font-size:11px;color:var(--muted);margin-top:2px;}
+.est-pick-g.warn .est-pick-gh b{color:#C81E1E;}
+.est-pick-n{font-size:11px;font-weight:600;padding:2px 9px;border-radius:12px;background:#F0F0F0;color:#555;white-space:nowrap;}
+.est-pick-g.warn .est-pick-n{background:#FDE8E8;color:#C81E1E;}
+.est-chev{width:14px;color:#555;}
+.est-pick-it{display:flex;align-items:center;gap:10px;width:100%;border:none;background:none;text-align:left;padding:9px 6px;border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;}
+.est-pick-it:hover{background:#F7F8FA;}
+.est-pick-it.on{background:#FFF9D6;}
+.est-pick-it.bloq{opacity:.62;cursor:not-allowed;}
+.est-pick-ic{font-size:15px;width:22px;text-align:center;flex-shrink:0;}
+.est-pick-nm{flex:1;min-width:0;display:flex;flex-direction:column;}
+.est-pick-nm b{font-size:13px;font-weight:600;color:#111;}
+.est-pick-nm small{font-size:11px;color:var(--muted);margin-top:2px;}
+.est-pick-sd{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;white-space:nowrap;}
+.est-pick-sd.pos{background:#E3F4E8;color:#1F7A45;} .est-pick-sd.zero{background:#EEF0F4;color:#555;} .est-pick-sd.neg{background:#FDE8E8;color:#C81E1E;}
+.est-pick-tag{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;background:#EEF0F4;color:#555;}
+.est-pick-tag.g-estoque{background:#E3F4E8;color:#1F7A45;} .est-pick-tag.g-inconsistente{background:#FDE8E8;color:#C81E1E;}
+.est-pick-vazio{font-size:12px;color:var(--muted);padding:12px 6px;text-align:center;}
+.est-pick-cart{display:flex;align-items:center;gap:10px;}
+.est-prev-dica{display:block;color:var(--muted);margin-top:4px;font-size:11px;}
+.est-lote-tit{font-size:14px;font-weight:800;color:#111;margin:6px 0 2px;border-top:1px solid var(--line);padding-top:14px;}
+.est-lote-sub{font-size:12px;color:var(--muted);margin-bottom:10px;}
+.est-lote-wrap{max-height:280px;overflow:auto;border:1px solid var(--line);border-radius:8px;}
+.est-lote-tab{width:100%;border-collapse:collapse;font-size:12px;}
+.est-lote-tab th{position:sticky;top:0;background:#F7F8FA;text-align:left;font-size:11px;font-weight:600;color:#444;padding:8px 6px;border-bottom:1px solid var(--line);z-index:1;}
+.est-lote-tab td{padding:5px 4px;border-bottom:1px solid #F0F0F0;vertical-align:middle;}
+.est-lote-tab .num{text-align:right;}
+.est-lote-tab .form-input,.est-lote-tab .form-select{padding:6px 7px;font-size:12px;min-width:0;}
+.est-lote-tab .inv,.est-lote-tab .form-input.inv{border-color:#C81E1E;background:#FFF5F5;}
+.est-lote-x{border:none;background:none;color:#999;cursor:pointer;font-size:14px;padding:4px 6px;}
+.est-lote-x:hover{color:#C81E1E;}
+.est-lote-tot{font-size:12px;color:#444;margin:8px 2px;min-height:16px;}
+.est-lote-bts{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 12px;}
+.est-lote-bts>button{flex:1;}
+.est-gerar{border:1px solid var(--yellow);background:#FFFDF0;border-radius:10px;padding:12px 14px;margin-bottom:12px;}
+.est-gerar-tit{font-size:13px;font-weight:700;margin-bottom:8px;}
+.est-gerar-dias{display:flex;flex-wrap:wrap;align-items:center;gap:10px;font-size:12px;margin:2px 0 8px;}
+.est-gerar-dias label{display:inline-flex;align-items:center;gap:4px;cursor:pointer;}
+.est-gerar-info{font-size:12px;color:#444;margin-bottom:8px;}
+.est-rev-top{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;}
+.est-rev-top>div{background:#F7F8FA;border-radius:8px;padding:10px 12px;}
+.est-rev-top small{display:block;font-size:10px;color:var(--muted);font-weight:600;}
+.est-rev-top b{display:block;font-size:13px;margin:2px 0;}
+.est-rev-aviso{background:#FFF8E6;border:1px solid #FFE066;color:#8A5A00;border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:12px;}
+.est-rev-aviso ul{margin:6px 0 0 18px;padding:0;}
+.est-rev-ok{background:#E3F4E8;color:#1F7A45;border-radius:8px;padding:9px 14px;font-size:12px;margin-bottom:12px;}
+.est-rev-flag{font-size:10px;font-weight:600;padding:1px 7px;border-radius:10px;background:#FFF1DC;color:#B45309;margin-right:4px;white-space:nowrap;}
+.est-rev-tab td,.est-rev-tab th{padding:7px 8px;}
+@media(max-width:640px){.est-rev-top{grid-template-columns:repeat(2,1fr);}}
+.est-rowauto{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+.est-lote-tab:not(.est-rev-tab){min-width:600px;}
+.est-lote-tab td:nth-child(3) input{min-width:64px;}
 .est-chk{display:flex;align-items:center;gap:8px;font-size:12px;color:#333;margin:10px 0;}
 .est-imp-intro{font-size:12px;color:#444;margin-bottom:10px;line-height:1.5;}
 .est-modelo{background:#F7F8FA;border-radius:8px;padding:10px 12px;font-size:12px;color:#333;margin-bottom:10px;line-height:1.6;}
@@ -6115,7 +6187,7 @@ function _estPgMov(){
           <td><b>${_estEsc(m.produto)}</b><small>${_estEsc(m.codigo||'s/ código')}${m.categoria?' · '+_estEsc(m.categoria):''}</small></td>
           <td class="num ${m.tipo==='Saída'?'neg':m.tipo==='Entrada'?'pos':''}">${m.tipo==='Transferência'?_estNum(m.quantidade):(q>0?'+':'')+_estNum(q)} <small>${_estEsc(m.unidade||'')}</small></td>
           <td class="num">${_estBRL(m.valorUnitario)}</td><td class="num">${_estBRL(m.valorTotal)}</td>
-          <td>${m.tipo==='Transferência'?`${_estEsc(m.areaOrigem||'—')} → ${_estEsc(m.area||'—')}`:_estEsc(m.area||'—')}</td>
+          <td>${m.tipo==='Transferência'?`${_estEsc(m.areaOrigem||'—')} → ${_estEsc(m.area||'—')}`:_estEsc(m.area||'—')}${(m.turno||m.responsavel)?`<small>${[m.turno?'Turno '+_estEsc(m.turno):'',m.responsavel?'Resp.: '+_estEsc(m.responsavel):''].filter(Boolean).join(' · ')}</small>`:''}</td>
           <td>${_estEsc(m.motivo||'—')}${m.observacao?`<small title="${_estEsc(m.observacao)}">${_estEsc(m.observacao)}</small>`:''}</td>
           <td><small class="est-user">${_estEsc(m.updatedBy||m.usuario||'—')}</small></td>
           <td class="est-acoes">${m.anexo?`<button onclick="estVerAnexo('${m.id}')" title="Ver anexo">📎</button>`:''}<button onclick="estAbrirMov('${m.id}')" title="Editar">✏️</button><button onclick="estExcluirMov('${m.id}')" title="Excluir">🗑</button></td>
@@ -6165,50 +6237,263 @@ function estAlternarMes(k){ if(!_estAbertos) _estAbertos=new Set(); _estAbertos.
 function estLimparFiltros(){ _estFil={ano:new Date().getFullYear(),mes:'todos',tipo:'todos',item:'todos',cat:'todos',area:'todos'}; _estAbertos=null; _estRender(); }
 
 // ─── Modal de movimentação (nova / edição) ───
-let _estAnexoPend=null;
+// Seletor de produto em grupos + busca global, retiradas em LOTE (inclusive retroativas) e regras por tipo.
+
+// ═══ CLASSIFICAÇÃO DOS PRODUTOS (alimenta o seletor "Produto / item") ═══
+// Usa SÓ os dados que o sistema já tem: produtos (DB 'estoque') e movimentações (DB 'estoqueMovimentos').
+// Saldo = mesma conta de _estSaldo(): estoque inicial + Σ efeito das movimentações com data ≤ hoje.
+// Cada produto cai em UM único grupo (nunca duplica), nesta ordem de prioridade:
+//   1. SALDO INCONSISTENTE — saldo negativo OU alguma inconsistência identificável nos dados (ver _estqProblemas)
+//   2. SEM ESTOQUE         — saldo igual a zero
+//   3. POUCO UTILIZADOS    — saldo > 0 e saídas em até ESTQ_CFG.maxDiasComSaida DIAS DISTINTOS nos últimos janelaDias dias
+//   4. PRODUTOS EM ESTOQUE — saldo > 0 (os mais movimentados primeiro)
+// Histórico insuficiente: só se avalia a frequência de produto com ≥ minHistoricoDias de observação. A observação conta a partir de
+//   ONDE O PRODUTO COMEÇOU A EXISTIR NO CONTROLE, nunca antes do início do controle de saídas (estoqueConfig.inicioSaidas — antes dele
+//   as saídas não eram lançadas, então "nenhuma saída" não prova baixa frequência):
+//     a) produto com `criadoEm` (gravado nos cadastros novos)       → a data de criação;
+//     b) senão, com estoque inicial > 0 (já existia ao iniciar o controle) → o início do controle de saídas;
+//     c) senão, com movimentações                                   → a 1ª movimentação;
+//     d) sem nada disso                                             → não avaliável.
+//   Não avaliável fica em "Produtos em estoque" (nunca vira "pouco utilizado" por chute). Ajustável em ESTQ_CFG ou estoqueConfig.classificacao.
+const ESTQ_CFG={ janelaDias:90, maxDiasComSaida:2, minHistoricoDias:90, tolerancia:1e-9 };
+// exigeSaldoPositivo: só produto com saldo > 0 pode ser SELECIONADO naquele tipo (todos continuam localizáveis pela busca)
+const ESTQ_REGRAS_TIPO={ 'Entrada':{exigeSaldoPositivo:false}, 'Saída':{exigeSaldoPositivo:true}, 'Ajuste':{exigeSaldoPositivo:false}, 'Transferência':{exigeSaldoPositivo:true} };
+const ESTQ_GRUPOS={
+  estoque:     {ordem:1, titulo:'Produtos em estoque', sub:()=>'', aberto:true},
+  pouco:       {ordem:2, titulo:'Pouco utilizados',    sub:c=>`Baixa frequência de saída nos últimos ${c.janelaDias} dias`, aberto:false},
+  sem:         {ordem:3, titulo:'Sem estoque',         sub:()=>'Saldo zero — disponíveis para consulta e entradas', aberto:false},
+  inconsistente:{ordem:4, titulo:'Saldo inconsistente', sub:()=>'Saldo negativo ou dados com problema — não disponíveis para retirada até corrigir', aberto:false},
+};
+const _estqNorm=s=>String(s==null?'':s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim();
+const _estqD=iso=>new Date(iso+'T12:00:00');
+const _estqDiff=(a,b)=>Math.round((_estqD(b)-_estqD(a))/86400000);
+function _estqAddDias(iso,n){ const d=_estqD(iso); d.setDate(d.getDate()+n); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+// Inconsistências IDENTIFICÁVEIS nos dados do produto (cada uma vira um texto exibido ao usuário):
+function _estqProblemas(p, a, saldo, dupDe){
+  const pr=[];
+  if(saldo<0) pr.push(`saldo negativo (${_estNum(saldo)} ${p.unidade||''})`.replace(/\s+\)/,')'));
+  if(_estInicial(p)<0) pr.push('estoque inicial negativo');
+  if(a.qtdInvalida) pr.push(`${a.qtdInvalida} movimentaç${a.qtdInvalida>1?'ões':'ão'} com quantidade inválida`);
+  if(a.dataInvalida) pr.push(`${a.dataInvalida} movimentaç${a.dataInvalida>1?'ões':'ão'} com data inválida`);
+  if(a.tipoInvalido) pr.push(`${a.tipoInvalido} movimentaç${a.tipoInvalido>1?'ões':'ão'} com tipo desconhecido`);
+  if(dupDe.length) pr.push(`código duplicado (também em: ${dupDe.slice(0,2).join(', ')}${dupDe.length>2?'…':''})`);
+  return pr;
+}
+function estqClassificar(produtos, movs, opts){
+  opts=opts||{}; const cfg={...ESTQ_CFG,...(opts.cfg||{})}, hoje=opts.hoje;
+  const tiposOk=opts.tiposValidos||['Entrada','Saída','Ajuste','Transferência'];
+  const inicioControle=(opts.inicioSaidas||'1900-01')+'-01', iniJanela=_estqAddDias(hoje,-(cfg.janelaDias-1));
+  const ag=new Map();
+  (movs||[]).forEach(m=>{
+    if(!m||!m.produtoId) return;
+    let a=ag.get(m.produtoId); if(!a){ a={efeito:0,primeira:null,diasSaida:new Set(),qtdSaida:0,ultimaSaida:null,qtdInvalida:0,dataInvalida:0,tipoInvalido:0}; ag.set(m.produtoId,a); }
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(m.data||''))){ a.dataInvalida++; return; }          // sem data confiável não dá para calcular
+    if(!tiposOk.includes(m.tipo)){ a.tipoInvalido++; return; }
+    const q=Number(m.quantidade);
+    if(!isFinite(q) || q===0 || (m.tipo!=='Ajuste' && q<0)) a.qtdInvalida++;
+    if(!a.primeira||m.data<a.primeira) a.primeira=m.data;
+    if(m.data>hoje) return;                                                                   // data futura (compra ainda não entregue) não conta
+    a.efeito+=_estEfeito(m);
+    if(m.tipo==='Saída'){ if(!a.ultimaSaida||m.data>a.ultimaSaida) a.ultimaSaida=m.data; if(m.data>=iniJanela){ a.diasSaida.add(m.data); a.qtdSaida+=(isFinite(q)?q:0); } }
+  });
+  const porCodigo=new Map();
+  (produtos||[]).forEach(p=>{ const c=_estqNorm(p.codigo); if(c){ if(!porCodigo.has(c)) porCodigo.set(c,[]); porCodigo.get(c).push(p); } });
+  const grupos={estoque:[],pouco:[],sem:[],inconsistente:[]}, porId=new Map();
+  (produtos||[]).forEach(p=>{
+    const a=ag.get(p.id)||{efeito:0,primeira:null,diasSaida:new Set(),qtdSaida:0,ultimaSaida:null,qtdInvalida:0,dataInvalida:0,tipoInvalido:0};
+    let saldo=_estInicial(p)+a.efeito; if(Math.abs(saldo)<cfg.tolerancia) saldo=0;
+    let avaliavel=false, motivoNaoAvaliavel='', desde=null;
+    const criado=String(p.criadoEm||'').slice(0,10);
+    if(/^\d{4}-\d{2}-\d{2}$/.test(criado)) desde=criado>inicioControle?criado:inicioControle;          // a) criado em
+    else if(_estInicial(p)>0) desde=inicioControle;                                                    // b) já existia ao iniciar o controle
+    else if(a.primeira) desde=a.primeira>inicioControle?a.primeira:inicioControle;                      // c) 1ª movimentação
+    if(!desde) motivoNaoAvaliavel='sem movimentações e sem estoque inicial';
+    else { const dias=_estqDiff(desde,hoje)+1;
+      if(dias>=cfg.minHistoricoDias) avaliavel=true; else motivoNaoAvaliavel=`histórico de apenas ${Math.max(0,dias)} dia(s) (mínimo ${cfg.minHistoricoDias})`; }
+    const dupDe=(porCodigo.get(_estqNorm(p.codigo))||[]).filter(x=>x.id!==p.id).map(x=>x.nome);
+    const problemas=_estqProblemas(p,a,saldo,dupDe), diasComSaida=a.diasSaida.size;
+    const grupo=problemas.length?'inconsistente':saldo===0?'sem':(avaliavel&&diasComSaida<=cfg.maxDiasComSaida)?'pouco':'estoque';
+    const it={id:p.id,produto:p,nome:p.nome||'',codigo:String(p.codigo||''),unidade:p.unidade||'',saldo,grupo,problemas,avaliavel,motivoNaoAvaliavel,diasComSaida,qtdSaida:a.qtdSaida,ultimaSaida:a.ultimaSaida,primeiraMov:a.primeira};
+    grupos[grupo].push(it); porId.set(p.id,it);
+  });
+  const porNome=(x,y)=>x.nome.localeCompare(y.nome,'pt-BR');
+  grupos.estoque.sort((x,y)=>(y.diasComSaida-x.diasComSaida)||porNome(x,y)); ['pouco','sem','inconsistente'].forEach(g=>grupos[g].sort(porNome));
+  return {grupos,porId,cfg,hoje,total:(produtos||[]).length};
+}
+function estqSelecionavel(tipo,it){
+  const r=ESTQ_REGRAS_TIPO[tipo]||{exigeSaldoPositivo:false};
+  if(r.exigeSaldoPositivo && (it.grupo==='inconsistente' || !(it.saldo>0))){
+    if(it.grupo==='inconsistente') return {ok:false,motivo:'Saldo inconsistente ('+it.problemas[0]+') — corrija antes de registrar '+tipo.toLowerCase()};
+    return {ok:false,motivo:'Sem estoque — não é possível registrar '+tipo.toLowerCase()};
+  }
+  return {ok:true,motivo:''};
+}
+function estqBuscar(cl,texto,tipo){
+  const tokens=_estqNorm(texto).split(/\s+/).filter(Boolean); if(!tokens.length) return [];
+  const cod=_estqNorm(texto).replace(/\s+/g,'');
+  const rel=it=>{ const c=_estqNorm(it.codigo), n=_estqNorm(it.nome); return cod&&c===cod?0:cod&&c.startsWith(cod)?1:n.startsWith(tokens[0])?2:3; };
+  const prio=it=>(estqSelecionavel(tipo,it).ok?0:10)+ESTQ_GRUPOS[it.grupo].ordem;
+  return Object.values(cl.grupos).flat().filter(it=>{ const n=_estqNorm(it.nome), c=_estqNorm(it.codigo); return tokens.every(t=>n.includes(t)||c.includes(t)); })
+    .sort((x,y)=>(rel(x)-rel(y))||(prio(x)-prio(y))||x.nome.localeCompare(y.nome,'pt-BR'));
+}
+// Recalcula a cada abertura do modal: a classificação acompanha as movimentações registradas.
+function _estClassificarAgora(){ return estqClassificar(_estProdutos(),_estMovs(),{hoje:_estHoje(),inicioSaidas:_estInicioSaidas(),cfg:_estCfg().classificacao,tiposValidos:EST_TIPOS}); }
+
+// ═══ Estado do modal ═══
+let _estAnexoPend=null, _estEditId=null, _estPick=null, _estLote=[], _estLoteSeq=0, _estModoLote=false, _estLoteRev=null;
+const EST_TURNOS_PADRAO=['T1','T2','T3'];
+function _estTurnos(){ const c=_estCfg(); return c.turnos&&c.turnos.length?c.turnos:EST_TURNOS_PADRAO; }
+function _estMsgModal(h){ const e=document.getElementById('em-msg'); if(e) e.innerHTML=h||''; }
+const _estIsoData=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const _estDataValida=s=>/^\d{4}-\d{2}-\d{2}$/.test(String(s||''))&&!isNaN(new Date(s+'T12:00:00'));
+
 function estAbrirMov(id,pre){
   const m=id?_estMovs().find(x=>x.id===id):null; if(id&&!m) return;
-  _estAnexoPend=null;
-  const prods=_estProdutos().slice().sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  _estAnexoPend=null; _estLoteRev=null; _estEditId=m?m.id:null;
   const v=m||{data:_estHoje(),tipo:'Saída',quantidade:'',area:'',motivo:'Consumo',...(pre||{})};
   const ajSinal=m&&m.tipo==='Ajuste'&&Number(m.quantidade)<0?'-':'+';
+  const cl=_estClassificarAgora();
+  _estPick={cl,tipo:v.tipo,busca:'',abertos:new Set(['estoque']),selId:'',trocando:false,permitidoId:m?m.produtoId:null};
+  _estLote=[]; _estLoteSeq=0; _estLote.push(_estLoteLinha({data:_estHoje()}));
+  const turnos=_estTurnos();
   openModal(m?'Editar movimentação':'Nova movimentação',`
+    <div id="em-form">
     <div class="form-row">
-      <div class="form-group"><label class="form-label">Data *</label><input type="date" class="form-input" id="em-data" value="${v.data||''}"/></div>
-      <div class="form-group"><label class="form-label">Tipo de movimentação *</label><select class="form-select" id="em-tipo" onchange="_estModalTipo()">${EST_TIPOS.map(t=>`<option${t===v.tipo?' selected':''}>${t}</option>`).join('')}</select></div></div>
-    <div class="form-row">
-      <div class="form-group" style="flex:2"><label class="form-label">Produto / item *</label><select class="form-select" id="em-prod" onchange="_estModalProd()">
-        <option value="">Selecione o produto</option>${prods.map(p=>`<option value="${p.id}"${p.id===v.produtoId?' selected':''}>${_estEsc(p.nome)}${p.codigo?' — '+_estEsc(p.codigo):''}</option>`).join('')}</select></div>
-      <div class="form-group"><label class="form-label">Código do item</label><input class="form-input" id="em-cod" placeholder="Digite o código" value="${_estEsc(v.codigo||'')}" oninput="_estModalCodigo()"/></div></div>
-    <div class="form-row">
-      <div class="form-group" id="em-sinal-g" style="display:none"><label class="form-label">Ajuste</label><select class="form-select" id="em-sinal" onchange="_estModalPrev()"><option value="+"${ajSinal==='+'?' selected':''}>Acréscimo (+)</option><option value="-"${ajSinal==='-'?' selected':''}>Redução (−)</option></select></div>
-      <div class="form-group"><label class="form-label">Quantidade *</label><input type="number" min="0" step="any" class="form-input" id="em-qtd" value="${v.quantidade!==''&&v.quantidade!=null?Math.abs(Number(v.quantidade)):''}" oninput="_estModalPrev()"/></div>
+      <div class="form-group"><label class="form-label">Tipo de movimentação *</label><select class="form-select" id="em-tipo" onchange="_estModalTipo()">${EST_TIPOS.map(t=>`<option${t===v.tipo?' selected':''}>${t}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Código do item</label><input class="form-input" id="em-cod" placeholder="Preenchimento automático" value="${_estEsc(v.codigo||'')}" oninput="_estModalCodigo()"/></div></div>
+    <div class="form-group"><label class="form-label">Produto / item *</label>
+      <input type="hidden" id="em-prod" value=""/>
+      <div id="em-pick" class="est-pick"></div></div>
+    <div id="em-prev" class="est-prev"></div>
+    <div id="em-unico">
+      <div class="form-row est-rowauto">
+        <div class="form-group"><label class="form-label">Data *</label><input type="date" class="form-input" id="em-data" value="${v.data||''}"/></div>
+        <div class="form-group" id="em-sinal-g" style="display:none"><label class="form-label">Ajuste</label><select class="form-select" id="em-sinal" onchange="_estModalPrev()"><option value="+"${ajSinal==='+'?' selected':''}>Acréscimo (+)</option><option value="-"${ajSinal==='-'?' selected':''}>Redução (−)</option></select></div>
+        <div class="form-group"><label class="form-label">Quantidade *</label><input type="number" min="0" step="any" class="form-input" id="em-qtd" value="${v.quantidade!==''&&v.quantidade!=null?Math.abs(Number(v.quantidade)):''}" oninput="_estModalPrev()"/></div></div>
+      <div class="form-row">
+        <div class="form-group" id="em-orig-g" style="display:none"><label class="form-label">Origem *</label><input class="form-input" id="em-orig" list="em-areas" value="${_estEsc(v.areaOrigem||'')}"/></div>
+        <div class="form-group"><label class="form-label" id="em-area-l">Área / Destino</label><input class="form-input" id="em-area" list="em-areas" value="${_estEsc(v.area||'')}"/></div></div>
+      <div class="form-row" id="em-saida-extra">
+        <div class="form-group"><label class="form-label">Turno</label><select class="form-select" id="em-turno"><option value="">—</option>${turnos.map(t=>`<option${t===v.turno?' selected':''}>${_estEsc(t)}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-label">Responsável</label><input class="form-input" id="em-resp" placeholder="Nome" value="${_estEsc(v.responsavel||'')}"/></div></div>
+    </div>
+    <div id="em-lote" style="display:none">
+      <div class="est-lote-tit">Retiradas a registrar</div>
+      <div class="est-lote-sub">Após selecionar o produto, informe as retiradas na tabela abaixo — pode lançar várias datas de uma vez, inclusive retroativas.</div>
+      <div class="est-lote-wrap"><table class="est-lote-tab"><thead><tr><th>Data</th><th>Turno</th><th>Qtd.</th><th>Área de destino</th><th>Responsável</th><th></th></tr></thead><tbody id="em-lote-corpo"></tbody></table></div>
+      <div id="em-lote-tot" class="est-lote-tot"></div>
+      <div class="est-lote-bts"><button type="button" class="est-btn-out" onclick="estLoteAdd()">+ Adicionar retirada</button><button type="button" class="est-btn-out" onclick="estLoteGerarAbrir()">▦ Gerar por período</button></div>
+      <div id="em-gerar" class="est-gerar" style="display:none"></div>
+    </div>
+    <div class="form-row est-rowauto">
+      <div class="form-group"><label class="form-label" id="em-mot-l">Motivo</label><input class="form-input" id="em-mot" list="em-motivos" value="${_estEsc(v.motivo||'')}"/></div>
       <div class="form-group"><label class="form-label">Unidade</label><input class="form-input" id="em-un" value="${_estEsc(v.unidade||'')}" placeholder="Un., rolos, caixas…"/></div>
       <div class="form-group"><label class="form-label">Valor unitário (R$)</label><input type="number" min="0" step="0.01" class="form-input" id="em-vu" value="${v.valorUnitario!=null?v.valorUnitario:''}"/></div></div>
-    <div id="em-prev" class="est-prev"></div>
-    <div class="form-row">
-      <div class="form-group" id="em-orig-g" style="display:none"><label class="form-label">Origem *</label><input class="form-input" id="em-orig" list="em-areas" value="${_estEsc(v.areaOrigem||'')}"/></div>
-      <div class="form-group"><label class="form-label" id="em-area-l">Área / Destino</label><input class="form-input" id="em-area" list="em-areas" value="${_estEsc(v.area||'')}"/></div>
-      <div class="form-group"><label class="form-label" id="em-mot-l">Motivo</label><input class="form-input" id="em-mot" list="em-motivos" value="${_estEsc(v.motivo||'')}"/></div></div>
     <datalist id="em-areas">${_estAreas().map(a=>`<option value="${_estEsc(a)}">`).join('')}</datalist>
     <datalist id="em-motivos">${_estMotivos().map(a=>`<option value="${_estEsc(a)}">`).join('')}</datalist>
     <div class="form-group"><label class="form-label">Observação</label><textarea class="form-textarea" id="em-obs" style="min-height:54px">${_estEsc(v.observacao||'')}</textarea></div>
-    <div class="form-group"><label class="form-label">Anexo (opcional, até 10 MB)</label>
+    <div class="form-group"><label class="form-label" id="em-anexo-l">Anexo (opcional, até 10 MB)</label>
       ${m&&m.anexo?`<div class="est-anexo-atual">📎 <button class="est-link" onclick="estVerAnexo('${m.id}')">${_estEsc(m.anexo.nome)}</button> <label style="font-size:11px;color:var(--muted);margin-left:8px"><input type="checkbox" id="em-anexo-rem"/> remover</label></div>`:''}
       <input type="file" id="em-anexo" class="form-input" onchange="_estAnexoPend=this.files[0]||null"/></div>
     <div id="em-msg" style="font-size:12px"></div>
-    ${m?`<div class="est-meta">Criada por ${_estEsc(m.usuario||'—')} em ${m.createdAt?new Date(m.createdAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'—'}${m.updatedAt&&m.updatedAt!==m.createdAt?` · alterada por ${_estEsc(m.updatedBy||'—')} em ${new Date(m.updatedAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`:''}</div>`:''}`,
-    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
-     <button class="btn btn-primary" id="em-btn" onclick="estSalvarMov(${m?`'${m.id}'`:'null'})">${m?'Salvar alterações':'Registrar movimentação'}</button>`,true);
+    ${m?`<div class="est-meta">Criada por ${_estEsc(m.usuario||'—')} em ${m.createdAt?new Date(m.createdAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'—'}${m.updatedAt&&m.updatedAt!==m.createdAt?` · alterada por ${_estEsc(m.updatedBy||'—')} em ${new Date(m.updatedAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}`:''}</div>`:''}
+    </div>
+    <div id="em-rev" style="display:none"></div>`,'',true);
+  document.getElementById('modal-box').classList.add('est-modal-mv');
+  document.getElementById('modal-title').innerHTML=`<span class="est-mt-ic">⇆</span><span class="est-mt-tx"><b>${m?'Editar movimentação':'Nova movimentação'}</b><small>Registre entradas e saídas de estoque</small></span>`;
+  // produto pré-selecionado (edição ou chamada com produtoId) — respeitando a regra do tipo
+  const pid=m?m.produtoId:(pre&&pre.produtoId), it=pid&&cl.porId.get(pid);
+  if(it){
+    const s=estqSelecionavel(v.tipo,it);
+    if(m||s.ok){ _estPick.selId=pid; document.getElementById('em-prod').value=pid; }
+    else _estMsgModal(`<span style="color:var(--red)">${_estEsc(it.nome)}: ${_estEsc(s.motivo)}.</span>`);
+  }
   _estModalTipo(); if(!m) _estModalProd(true); else _estModalPrev();
 }
+function _estRodape(modo,n){
+  const f=document.getElementById('modal-footer'); if(!f) return;
+  f.innerHTML=modo==='rev'
+    ? `<button class="btn btn-outline" onclick="estLoteVoltar()">Voltar</button><button class="btn btn-primary" id="em-btn" onclick="estLoteConfirmar()">Registrar ${n} ${n===1?'retirada':'retiradas'}</button>`
+    : modo==='lote'
+    ? `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button><button class="btn btn-primary" id="em-btn" onclick="estLoteContinuar()">Continuar</button>`
+    : `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button><button class="btn btn-primary" id="em-btn" onclick="estSalvarMov(${_estEditId?`'${_estEditId}'`:'null'})">${_estEditId?'Salvar alterações':'Registrar movimentação'}</button>`;
+}
 function _estModalTipo(){
-  const t=document.getElementById('em-tipo').value;
-  document.getElementById('em-sinal-g').style.display=t==='Ajuste'?'':'none';
-  document.getElementById('em-orig-g').style.display=t==='Transferência'?'':'none';
-  document.getElementById('em-area-l').textContent=t==='Transferência'?'Destino *':t==='Saída'?'Área / Destino *':'Área / Destino';
-  document.getElementById('em-mot-l').textContent=t==='Saída'?'Motivo *':'Motivo';
-  _estModalPrev();
+  const g=x=>document.getElementById(x), t=g('em-tipo').value, P=_estPick;
+  _estModoLote=!_estEditId&&t==='Saída';
+  g('em-sinal-g').style.display=t==='Ajuste'?'':'none';
+  g('em-orig-g').style.display=t==='Transferência'?'':'none';
+  g('em-area-l').textContent=t==='Transferência'?'Destino *':t==='Saída'?'Área / Destino *':'Área / Destino';
+  g('em-mot-l').textContent=t==='Saída'?'Motivo *':'Motivo';
+  g('em-unico').style.display=_estModoLote?'none':'';
+  g('em-saida-extra').style.display=(t==='Saída'&&!_estModoLote)?'':'none';
+  g('em-lote').style.display=_estModoLote?'':'none';
+  g('em-anexo-l').textContent=_estModoLote?'Anexo (opcional, até 10 MB — fica na primeira retirada)':'Anexo (opcional, até 10 MB)';
+  if(P){
+    P.tipo=t;
+    const it=P.selId&&P.cl.porId.get(P.selId);
+    if(it&&P.selId!==P.permitidoId&&!estqSelecionavel(t,it).ok){            // o produto escolhido não vale para o novo tipo
+      _estMsgModal(`<span style="color:var(--red)">${_estEsc(it.nome)}: ${_estEsc(estqSelecionavel(t,it).motivo)}. Escolha outro produto.</span>`);
+      P.selId=''; P.trocando=true; g('em-prod').value='';
+    }
+  }
+  if(!document.getElementById('em-rev')||document.getElementById('em-rev').style.display==='none') _estRodape(_estModoLote?'lote':'unico');
+  _estPickRender(); _estLoteRender(); _estModalPrev();
+}
+
+// ═══ Seletor de produto (3 grupos + inconsistentes, busca global) ═══
+const _estPickGrupoNome={estoque:'Em estoque',pouco:'Pouco utilizado',sem:'Sem estoque',inconsistente:'Inconsistente'};
+function _estPickItem(it,mostrarGrupo){
+  const P=_estPick, s=estqSelecionavel(P.tipo,it), bloq=!s.ok&&it.id!==P.permitidoId;
+  const cls=it.saldo<0?'neg':it.saldo===0?'zero':'pos';
+  const sub=[`Código: ${_estEsc(it.codigo||'s/ código')}`];
+  if(mostrarGrupo) sub.push(`<span class="est-pick-tag g-${it.grupo}">${_estPickGrupoNome[it.grupo]}</span>`);
+  if(it.grupo==='pouco') sub.push(`${it.diasComSaida} dia(s) com saída em ${P.cl.cfg.janelaDias} dias`);
+  if(it.grupo==='inconsistente') sub.push(`<span class="neg">⚠ ${_estEsc(it.problemas.slice(0,2).join(' · '))}</span>`);
+  const tit=bloq?s.motivo:(!it.avaliavel&&it.grupo==='estoque'?'Histórico insuficiente para avaliar a frequência de uso: '+it.motivoNaoAvaliavel:'');
+  return `<button type="button" class="est-pick-it${bloq?' bloq':''}${P.selId===it.id?' on':''}" data-id="${_estEsc(it.id)}" ${tit?`title="${_estEsc(tit)}"`:''} onclick="estPickEscolher('${it.id}')">
+    <span class="est-pick-ic">${it.grupo==='inconsistente'?'⚠️':'📦'}</span><span class="est-pick-nm"><b>${_estEsc(it.nome)}</b><small>${sub.join(' · ')}</small></span>
+    <span class="est-pick-sd ${cls}">${_estEsc(_estNum(it.saldo))} ${_estEsc(it.unidade||'')}</span></button>`;
+}
+function _estPickLista(){
+  const el=document.getElementById('em-pick-lista'), P=_estPick; if(!el||!P) return;
+  const q=P.busca.trim(); if(P._bq!==q){ P._bq=q; el.scrollTop=0; }
+  if(q){
+    const r=estqBuscar(P.cl,q,P.tipo);
+    el.innerHTML=`<div class="est-pick-gh sem-btn"><span><b>Resultados da busca</b><small>em todos os produtos cadastrados</small></span><span class="est-pick-n">${r.length} ${r.length===1?'item':'itens'}</span></div>`
+      +(r.length?r.map(it=>_estPickItem(it,true)).join(''):'<div class="est-pick-vazio">Nenhum produto encontrado para essa busca.</div>');
+    return;
+  }
+  el.innerHTML=['estoque','pouco','sem','inconsistente'].filter(gk=>gk!=='inconsistente'||P.cl.grupos.inconsistente.length).map(gk=>{
+    const G=ESTQ_GRUPOS[gk], itens=P.cl.grupos[gk], aberto=P.abertos.has(gk), n=itens.length;
+    return `<div class="est-pick-g${aberto?' aberto':''}${gk==='inconsistente'?' warn':''}"><button type="button" class="est-pick-gh" onclick="estPickAlternar('${gk}')"><span class="est-chev">${aberto?'▾':'›'}</span>
+      <span><b>${G.titulo}</b>${G.sub(P.cl.cfg)?`<small>${_estEsc(G.sub(P.cl.cfg))}</small>`:''}</span><span class="est-pick-n">${n} ${n===1?'item':'itens'}</span></button>
+      ${aberto?(n?itens.map(it=>_estPickItem(it,false)).join(''):'<div class="est-pick-vazio">Nenhum produto neste grupo.</div>'):''}</div>`;
+  }).join('');
+}
+function _estPickRender(){
+  const el=document.getElementById('em-pick'), P=_estPick; if(!el||!P) return;
+  const sel=P.selId&&P.cl.porId.get(P.selId);
+  if(sel&&!P.trocando){
+    const cls=sel.saldo<0?'neg':sel.saldo===0?'zero':'pos';
+    el.className='est-pick sel';
+    el.innerHTML=`<div class="est-pick-cart"><span class="est-pick-ic">📦</span><span class="est-pick-nm"><b>${_estEsc(sel.nome)}</b><small>Código: ${_estEsc(sel.codigo||'s/ código')} · ${_estPickGrupoNome[sel.grupo]}</small></span>
+      <span class="est-pick-sd ${cls}">${_estEsc(_estNum(sel.saldo))} ${_estEsc(sel.unidade||'')}</span><button type="button" class="est-btn-out" onclick="estPickTrocar()">Trocar</button></div>`;
+    return;
+  }
+  el.className='est-pick';
+  el.innerHTML=`<div class="est-pick-busca"><span>🔍</span><input id="em-busca" autocomplete="off" placeholder="Buscar produto pelo nome ou código..." value="${_estEsc(P.busca)}" oninput="estPickBuscar(this.value)"/></div><div id="em-pick-lista"></div>`;
+  _estPickLista();
+}
+function estPickBuscar(v){ _estPick.busca=String(v||''); _estPickLista(); }
+function estPickAlternar(gk){ const P=_estPick; P.abertos.has(gk)?P.abertos.delete(gk):P.abertos.add(gk); _estPickLista(); }
+function estPickTrocar(){ const P=_estPick; P.selId=''; P.trocando=true; document.getElementById('em-prod').value=''; _estMsgModal(''); _estPickRender(); _estModalPrev(); const b=document.getElementById('em-busca'); if(b) b.focus(); }
+function estPickEscolher(id){
+  const P=_estPick, it=P.cl.porId.get(id); if(!it) return;
+  const s=estqSelecionavel(P.tipo,it);
+  if(!s.ok&&id!==P.permitidoId){ _estMsgModal(`<span style="color:var(--red)">${_estEsc(it.nome)}: ${_estEsc(s.motivo)}.</span>`); return; }
+  _estMsgModal(''); P.selId=id; P.trocando=false; document.getElementById('em-prod').value=id;
+  _estModalProd(); _estPickRender();
 }
 function _estModalProd(soVazios){
   const p=_estProdutos().find(x=>x.id===document.getElementById('em-prod').value);
@@ -6218,21 +6503,194 @@ function _estModalProd(soVazios){
   _estModalPrev();
 }
 function _estModalCodigo(){
-  const p=_estProdPorCodigo(document.getElementById('em-cod').value);
-  if(p){ document.getElementById('em-prod').value=p.id; _estModalProd(); }
+  const p=_estProdPorCodigo(document.getElementById('em-cod').value), P=_estPick; if(!p||!P) return;
+  const it=P.cl.porId.get(p.id), s=it?estqSelecionavel(P.tipo,it):{ok:true};
+  if(it&&!s.ok&&p.id!==P.permitidoId){ _estMsgModal(`<span style="color:var(--red)">${_estEsc(it.nome)}: ${_estEsc(s.motivo)}.</span>`); return; }
+  _estMsgModal(''); P.selId=p.id; P.trocando=false; document.getElementById('em-prod').value=p.id; _estModalProd(); _estPickRender();
 }
 function _estModalPrev(){
   const el=document.getElementById('em-prev'); if(!el) return;
+  const dica='<small class="est-prev-dica">Ao selecionar um produto, o sistema preenche o código, a unidade e o saldo automaticamente.</small>';
   const p=_estProdutos().find(x=>x.id===document.getElementById('em-prod').value);
-  if(!p){ el.innerHTML=''; return; }
-  const t=document.getElementById('em-tipo').value, q=Number(document.getElementById('em-qtd').value)||0;
+  if(!p){ el.innerHTML=dica; return; }
+  const t=document.getElementById('em-tipo').value, q=_estModoLote?_estLoteTotal(true):(Number(document.getElementById('em-qtd').value)||0);
   const sinal=document.getElementById('em-sinal').value;
   const atual=_estSaldo(p);
   const ef=t==='Entrada'?q:t==='Saída'?-q:t==='Ajuste'?(sinal==='-'?-q:q):0;
   const depois=atual+ef;
-  el.innerHTML=`Estoque atual de <b>${_estEsc(p.nome)}</b>: <b>${_estNum(atual)}</b> ${_estEsc(p.unidade||'')}${q?` → após lançar: <b class="${depois<0?'neg':''}">${_estNum(depois)}</b>${depois<0?' <span class="neg">⚠ ficará negativo</span>':''}`:''}${t==='Transferência'?' · transferência não altera o total':''}`;
+  el.innerHTML=`📦 Estoque atual de <b>${_estEsc(p.nome)}</b>: <b>${_estNum(atual)}</b> ${_estEsc(p.unidade||'')}${q?` → após lançar: <b class="${depois<0?'neg':''}">${_estNum(depois)}</b>${depois<0?' <span class="neg">⚠ ficará negativo</span>':''}`:''}${t==='Transferência'?' · transferência não altera o total':''}${dica}`;
 }
+
+// ═══ Retiradas em lote ═══
+function _estLoteLinha(base){ return {k:++_estLoteSeq,data:'',turno:_estTurnos()[0],qtd:'',area:'',resp:'',inv:{},...base}; }
+const _estLoteVazia=r=>!String(r.qtd).trim()&&!String(r.area).trim()&&!String(r.resp).trim();
+function _estLoteTotal(semDom){
+  const tot=_estLote.reduce((s,r)=>s+(Number(r.qtd)>0?Number(r.qtd):0),0), n=_estLote.filter(r=>Number(r.qtd)>0).length;
+  if(!semDom){ const el=document.getElementById('em-lote-tot'); if(el){ const un=(document.getElementById('em-un')||{}).value||''; el.innerHTML=n?`<b>${n}</b> ${n===1?'retirada':'retiradas'} · total <b>${_estNum(Math.round(tot*1000)/1000)}</b> ${_estEsc(un)}`:''; } }
+  return tot;
+}
+function _estLoteRender(){
+  const c=document.getElementById('em-lote-corpo'); if(!c) return;
+  const turnos=_estTurnos();
+  c.innerHTML=_estLote.map(r=>`<tr data-k="${r.k}">
+    <td><input type="date" class="form-input${r.inv.data?' inv':''}" value="${_estEsc(r.data)}" onchange="estLoteSet(${r.k},'data',this.value)"/></td>
+    <td><select class="form-select" onchange="estLoteSet(${r.k},'turno',this.value)">${turnos.map(t=>`<option${t===r.turno?' selected':''}>${_estEsc(t)}</option>`).join('')}</select></td>
+    <td><input type="number" min="0" step="any" class="form-input${r.inv.qtd?' inv':''}" placeholder="0" value="${_estEsc(r.qtd)}" oninput="estLoteSet(${r.k},'qtd',this.value)"/></td>
+    <td><input class="form-input${r.inv.area?' inv':''}" list="em-areas" placeholder="Selecionar área" value="${_estEsc(r.area)}" oninput="estLoteSet(${r.k},'area',this.value)"/></td>
+    <td><input class="form-input" placeholder="Nome" value="${_estEsc(r.resp)}" oninput="estLoteSet(${r.k},'resp',this.value)"/></td>
+    <td><button type="button" class="est-lote-x" title="Remover esta retirada" onclick="estLoteDel(${r.k})">✕</button></td></tr>`).join('');
+  _estLoteTotal();
+}
+function estLoteSet(k,campo,val){
+  const r=_estLote.find(x=>x.k===k); if(!r) return; r[campo]=val; delete r.inv[campo];
+  const inp=document.querySelector(`#em-lote-corpo tr[data-k="${k}"] .inv`); if(inp&&(campo==='data'||campo==='qtd'||campo==='area')) inp.classList.remove('inv');
+  _estLoteTotal(); _estModalPrev();
+}
+function estLoteAdd(){
+  const ult=_estLote[_estLote.length-1];
+  let data=_estHoje();
+  if(ult&&_estDataValida(ult.data)){ const d=_estqAddDias(ult.data,1); data=d>_estHoje()?ult.data:d; }
+  _estLote.push(_estLoteLinha({data,turno:ult?ult.turno:_estTurnos()[0],area:ult?ult.area:'',resp:ult?ult.resp:''}));
+  _estLoteRender(); const w=document.querySelector('.est-lote-wrap'); if(w) w.scrollTop=w.scrollHeight;
+}
+function estLoteDel(k){ _estLote=_estLote.filter(r=>r.k!==k); if(!_estLote.length) _estLote.push(_estLoteLinha({data:_estHoje()})); _estLoteRender(); _estModalPrev(); }
+const _estDiasSemana=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+function estLoteGerarAbrir(){
+  const el=document.getElementById('em-gerar'); if(!el) return;
+  if(el.style.display!=='none'){ el.style.display='none'; return; }
+  const hoje=_estHoje(), ini=hoje.slice(0,8)+'01', ult=_estLote[_estLote.length-1]||{};
+  el.innerHTML=`<div class="est-gerar-tit">Gerar retiradas por período</div>
+    <div class="form-row est-rowauto"><div class="form-group"><label class="form-label">De *</label><input type="date" class="form-input" id="eg-de" value="${ini}" onchange="estLoteGerarInfo()"/></div>
+      <div class="form-group"><label class="form-label">Até *</label><input type="date" class="form-input" id="eg-ate" value="${hoje}" onchange="estLoteGerarInfo()"/></div>
+      <div class="form-group"><label class="form-label">Turno</label><select class="form-select" id="eg-turno">${_estTurnos().map(t=>`<option>${_estEsc(t)}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Qtd. por dia *</label><input type="number" min="0" step="any" class="form-input" id="eg-qtd" placeholder="0" oninput="estLoteGerarInfo()"/></div></div>
+    <div class="form-row"><div class="form-group"><label class="form-label">Área de destino</label><input class="form-input" id="eg-area" list="em-areas" value="${_estEsc(ult.area||'')}"/></div>
+      <div class="form-group"><label class="form-label">Responsável</label><input class="form-input" id="eg-resp" value="${_estEsc(ult.resp||'')}"/></div></div>
+    <div class="est-gerar-dias"><span>Dias da semana:</span>${_estDiasSemana.map((d,i)=>`<label><input type="checkbox" class="eg-dia" value="${i}" checked onchange="estLoteGerarInfo()"/>${d}</label>`).join('')}</div>
+    <div id="eg-info" class="est-gerar-info"></div>
+    <div class="est-lote-bts"><button type="button" class="est-btn-y" onclick="estLoteGerar()">Gerar retiradas</button><button type="button" class="est-btn-out" onclick="estLoteGerarAbrir()">Fechar</button></div>`;
+  el.style.display=''; estLoteGerarInfo();
+}
+function _estGerarDatas(){
+  const g=x=>document.getElementById(x), de=g('eg-de').value, ate=g('eg-ate').value;
+  const dias=[...document.querySelectorAll('.eg-dia:checked')].map(x=>Number(x.value));
+  if(!_estDataValida(de)||!_estDataValida(ate)) return {erro:'Informe as datas "De" e "Até".'};
+  if(de>ate) return {erro:'A data inicial não pode ser depois da final.'};
+  if(!dias.length) return {erro:'Marque ao menos um dia da semana.'};
+  const out=[]; let d=_estqD(de); const fim=_estqD(ate);
+  while(d<=fim){ if(dias.includes(d.getDay())) out.push(_estIsoData(d)); d.setDate(d.getDate()+1); if(out.length>366) return {erro:'O período gera mais de 366 retiradas. Reduza o intervalo.'}; }
+  return {datas:out};
+}
+function estLoteGerarInfo(){
+  const el=document.getElementById('eg-info'); if(!el) return;
+  const r=_estGerarDatas(), q=Number(document.getElementById('eg-qtd').value)||0;
+  el.innerHTML=r.erro?`<span style="color:var(--red)">${r.erro}</span>`:`Serão geradas <b>${r.datas.length}</b> ${r.datas.length===1?'retirada':'retiradas'} (${fmtDate(r.datas[0]||'')} a ${fmtDate(r.datas[r.datas.length-1]||'')})${q?` · total <b>${_estNum(Math.round(q*r.datas.length*1000)/1000)}</b>`:''}. Depois você pode ajustar cada linha.`;
+}
+function estLoteGerar(){
+  const g=x=>document.getElementById(x), r=_estGerarDatas(), q=Number(g('eg-qtd').value);
+  if(r.erro){ g('eg-info').innerHTML=`<span style="color:var(--red)">${r.erro}</span>`; return; }
+  if(!(q>0)){ g('eg-info').innerHTML='<span style="color:var(--red)">Informe a quantidade por dia.</span>'; return; }
+  if(!r.datas.length){ g('eg-info').innerHTML='<span style="color:var(--red)">Nenhum dia do período coincide com os dias da semana marcados.</span>'; return; }
+  _estLote=_estLote.filter(x=>!_estLoteVazia(x));                       // descarta a linha em branco inicial
+  r.datas.forEach(d=>_estLote.push(_estLoteLinha({data:d,turno:g('eg-turno').value,qtd:String(q),area:g('eg-area').value.trim(),resp:g('eg-resp').value.trim()})));
+  g('em-gerar').style.display='none'; _estLoteRender(); _estModalPrev();
+  const w=document.querySelector('.est-lote-wrap'); if(w) w.scrollTop=w.scrollHeight;
+}
+
+// ═══ Revisão (botão "Continuar") e gravação em lote ═══
+function _estLoteAnalisar(p,linhas){
+  const hoje=_estHoje(), ord=linhas.slice().sort((a,b)=>String(a.data).localeCompare(String(b.data))||String(a.turno).localeCompare(String(b.turno)));
+  const movs=_estMovs(), total=ord.reduce((s,r)=>s+r.q,0), saldoAtual=_estSaldo(p,null,movs);
+  // saldo ao longo do tempo: nas datas da carga e em toda movimentação posterior do produto (retroativo reduz o saldo dali em diante)
+  const dmin=ord[0].data, datas=new Set(ord.map(r=>r.data)); datas.add(hoje);
+  movs.filter(m=>m.produtoId===p.id&&m.data>=dmin&&m.data<=hoje).forEach(m=>datas.add(m.data));
+  let min=null, primeiraNeg=null; [...datas].sort().forEach(d=>{ const acum=ord.filter(r=>r.data<=d).reduce((s,r)=>s+r.q,0), s=Math.round((_estSaldo(p,d,movs)-acum)*1000)/1000; if(s<0&&!primeiraNeg) primeiraNeg=d; if(!min||s<min.valor) min={data:d,valor:s}; });
+  const jaLancada=new Set(), dupLote=new Set(), seen=new Map();
+  ord.forEach(r=>{
+    if(movs.some(m=>m.produtoId===p.id&&m.tipo==='Saída'&&m.data===r.data&&Number(m.quantidade)===r.q&&(m.area||'')===r.area)) jaLancada.add(r.k);
+    const key=[r.data,r.turno,r.area,r.q].join('|'); if(seen.has(key)){ dupLote.add(r.k); dupLote.add(seen.get(key)); } else seen.set(key,r.k);
+  });
+  return {p,ord,total,saldoAtual,saldoApos:Math.round((saldoAtual-total)*1000)/1000,min,primeiraNeg,jaLancada,dupLote,
+    futuras:new Set(ord.filter(r=>r.data>hoje).map(r=>r.k)), semControle:new Set(ord.filter(r=>!_estControlado(_estMesKey(r.data))).map(r=>r.k))};
+}
+function estLoteContinuar(){
+  const g=x=>document.getElementById(x), p=_estProdutos().find(x=>x.id===g('em-prod').value), erros=[];
+  if(!p) erros.push('produto');
+  const linhas=_estLote.filter(r=>!_estLoteVazia(r));
+  _estLote.forEach(r=>{ r.inv={}; });
+  if(!linhas.length) erros.push('ao menos uma retirada (quantidade e área)');
+  linhas.forEach(r=>{ if(!_estDataValida(r.data)) r.inv.data=true; if(!(Number(r.qtd)>0)) r.inv.qtd=true; if(!String(r.area).trim()) r.inv.area=true; });
+  const ruins=linhas.filter(r=>r.inv.data||r.inv.qtd||r.inv.area);
+  if(ruins.length) erros.push(`${ruins.length} ${ruins.length===1?'retirada incompleta':'retiradas incompletas'} (data, quantidade e área são obrigatórias)`);
+  if(!g('em-mot').value.trim()) erros.push('motivo');
+  _estLoteRender();
+  if(erros.length){ _estMsgModal(`<span style="color:var(--red)">Preencha: ${erros.join('; ')}.</span>`); const x=document.querySelector('#em-lote-corpo .inv'); if(x) x.focus(); return; }
+  if(_estPick&&_estPick.cl.porId.get(p.id)&&!estqSelecionavel('Saída',_estPick.cl.porId.get(p.id)).ok){ _estMsgModal(`<span style="color:var(--red)">${_estEsc(p.nome)}: ${_estEsc(estqSelecionavel('Saída',_estPick.cl.porId.get(p.id)).motivo)}.</span>`); return; }
+  const rows=linhas.map(r=>({k:r.k,data:r.data,turno:r.turno,q:Number(r.qtd),area:String(r.area).trim(),resp:String(r.resp).trim()}));
+  _estLoteRev=_estLoteAnalisar(p,rows); _estMsgModal('');
+  const R=_estLoteRev, un=g('em-un').value.trim()||p.unidade||'', n=R.ord.length;
+  const av=[];
+  if(R.saldoApos<0) av.push(`O estoque ficará <b>negativo</b> ao final: ${_estNum(R.saldoApos)} ${_estEsc(un)}.`);
+  if(R.min&&R.min.valor<0&&!(R.saldoApos<0&&R.min.data===R.ord[R.ord.length-1].data)) av.push(`O saldo ficaria <b>negativo a partir de ${fmtDate(R.primeiraNeg)}</b>${R.min.data!==R.primeiraNeg?`, chegando a ${_estNum(R.min.valor)} ${_estEsc(un)} em ${fmtDate(R.min.data)}`:` (${_estNum(R.min.valor)} ${_estEsc(un)})`} — pode indicar entrada não lançada ou data errada.`);
+  if(R.jaLancada.size) av.push(`<b>${R.jaLancada.size}</b> ${R.jaLancada.size===1?'retirada parece já lançada':'retiradas parecem já lançadas'} (mesmo produto, data, quantidade e área).`);
+  if(R.dupLote.size) av.push(`<b>${R.dupLote.size}</b> linhas repetidas nesta lista (mesma data, turno, área e quantidade).`);
+  if(R.futuras.size) av.push(`${R.futuras.size} ${R.futuras.size===1?'retirada com data futura (só afeta o saldo a partir da data)':'retiradas com data futura (só afetam o saldo a partir de cada data)'}.`);
+  if(R.semControle.size) av.push(`${R.semControle.size} ${R.semControle.size===1?'retirada em mês':'retiradas em meses'} anterior(es) ao início do controle de saídas — entram no saldo, mas não nos indicadores de consumo.`);
+  R.avisos=av;
+  const flag=r=>[R.jaLancada.has(r.k)?'<span class="est-rev-flag">já lançada?</span>':'',R.dupLote.has(r.k)?'<span class="est-rev-flag">repetida</span>':'',R.futuras.has(r.k)?'<span class="est-rev-flag">data futura</span>':''].join('');
+  g('em-rev').innerHTML=`<div class="est-rev">
+    <div class="est-rev-top"><div><small>Produto</small><b>${_estEsc(p.nome)}</b><small>Código: ${_estEsc(p.codigo||'s/ código')}</small></div>
+      <div><small>Retiradas</small><b>${n}</b><small>${fmtDate(R.ord[0].data)}${R.ord[n-1].data!==R.ord[0].data?' a '+fmtDate(R.ord[n-1].data):''}</small></div>
+      <div><small>Total retirado</small><b>${_estNum(Math.round(R.total*1000)/1000)} ${_estEsc(un)}</b></div>
+      <div><small>Saldo</small><b>${_estNum(R.saldoAtual)} → <span class="${R.saldoApos<0?'neg':''}">${_estNum(R.saldoApos)}</span> ${_estEsc(un)}</b></div></div>
+    ${av.length?`<div class="est-rev-aviso"><b>Atenção</b><ul>${av.map(a=>`<li>${a}</li>`).join('')}</ul></div>`:'<div class="est-rev-ok">✓ Nenhum alerta: o saldo se mantém positivo em todo o período.</div>'}
+    <div class="est-lote-wrap"><table class="est-lote-tab est-rev-tab"><thead><tr><th>Data</th><th>Turno</th><th class="num">Qtd.</th><th>Área de destino</th><th>Responsável</th><th></th></tr></thead><tbody>
+      ${R.ord.map(r=>`<tr><td>${fmtDate(r.data)}</td><td>${_estEsc(r.turno)}</td><td class="num">${_estNum(r.q)}</td><td>${_estEsc(r.area)}</td><td>${_estEsc(r.resp||'—')}</td><td>${flag(r)}</td></tr>`).join('')}</tbody></table></div>
+    <div class="est-meta">Motivo: ${_estEsc(g('em-mot').value.trim())}${g('em-obs').value.trim()?' · Obs.: '+_estEsc(g('em-obs').value.trim()):''}${_estAnexoPend?' · 📎 '+_estEsc(_estAnexoPend.name)+' (na 1ª retirada)':''}</div></div>`;
+  g('em-form').style.display='none'; g('em-rev').style.display=''; _estRodape('rev',n);
+  const box=document.getElementById('modal-box'); if(box) box.scrollTop=0;
+}
+function estLoteVoltar(){
+  document.getElementById('em-rev').style.display='none'; document.getElementById('em-form').style.display=''; _estLoteRev=null; _estRodape('lote');
+}
+function _estGravarLoteSeguro(recs){
+  const antes=DB.get('estoqueMovimentos')||{};
+  return Promise.resolve(_estGravarLote(recs)).catch(e=>{ DB_CACHE.estoqueMovimentos=antes; throw e; });   // multi-caminho: grava tudo ou nada
+}
+async function estLoteConfirmar(){
+  const R=_estLoteRev; if(!R) return;
+  const g=x=>document.getElementById(x), p=R.p;
+  if(R.avisos.length&&(R.saldoApos<0||(R.min&&R.min.valor<0)||R.jaLancada.size||R.dupLote.size)){
+    const crit=[]; if(R.saldoApos<0||(R.min&&R.min.valor<0)) crit.push(`o estoque de "${p.nome}" ficará negativo (${_estNum(R.min&&R.min.valor<R.saldoApos?R.min.valor:R.saldoApos)} ${p.unidade||''})`); if(R.jaLancada.size) crit.push(`${R.jaLancada.size} retirada(s) parecem já lançadas`); if(R.dupLote.size) crit.push(`há linhas repetidas na lista`);
+    if(!confirm(`Atenção: ${crit.join('; ')}.\n\nIsso costuma indicar entrada não lançada, estoque inicial desatualizado ou lançamento em duplicidade. Deseja registrar mesmo assim?`)) return;
+  }
+  const agora=new Date().toISOString(), usuario=_estUsuario(), loteId=uid();
+  const vu=Number(g('em-vu').value)||0, un=g('em-un').value.trim()||p.unidade||'', motivo=g('em-mot').value.trim(), obs=g('em-obs').value.trim();
+  const usados=new Set(), novoId=()=>{ let i; do{ i=uid(); }while(usados.has(i)); usados.add(i); return i; };
+  const recs=R.ord.map(r=>({id:novoId(),data:r.data,mes:_estMesKey(r.data),tipo:'Saída',produtoId:p.id,codigo:p.codigo||'',produto:p.nome,categoria:p.categoria||'',
+    quantidade:r.q,unidade:un,valorUnitario:vu,valorTotal:Math.round(r.q*vu*100)/100,area:r.area,areaOrigem:'',motivo,observacao:obs,turno:r.turno,responsavel:r.resp,loteId,
+    usuario,createdAt:agora,updatedAt:agora,updatedBy:usuario}));
+  const btn=g('em-btn'); btn.disabled=true; btn.textContent='Salvando…';
+  try{
+    if(_estAnexoPend){
+      if(_estAnexoPend.size>EST_ANEXO_MAX){ _estMsgModal('<span style="color:var(--red)">O anexo passa de 10 MB.</span>'); estLoteVoltar(); return; }
+      const up=uid(), url=await _lerArquivoComoBase64(_estAnexoPend), ref=fbEstAnexos.child(recs[0].id).child(up), total=Math.max(1,Math.ceil(url.length/PDF_PARTE_CHARS));
+      for(let i=0;i<total;i++) await ref.child('partes').child('p'+i).set(url.slice(i*PDF_PARTE_CHARS,(i+1)*PDF_PARTE_CHARS));
+      await ref.child('meta').set({totalPartes:total});
+      recs[0].anexo={nome:_estAnexoPend.name,tamanho:_estAnexoPend.size,tipo:_estAnexoPend.type||'application/octet-stream',uploadId:up};
+    }
+    await _estGravarLoteSeguro(recs);
+  }catch(e){ console.error(e); alert('⚠️ Não foi possível salvar as retiradas na nuvem. Nada foi registrado. Verifique a conexão e tente novamente.'); btn.disabled=false; btn.textContent=`Registrar ${recs.length} ${recs.length===1?'retirada':'retiradas'}`; return; }
+  _estLog('Criação',`Saída em lote · ${p.nome} (${p.codigo||'s/ código'}) · ${recs.length} ${recs.length===1?'retirada':'retiradas'} · ${_estNum(Math.round(R.total*1000)/1000)} ${un} · ${fmtDate(R.ord[0].data)}${R.ord[R.ord.length-1].data!==R.ord[0].data?' a '+fmtDate(R.ord[R.ord.length-1].data):''}`,{loteId,movIds:recs.map(r=>r.id)});
+  _estAnexoPend=null;
+  if(!_estAbertos) _estAbertos=new Set(); recs.forEach(r=>_estAbertos.add(r.mes));
+  const ano=Number(R.ord[0].data.slice(0,4)); if(ano!==_estFil.ano&&currentPage==='movimentacoes') _estFil.ano=ano;
+  closeModalDirect(); _estRender();
+}
+
+// ═══ Salvar movimentação única (Entrada / Ajuste / Transferência e edição) ═══
 async function estSalvarMov(id){
+  if(_estModoLote){ estLoteContinuar(); return; }
   const g=x=>document.getElementById(x);
   const msg=t=>{ g('em-msg').innerHTML=t; };
   const data=g('em-data').value, tipo=g('em-tipo').value, p=_estProdutos().find(x=>x.id===g('em-prod').value);
@@ -6242,9 +6700,12 @@ async function estSalvarMov(id){
   if(tipo==='Saída'&&!area) falta.push('área/destino'); if(tipo==='Saída'&&!motivo) falta.push('motivo');
   if(tipo==='Transferência'&&(!orig||!area)) falta.push('origem e destino');
   if(falta.length){ msg(`<span style="color:var(--red)">Preencha: ${falta.join(', ')}.</span>`); return; }
+  const antigo=id?_estMovs().find(x=>x.id===id):null;
+  // regra do tipo: produto sem estoque / inconsistente não pode ser usado em Saída (nem Transferência); edição do mesmo produto é preservada
+  const it=_estPick&&_estPick.cl.porId.get(p.id);
+  if(it&&!(antigo&&antigo.produtoId===p.id&&antigo.tipo===tipo)){ const s=estqSelecionavel(tipo,it); if(!s.ok){ msg(`<span style="color:var(--red)">${_estEsc(p.nome)}: ${_estEsc(s.motivo)}.</span>`); return; } }
   const quantidade=tipo==='Ajuste'&&g('em-sinal').value==='-'?-qAbs:qAbs;
   const vu=Number(g('em-vu').value)||0;
-  const antigo=id?_estMovs().find(x=>x.id===id):null;
   // alerta de estoque negativo
   const movsSem=_estMovs().filter(x=>x.id!==id);
   const efeito=_estEfeito({tipo,quantidade});
@@ -6254,6 +6715,7 @@ async function estSalvarMov(id){
   const rec={...(antigo||{}),id:id||uid(),data,mes:_estMesKey(data),tipo,produtoId:p.id,codigo:p.codigo||'',produto:p.nome,categoria:p.categoria||'',
     quantidade,unidade:g('em-un').value.trim()||p.unidade||'',valorUnitario:vu,valorTotal:Math.round(Math.abs(quantidade)*vu*100)/100,
     area,areaOrigem:tipo==='Transferência'?orig:'',motivo,observacao:g('em-obs').value.trim(),
+    turno:tipo==='Saída'?g('em-turno').value:'',responsavel:tipo==='Saída'?g('em-resp').value.trim():'',
     usuario:antigo?antigo.usuario:usuario,createdAt:antigo?antigo.createdAt:agora,updatedAt:agora,updatedBy:usuario};
   const btn=g('em-btn'); btn.disabled=true; btn.textContent='Salvando…';
   try{
@@ -6271,7 +6733,7 @@ async function estSalvarMov(id){
   }catch(e){ console.error(e); msg('<span style="color:var(--red)">Não foi possível enviar o anexo. A movimentação não foi salva.</span>'); btn.disabled=false; btn.textContent='Salvar'; return; }
   _estGravarMov(rec);
   if(antigo){
-    const campos=['data','tipo','produto','quantidade','unidade','valorUnitario','area','areaOrigem','motivo','observacao'];
+    const campos=['data','tipo','produto','quantidade','unidade','valorUnitario','area','areaOrigem','motivo','observacao','turno','responsavel'];
     const alt=campos.filter(c=>String(antigo[c]??'')!==String(rec[c]??'')).map(c=>({campo:c,de:antigo[c]??'',para:rec[c]??''}));
     if(alt.length||_estAnexoPend) _estLog('Edição',_estResumoMov(rec),{movId:rec.id,alteracoes:alt});
   } else _estLog('Criação',_estResumoMov(rec),{movId:rec.id});
@@ -7116,7 +7578,7 @@ function estSalvarProduto(id){
   const prods=_estProdutos().slice();
   if(codigo&&prods.some(p=>p.id!==id&&String(p.codigo||'').trim()===codigo)){ alert(`O código ${codigo} já está em outro produto.`); return; }
   const antigo=id?prods.find(p=>p.id===id):null;
-  const rec={...(antigo||{}),id:id||uid(),nome,codigo,categoria:g('ep-cat').value.trim(),unidade:g('ep-un').value.trim(),valorUnitario:Number(g('ep-vu').value)||0,
+  const rec={...(antigo||{}),...(antigo?{}:{criadoEm:_estHoje()}),id:id||uid(),nome,codigo,categoria:g('ep-cat').value.trim(),unidade:g('ep-un').value.trim(),valorUnitario:Number(g('ep-vu').value)||0,
     estoqueInicial:Number(g('ep-ini').value)||0,minimo:Number(g('ep-min').value)||0,maximo:Number(g('ep-max').value)||0,critico:g('ep-crit').checked,marca:g('ep-marca').value.trim(),obs:g('ep-obs').value.trim()};
   delete rec.atual;
   if(id) prods[prods.findIndex(p=>p.id===id)]=rec; else prods.push(rec);
@@ -7141,7 +7603,7 @@ function excluirEstoque(id){ estExcluirProduto(id); }
 function _estPgHistorico(){
   const log=Object.values(DB.get('estoqueHistorico')||{}).filter(e=>_estNoPeriodo(String(e.data||'').slice(0,10))).sort((a,b)=>String(b.data).localeCompare(String(a.data)));
   const cor={'Criação':'est-t-ent','Edição':'est-t-tra','Exclusão':'est-t-sai','Importação':'est-t-aju','Inventário':'est-t-aju','Produto':'est-t-tra','Configuração':'est-t-tra'};
-  const nomeCampo={data:'Data',tipo:'Tipo',produto:'Produto',quantidade:'Quantidade',unidade:'Unidade',valorUnitario:'Valor unitário',area:'Área/Destino',areaOrigem:'Origem',motivo:'Motivo',observacao:'Observação'};
+  const nomeCampo={data:'Data',tipo:'Tipo',produto:'Produto',quantidade:'Quantidade',unidade:'Unidade',valorUnitario:'Valor unitário',area:'Área/Destino',areaOrigem:'Origem',motivo:'Motivo',observacao:'Observação',turno:'Turno',responsavel:'Responsável'};
   return `<div class="est">
     ${_estCab('Histórico de alterações','Registro de quem criou, alterou, excluiu ou importou movimentações. Não pode ser apagado pela tela.','🕘',_estFiltroPeriodo())}
     <div class="est-card est-sec"><div class="est-tab-wrap"><table class="est-tab"><thead><tr><th>Data/hora</th><th>Usuário</th><th>Ação</th><th>Detalhe</th></tr></thead><tbody>
@@ -7210,9 +7672,9 @@ async function estExportarExcel(btn){
     // 1) Movimentações (filtros da tela)
     const movs=_estMovsFiltradas().sort((a,b)=>String(a.data).localeCompare(String(b.data)));
     aba('Movimentações',`Movimentações de Estoque — ${_estFil.ano}`,
-      [{t:'Data',w:12,f:'dd/mm/yyyy'},{t:'Mês',w:10},{t:'Tipo',w:14},{t:'Código',w:11},{t:'Item',w:30},{t:'Categoria',w:16},{t:'Quantidade',w:12,n:1,f:'#,##0.##'},{t:'Unidade',w:10},{t:'Valor unit. (R$)',w:14,n:1,f:'"R$" #,##0.00'},{t:'Valor total (R$)',w:15,n:1,f:'"R$" #,##0.00'},{t:'Área / Destino',w:22},{t:'Motivo',w:14},{t:'Observação',w:28},{t:'Usuário',w:18},{t:'Atualizado em',w:17}],
+      [{t:'Data',w:12,f:'dd/mm/yyyy'},{t:'Mês',w:10},{t:'Tipo',w:14},{t:'Código',w:11},{t:'Item',w:30},{t:'Categoria',w:16},{t:'Quantidade',w:12,n:1,f:'#,##0.##'},{t:'Unidade',w:10},{t:'Valor unit. (R$)',w:14,n:1,f:'"R$" #,##0.00'},{t:'Valor total (R$)',w:15,n:1,f:'"R$" #,##0.00'},{t:'Área / Destino',w:22},{t:'Turno',w:8},{t:'Responsável',w:18},{t:'Motivo',w:14},{t:'Observação',w:28},{t:'Usuário',w:18},{t:'Atualizado em',w:17}],
       movs.map(m=>[dt(m.data),_estMesCurto(m.mes),m.tipo,m.codigo||'',m.produto,m.categoria||'',m.tipo==='Saída'?-Math.abs(m.quantidade):Number(m.quantidade),m.unidade||'',Number(m.valorUnitario)||0,Number(m.valorTotal)||0,
-        m.tipo==='Transferência'?`${m.areaOrigem||'—'} → ${m.area||'—'}`:(m.area||''),m.motivo||'',m.observacao||'',m.updatedBy||m.usuario||'',m.updatedAt?new Date(m.updatedAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'']),
+        m.tipo==='Transferência'?`${m.areaOrigem||'—'} → ${m.area||'—'}`:(m.area||''),m.turno||'',m.responsavel||'',m.motivo||'',m.observacao||'',m.updatedBy||m.usuario||'',m.updatedAt?new Date(m.updatedAt).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'']),
       r=>{ const c=r.getCell(3), [bg,fg]=corTipo[c.value]||[C.cinzaF,C.cinza]; c.fill=fill(bg); c.font=fonte({bold:true,color:{argb:fg}}); c.alignment={vertical:'top',horizontal:'center'};
         r.getCell(7).font=fonte({bold:true,color:{argb:r.getCell(7).value<0?C.verm:'FF111111'}}); r.getCell(5).font=fonte({bold:true}); });
     // 2) Resumo mensal
