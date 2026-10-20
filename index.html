@@ -713,6 +713,65 @@ button.dr-kpi:hover{border-color:var(--black);}
 .eq-upd-txt{font-size:13px;color:#323338;margin-top:3px;white-space:pre-line;}
 .eq-upd-rod{font-size:11px;color:#9699A6;margin-top:10px;}
 .eq-vazio{padding:30px;text-align:center;color:#676879;}
+/* ── Plano de Ação da Equipe: conclusão, SLA (farol), histórico e indicadores ── */
+.eq-tab{table-layout:fixed;width:100%;min-width:1040px;}
+.eq-tab thead th:nth-child(2){width:112px;} .eq-tab thead th:nth-child(3){width:112px;} .eq-tab thead th:nth-child(4){width:84px;} .eq-tab thead th:nth-child(5){width:112px;}
+.eq-tab thead th:nth-child(6){width:88px;} .eq-tab thead th:nth-child(7){width:142px;} .eq-tab thead th:nth-child(8){width:92px;} .eq-tab thead th:nth-child(9){width:128px;} .eq-tab thead th:nth-child(10){width:68px;}
+.eq-tab .eq-c-tit{min-width:0;} .eq-tab .eq-c-pes,.eq-tab .eq-c-lbl,.eq-tab .eq-c-data,.eq-tab .eq-c-conc,.eq-tab .eq-c-sla,.eq-tab .eq-c-upd,.eq-tab .eq-c-acao,.eq-tab .eq-c-com{width:auto;}
+.eq-tab .eq-cel-btn span{max-width:64px;} .eq-tab .eq-c-lbl{font-size:12px;line-height:1.15;padding:0 4px;} .eq-tab .eq-c-upd{white-space:normal!important;font-size:10.5px!important;line-height:1.2;}
+.eq-tab .eq-tit{padding:0 10px;line-height:1.3;height:auto;min-height:38px;white-space:normal;}
+.eq-c-conc{font-size:12px!important;color:#323338;} .eq-nd{color:#B0B3BF;}
+.eq-c-sla{padding:0 5px!important;}
+.eq-sla{display:inline-flex;align-items:center;gap:7px;padding:4px 10px 4px 5px;border-radius:14px;border:none;font-family:'Inter',sans-serif;font-size:11.5px;font-weight:700;cursor:pointer;text-align:left;line-height:1.15;}
+.eq-sla i{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:10px;font-weight:800;flex-shrink:0;color:#fff;}
+.eq-sla small{display:block;font-size:10px;font-weight:600;opacity:.85;}
+.eq-sla-verde{background:#E1F7EB;color:#0A6B43;} .eq-sla-verde i{background:#00C875;}
+.eq-sla-amarelo{background:#FFF1BF;color:#7A5600;} .eq-sla-amarelo i{background:#E8A800;}
+.eq-sla-vermelho{background:#FDE3E8;color:#B3213A;} .eq-sla-vermelho i{background:#E2445C;}
+.eq-sla-cinza{background:#EEF0F4;color:#5F6270;} .eq-sla-cinza i{background:#9CA0AE;}
+.eq-sla:hover{filter:brightness(.96);} .eq-sla-p{padding:2px 8px 2px 4px;font-size:10.5px;} .eq-sla-p i{width:15px;height:15px;font-size:9px;}
+.eq-c-acao{white-space:nowrap;}
+.eq-concluir{height:28px;padding:0 12px;border:none;border-radius:5px;background:#0073EA;color:#fff;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;}
+.eq-concluir:hover{background:#0060B9;}
+.eq-done{height:28px;padding:0 10px;border:1px solid #BFE9D3;border-radius:5px;background:#E9F9F1;color:#0A6B43;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;}
+.eq-regs{height:28px;padding:0 9px;border:1px dashed #9CA0AE;border-radius:5px;background:#fff;color:#5F6270;font-size:11px;font-family:'Inter',sans-serif;cursor:pointer;}
+.eq-reab{border:none;background:none;color:#8B8C99;font-size:14px;cursor:pointer;padding:2px 5px;border-radius:4px;} .eq-reab:hover{background:#E6E9EF;color:#323338;}
+.eq-c-com{white-space:nowrap;}
+.eq-hist{border:none;background:none;cursor:pointer;font-size:14px;opacity:.55;padding:0 3px;} .eq-hist:hover{opacity:1;}
+.eq-card-acao{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:9px;padding-top:8px;border-top:1px solid #F0F1F4;}
+.eq-card-acao .eq-concluir{height:24px;padding:0 10px;font-size:11px;} .eq-card-conc{font-size:11px;color:#0A6B43;font-weight:600;}
+.eq-toast{position:fixed;right:20px;bottom:24px;z-index:5000;background:#1F2937;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,.25);opacity:0;transform:translateY(10px);transition:all .25s;max-width:360px;border-left:5px solid #00C875;}
+.eq-toast.on{opacity:1;transform:none;} .eq-toast.atraso{border-left-color:#E2445C;} .eq-toast.info{border-left-color:#579BFC;}
+.eqc-tarefa{font-weight:700;font-size:14px;margin-bottom:12px;color:#323338;line-height:1.35;}
+.eqc-aviso{background:#FFF8E1;border:1px solid #FFE08A;color:#7A5600;border-radius:7px;padding:9px 12px;font-size:12px;margin-bottom:12px;}
+.eqc-dica{font-size:11px;color:#8B8C99;display:block;margin-top:4px;}
+.eqc-previa{margin:-4px 0 14px;font-size:12px;} .eqc-previa small{color:#8B8C99;margin-right:4px;}
+.eqc-pv{display:inline-block;padding:4px 10px;border-radius:12px;font-weight:700;font-size:12px;} .eqc-pv.verde{background:#E1F7EB;color:#0A6B43;} .eqc-pv.vermelho{background:#FDE3E8;color:#B3213A;} .eqc-pv.cinza{background:#EEF0F4;color:#5F6270;}
+.eqc-msg{color:#C81E1E;font-size:12px;font-weight:600;min-height:16px;}
+.eqc-ok{background:#FFE600!important;color:#111!important;} .eqc-ok:disabled{opacity:.6;}
+.eqp-troca{display:flex;align-items:center;gap:18px;background:#F5F6F8;border-radius:8px;padding:12px 16px;margin-bottom:10px;} .eqp-troca small{display:block;font-size:11px;color:#8B8C99;} .eqp-troca b{font-size:15px;} .eqp-troca span{font-size:18px;color:#8B8C99;}
+.eqh-sla-box{display:flex;flex-wrap:wrap;gap:26px;align-items:center;border-radius:8px;padding:14px 18px;border:1px solid;} .eqh-sla-box small{display:block;font-size:11px;color:#6B6E7C;} .eqh-sla-box b{font-size:15px;}
+.eqh-sla-box.verde{background:#EAFAF1;border-color:#BFE9D3;} .eqh-sla-box.amarelo{background:#FFF8DA;border-color:#FFE08A;} .eqh-sla-box.vermelho{background:#FDECEF;border-color:#F5C2CB;} .eqh-sla-box.cinza{background:#F3F4F7;border-color:#DDE0E8;}
+.eqh-sla-t{display:flex;align-items:center;gap:10px;} .eqh-sla-ic{width:34px;height:34px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;}
+.eqh-sla-box.verde .eqh-sla-ic{background:#00C875;} .eqh-sla-box.amarelo .eqh-sla-ic{background:#E8A800;} .eqh-sla-box.vermelho .eqh-sla-ic{background:#E2445C;} .eqh-sla-box.cinza .eqh-sla-ic{background:#9CA0AE;}
+.eqh-sla-box.vermelho .eqh-sla-t b{color:#B3213A;} .eqh-det{font-size:12px;color:#5F6270;margin-top:8px;}
+.eqh-lista{max-height:340px;overflow-y:auto;border:1px solid #E6E9EF;border-radius:8px;padding:4px 14px;}
+.eqh-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid #F0F1F4;font-size:13px;color:#323338;} .eqh-item:last-child{border-bottom:none;}
+.eqh-ic{width:26px;height:26px;border-radius:50%;background:#EEF0F4;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.eqh-conclusao .eqh-ic{background:#E1F7EB;color:#0A6B43;} .eqh-reabertura .eqh-ic{background:#FFF1BF;color:#7A5600;}
+.eqh-meta{font-size:11px;color:#8B8C99;margin-top:3px;} .eqh-meta b{color:#323338;} .eqh-just{font-size:12px;color:#5F6270;margin-top:3px;white-space:pre-line;} .eqh-leg{font-size:11px;color:#8B8C99;} .eqh-obs{white-space:pre-line;}
+.eqh-sla{padding:1px 8px;border-radius:10px;font-weight:700;font-size:11.5px;} .eqh-sla.verde{background:#E1F7EB;color:#0A6B43;} .eqh-sla.vermelho{background:#FDE3E8;color:#B3213A;} .eqh-sla.cinza{background:#EEF0F4;color:#5F6270;}
+.eqh-evid{border:1px solid #D0D4E4;background:#fff;border-radius:6px;padding:3px 9px;font-size:11.5px;cursor:pointer;margin-top:5px;font-family:'Inter',sans-serif;}
+.eqi-painel{background:#fff;border:1px solid #E6E9EF;border-radius:10px;padding:14px 16px;margin:-6px 0 18px;}
+.eqi-topo{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;} .eqi-tit{font-weight:700;font-size:14px;} .eqi-tit span{font-weight:400;color:#8B8C99;font-size:12px;}
+.eqi-filtro{display:flex;align-items:center;gap:8px;font-size:12px;color:#8B8C99;}
+.eqi-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.eqi-card{border:1px solid #E6E9EF;border-left:5px solid #9CA0AE;border-radius:8px;padding:11px 14px;} .eqi-card small{display:block;font-size:12px;font-weight:600;color:#323338;} .eqi-card b{display:block;font-family:'Sora',sans-serif;font-size:24px;font-weight:800;margin:3px 0;} .eqi-card em{font-style:normal;font-size:11px;color:#8B8C99;}
+.eqi-card.verde{border-left-color:#00C875;} .eqi-card.verde b{color:#00A862;} .eqi-card.vermelho{border-left-color:#E2445C;} .eqi-card.vermelho b{color:#E2445C;} .eqi-card.cinza b{color:#323338;}
+.eqi-nd{font-size:13px;font-weight:600;color:#9699A6;font-family:'Inter',sans-serif;} .eqi-pct{font-size:15px;font-weight:700;} .eqi-nota{font-size:11px;color:#8B8C99;margin-top:10px;}
+.eq-btn-ind.on{background:#CCE5FF;border-color:#99C9FF;color:#0060B9;font-weight:600;}
+@media(max-width:900px){.eqi-cards{grid-template-columns:repeat(2,1fr);}.eq-kpis{gap:14px;}}
+@media(max-width:560px){.eqi-cards{grid-template-columns:1fr;}.eq-toast{left:12px;right:12px;max-width:none;}.eqh-sla-box{gap:14px;}.eq-busca input{width:120px;}}
 @media (max-width:900px){.eq-cfg{grid-template-columns:1fr;}.eq-kpis{gap:14px;}}
 /* ── Plano de Ação por fornecedor (Gestão de Fornecedores) ── */
 .pv{max-width:1180px;}
@@ -1055,6 +1114,119 @@ button.dr-kpi:hover{border-color:var(--black);}
 .est-rev-tab td,.est-rev-tab th{padding:7px 8px;}
 @media(max-width:640px){.est-rev-top{grid-template-columns:repeat(2,1fr);}}
 .est-rowauto{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));}
+/* ── Inventário e Acuracidade (identidade Mercado Livre: amarelo · preto · branco · cinza) ── */
+.inv-btn-k{height:38px;padding:0 18px;border:none;border-radius:8px;background:#111;color:#fff;font-size:12.5px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;}
+.inv-btn-k:hover{background:#000;} .inv-btn-k:disabled{opacity:.45;cursor:not-allowed;}
+.inv-btn-o{height:38px;padding:0 16px;border:1px solid #111;border-radius:8px;background:#fff;color:#111;font-size:12.5px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;}
+.inv-btn-o:hover{background:#F5F5F5;}
+.inv-btn-y{height:40px;padding:0 18px;border:none;border-radius:8px;background:var(--yellow);color:#111;font-size:12.5px;font-weight:800;font-family:'Inter',sans-serif;cursor:pointer;width:100%;}
+.inv-btn-y:hover{background:#F0D800;} .inv-btn-y:disabled{opacity:.45;cursor:not-allowed;}
+.inv .est-head-f{align-items:center;flex-wrap:wrap;}
+.inv-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px;}
+.inv-kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:center;}
+.inv-kpi small{display:block;font-size:11px;font-weight:600;color:#111;} .inv-kpi b{display:block;font-size:22px;font-weight:800;color:#111;line-height:1.2;margin:1px 0;} .inv-kpi em{font-style:normal;font-size:10.5px;color:var(--muted);}
+.inv-kpi-ic{width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;color:#fff;}
+.inv-kpi-ic.g{background:var(--green);} .inv-kpi-ic.y{background:var(--yellow);color:#111;} .inv-kpi-ic.r{background:var(--red);} .inv-kpi-ic.b{background:var(--blue);}
+.inv-filtros{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;padding:12px 16px;margin-bottom:14px;}
+.inv-filtros .est-f{display:flex;flex-direction:column;gap:4px;} .inv-filtros label{font-size:10.5px;font-weight:600;color:#444;}
+.inv-filtros select,.inv-filtros input:not([type=checkbox]){height:36px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font-size:12px;font-family:'Inter',sans-serif;background:#fff;}
+.inv-periodo{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);}
+.inv-grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;align-items:start;}
+.inv-tabs{display:flex;gap:8px;margin-bottom:10px;}
+.inv-tab{height:38px;padding:0 18px;border:1px solid var(--line);border-radius:8px 8px 0 0;background:#fff;font-size:12.5px;font-weight:600;color:#444;cursor:pointer;font-family:'Inter',sans-serif;}
+.inv-tab.on{background:var(--yellow);border-color:var(--yellow);color:#111;font-weight:800;}
+.inv-tabela{padding:0;overflow:hidden;}
+.inv-tabela .est-tab thead th{background:#111;color:#fff;border-color:#111;font-size:10.5px;}
+.inv-tab-lista td{vertical-align:middle;} .inv-tab-lista small,.inv-tab-c small,.inv-tab-ap small{display:block;font-size:10.5px;color:var(--muted);font-weight:400;}
+.inv-pill{display:inline-block;padding:3px 10px;border-radius:7px;font-size:11px;font-weight:700;white-space:nowrap;}
+.inv-p-ok{background:#DCFCE7;color:#166534;} .inv-p-falta{background:#FDE2E2;color:#B91C1C;} .inv-p-sobra{background:#DBEAFE;color:#1D4ED8;}
+.inv-p-div{background:#FFF0A6;color:#7A5B00;} .inv-p-apur{background:#FFE4C4;color:#9A4B00;} .inv-p-nao{background:#EEF0F4;color:#555;}
+.inv-pager{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;font-size:11.5px;color:var(--muted);border-top:1px solid var(--line);}
+.inv-pager>div{display:flex;gap:4px;align-items:center;} .inv-pager button{min-width:28px;height:28px;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer;font-size:12px;}
+.inv-pager button.on{background:var(--yellow);border-color:var(--yellow);font-weight:800;} .inv-pager button:disabled{opacity:.4;cursor:default;}
+.inv-and{padding:14px 16px;margin-bottom:12px;} .inv-and-h{display:flex;gap:10px;align-items:center;margin-bottom:10px;} .inv-and-h b{display:block;font-size:13px;} .inv-and-h small{display:block;font-size:11px;color:var(--muted);margin-top:2px;}
+.inv-and .inv-kpi-ic{width:34px;height:34px;font-size:15px;}
+.inv-barra{position:relative;height:9px;background:#E8E8E8;border-radius:6px;margin:4px 0 12px;} .inv-barra>div{height:100%;background:var(--yellow);border-radius:6px;transition:width .3s;}
+.inv-barra>span{position:absolute;right:0;top:-17px;font-size:11px;color:var(--muted);}
+.inv-res{padding:14px 16px;margin-bottom:12px;} .inv-res-h{margin-bottom:8px;font-size:13px;}
+.inv-res-corpo{display:flex;align-items:center;gap:12px;position:relative;} .inv-donut{width:120px;height:120px;flex-shrink:0;}
+.inv-donut-c{position:absolute;left:0;width:120px;text-align:center;display:flex;flex-direction:column;} .inv-donut-c b{font-size:16px;font-weight:800;} .inv-donut-c small{font-size:9px;color:var(--muted);}
+.inv-leg{list-style:none;margin:0;padding:0;font-size:12px;flex:1;} .inv-leg li{display:flex;align-items:center;gap:7px;padding:4px 0;} .inv-leg i{width:9px;height:9px;border-radius:50%;display:inline-block;} .inv-leg b{margin-left:auto;}
+.inv-mot{margin-top:12px;border:1px solid var(--line);border-radius:8px;padding:10px 12px;} .inv-mot>b{font-size:11.5px;display:block;margin-bottom:6px;}
+.inv-mot-l{display:grid;grid-template-columns:118px 1fr 18px;gap:8px;align-items:center;font-size:11px;padding:3px 0;} .inv-mot-l>div{height:7px;background:#EEF0F4;border-radius:4px;overflow:hidden;} .inv-mot-l i{display:block;height:100%;border-radius:4px;} .inv-mot-l b{text-align:right;}
+.inv-como{background:#FFF8D6;border:1px solid #F1DE7B;border-radius:12px;padding:12px 14px;font-size:11.5px;color:#444;} .inv-como p{margin:4px 0 0;line-height:1.45;}
+.inv-vazio-s{font-size:11.5px;color:var(--muted);padding:8px 2px;} .inv-nd{color:var(--light);} .inv-dica{font-size:10.5px;color:var(--muted);}
+.inv-form{max-width:1000px;} .inv-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;} .inv-form-grid .form-group{margin-bottom:10px;}
+.inv-sel{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:12px;} .inv-sel-h{display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;} .inv-sel-h input{flex:1;min-width:220px;}
+.inv-sel-lista{max-height:260px;overflow:auto;} .inv-sel-it{display:flex;gap:10px;align-items:flex-start;padding:7px 8px;border-radius:7px;cursor:pointer;font-size:12px;} .inv-sel-it:hover{background:#F7F8FA;} .inv-sel-it.bloq{opacity:.5;cursor:not-allowed;} .inv-sel-it small{display:block;font-size:10.5px;color:var(--muted);}
+.inv-resumo{background:#F7F8FA;border:1px solid var(--line);border-radius:10px;padding:12px 16px;margin:6px 0 14px;} .inv-resumo small{display:block;font-size:10.5px;color:var(--muted);font-weight:600;} .inv-resumo b{font-size:16px;margin-right:8px;} .inv-resumo span{font-size:12px;color:var(--muted);}
+.inv-aviso{background:#FFF8E6;border:1px solid #FFE066;color:#8A5A00;border-radius:8px;padding:9px 13px;font-size:12px;margin:8px 0;} .inv-aviso-i{background:#EEF4FF;border-color:#C7D8FA;color:#1D4ED8;} .inv-aviso span{font-weight:600;}
+.inv-form-bts{display:flex;justify-content:flex-end;gap:10px;} .inv-form-bts .inv-btn-y{width:auto;min-width:170px;}
+.inv-cab{padding:14px 16px;margin-bottom:12px;} .inv-cab-info{display:flex;gap:30px;flex-wrap:wrap;margin-bottom:12px;} .inv-cab-info small{display:block;font-size:10.5px;color:var(--muted);font-weight:600;} .inv-cab-info b{font-size:13px;}
+.inv-prog{display:flex;align-items:center;gap:20px;flex-wrap:wrap;} .inv-prog .inv-barra{flex:1;min-width:220px;margin:16px 0 4px;}
+.inv-stats{display:flex;gap:16px;font-size:12px;color:var(--muted);} .inv-stats b{color:#111;font-size:15px;margin-right:3px;} .inv-stats .ok b{color:#166534;} .inv-stats .pend b{color:#B45309;}
+.inv-salvo{font-size:11px;color:var(--muted);margin-top:8px;} .inv-salvo.erro{color:var(--red);font-weight:700;} .inv-salvo.salvando{color:var(--blue);}
+.inv-chips{display:flex;gap:6px;flex-wrap:wrap;} .inv-chip{height:34px;padding:0 13px;border:1px solid var(--line);border-radius:8px;background:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;color:#444;}
+.inv-chip.on{background:var(--yellow);border-color:var(--yellow);color:#111;font-weight:800;} .inv-chip i{font-style:normal;font-size:10.5px;background:rgba(0,0,0,.08);border-radius:9px;padding:1px 6px;margin-left:3px;}
+.inv-tab-c td{vertical-align:middle;} .inv-pend td:first-child{box-shadow:inset 3px 0 0 var(--yellow);} .inv-pend{background:#FFFDF0;}
+.inv-in{width:120px;height:34px;border:1px solid #BDBDBD;border-radius:7px;text-align:right;padding:0 10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;background:#fff;} .inv-in:focus{border-color:#111;outline:2px solid var(--yellow);}
+.inv-in.inv-erro{border-color:var(--red);background:#FFF5F5;} .inv-msg.erro{color:var(--red);font-weight:600;white-space:normal;max-width:180px;margin-left:auto;}
+.inv-val{display:inline-flex;align-items:center;gap:8px;} .inv-val b{font-size:14px;} .inv-recontar{border:1px solid var(--line);background:#fff;border-radius:6px;font-size:10.5px;padding:3px 8px;cursor:pointer;color:#444;} .inv-recontar:hover{border-color:#111;color:#111;}
+.inv-oculto{letter-spacing:2px;color:#999;} .inv-obs{width:100%;min-width:140px;height:32px;border:1px solid var(--line);border-radius:7px;padding:0 9px;font-size:12px;font-family:'Inter',sans-serif;}
+.inv-st-linha{display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:12px;} .inv-alerta-i{color:#B45309;font-weight:600;}
+.inv-kas{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-bottom:14px;} .inv-ka{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;} .inv-ka small{display:block;font-size:10px;font-weight:600;color:var(--muted);} .inv-ka b{display:block;font-size:19px;font-weight:800;margin:1px 0;} .inv-ka em{font-style:normal;font-size:10px;color:var(--muted);}
+.inv-ka.ok b{color:#166534;} .inv-ka.neg b{color:#B91C1C;} .inv-ka.warn b{color:#B45309;} .inv-ka.warn{border-color:#FFE066;background:#FFFDF0;}
+.inv-tab-ap td{vertical-align:top;font-size:12px;} .inv-conf td{background:#FFFDF0;} .inv-td-mot{min-width:250px;} .inv-alt{color:#B45309 !important;font-weight:600;}
+.inv-mot-sel{width:100%;height:32px;border:1px solid var(--line);border-radius:7px;font-size:11.5px;padding:0 6px;background:#fff;} .inv-mot-obs{width:100%;height:30px;border:1px solid var(--line);border-radius:7px;margin-top:5px;padding:0 8px;font-size:11.5px;}
+.inv-acoes{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;} .inv-acoes button{border:1px solid var(--line);background:#fff;border-radius:6px;font-size:10.5px;padding:4px 8px;cursor:pointer;font-weight:600;} .inv-acoes button:hover{border-color:#111;} .inv-acoes .inv-a-ok{background:var(--yellow);border-color:var(--yellow);color:#111;font-weight:800;}
+.inv-rev-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:14px;margin-bottom:14px;}
+.inv-gates{list-style:none;margin:6px 0 0;padding:0;} .inv-gates li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #F0F0F0;font-size:12.5px;} .inv-gates i{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;font-weight:800;flex-shrink:0;color:#fff;}
+.inv-gates li.ok i{background:var(--green);} .inv-gates li.no i{background:var(--red);} .inv-gates small{display:block;color:#B91C1C;font-size:11px;margin-top:2px;}
+.inv-pend-box{background:#FFF8E6;border:1px solid #FFE066;border-radius:8px;padding:10px 12px;margin-top:10px;font-size:12px;} .inv-pend-lista{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 8px;} .inv-pend-lista span{background:#fff;border:1px solid #F1DE7B;border-radius:6px;padding:2px 8px;font-size:11px;}
+.inv-tag{font-size:11px;font-weight:700;background:#EEF0F4;border-radius:10px;padding:2px 10px;} .inv-aj-tot{margin-top:8px;font-size:12.5px;text-align:right;}
+.inv-ac-t{font-weight:800;font-size:13px;padding:12px 14px 6px;} .inv-ac-b{height:8px;background:#EEF0F4;border-radius:5px;overflow:hidden;width:130px;} .inv-ac-b i{display:block;height:100%;}
+@media(max-width:1180px){.inv-grid{grid-template-columns:1fr;}.inv-kas{grid-template-columns:repeat(4,1fr);}.inv-rev-grid{grid-template-columns:1fr;}}
+@media(max-width:760px){.inv-kpis{grid-template-columns:repeat(2,1fr);}.inv-form-grid{grid-template-columns:1fr;}.inv-kas{grid-template-columns:repeat(2,1fr);}}
+.inv-periodo input{width:134px;padding:0 8px !important;}
+.inv-grid{grid-template-columns:minmax(0,1fr) 318px;}
+.inv-tab-lista{font-size:11.5px;} .inv-tab-lista th,.inv-tab-lista td{padding:9px 7px;} .inv-tab-lista th{white-space:nowrap;font-size:10px;}
+.inv-tab-lista td:first-child{min-width:150px;} .inv-tab-lista td b{font-size:11.5px;} .inv-tab-lista .inv-pill{font-size:10px;padding:3px 8px;}
+.inv-tabela .est-tab-wrap{overflow-x:auto;}
+/* acabamentos de largura */
+.inv-filtros .est-f:first-child{min-width:300px;flex:none;} .inv-periodo{min-width:296px;}
+.inv-tab-lista{table-layout:fixed;width:100%;} .inv-tab-lista th{white-space:normal;line-height:1.15;vertical-align:middle;} .inv-tab-lista td{overflow-wrap:anywhere;}
+.inv-tab-lista .inv-pill{white-space:normal;line-height:1.15;display:inline-block;}
+.inv-tab-ap{min-width:980px;} .inv-tab-ap th,.inv-tab-ap td{padding:8px 6px;} .inv-tab-ap th{font-size:10px;white-space:nowrap;} .inv-tab-ap td:first-child{min-width:170px;} .inv-td-mot{width:235px;min-width:235px;}
+.inv-tab-ap .inv-pill{font-size:10px;padding:3px 8px;}
+/* ── Tema Mercado Livre (amarelo · preto · branco · cinza) — Gestão de Resíduos ──
+   Ativado por ML_TEMA_MODULOS (script): a classe tema-ml é aplicada ao #screen-module quando o módulo está na lista. */
+.mod-topbar-info{display:none;align-items:center;gap:10px;font-size:12px;font-weight:600;color:#111;margin-right:6px;white-space:nowrap;}
+.mod-topbar-info i{width:1px;height:12px;background:rgba(0,0,0,.35);display:inline-block;}
+#screen-module.tema-ml .mod-topbar{background:var(--yellow);box-shadow:0 1px 0 rgba(0,0,0,.08);}
+#screen-module.tema-ml .mod-topbar-info{display:flex;}
+#screen-module.tema-ml .mod-back{background:rgba(0,0,0,.08);color:#111;}
+#screen-module.tema-ml .mod-back:hover{background:rgba(0,0,0,.16);}
+#screen-module.tema-ml .mod-topbar-sep{background:rgba(0,0,0,.22);}
+#screen-module.tema-ml .mod-topbar-breadcrumb{color:rgba(0,0,0,.6);}
+#screen-module.tema-ml .mod-topbar-breadcrumb span{color:#111;}
+#screen-module.tema-ml .mod-topbar-name{color:#111;}
+#screen-module.tema-ml .mod-topbar-icon{background:#111 !important;color:var(--yellow);}
+#screen-module.tema-ml .topbar-avatar{background:#111 !important;color:#fff !important;}
+#screen-module.tema-ml .topbar-btn{background:transparent;border:1px solid rgba(0,0,0,.45);color:#111;}
+#screen-module.tema-ml .topbar-btn:hover{background:#111;color:var(--yellow);}
+#screen-module.tema-ml .mod-sidebar{background:#111;}
+#screen-module.tema-ml .mod-sidebar-label{color:rgba(255,255,255,.45);}
+#screen-module.tema-ml .mod-nav-item{color:rgba(255,255,255,.8);}
+#screen-module.tema-ml .mod-nav-item:hover{background:rgba(255,255,255,.1);color:#fff;}
+#screen-module.tema-ml .mod-nav-item.active{background:var(--yellow) !important;color:#111 !important;border-left:0 !important;font-weight:700;}
+#screen-module.tema-ml .mod-sidebar-footer{border-top:1px solid rgba(255,255,255,.14);}
+#screen-module.tema-ml .mod-sidebar-username{color:#fff;font-weight:600;}
+#screen-module.tema-ml .mod-sidebar-role{color:rgba(255,255,255,.55);}
+/* tabelas de dados: cabeçalho preto com texto branco */
+#screen-module.tema-ml .mod-content table thead th{background:#111 !important;color:#fff !important;border-color:#111 !important;}
+#screen-module.tema-ml .mod-content table thead th.dr-th-ord:hover,#screen-module.tema-ml .mod-content table thead th.dr-th-ord.on{color:var(--yellow) !important;}
+/* abas: item ativo amarelo, como na referência */
+#screen-module.tema-ml .dr-tab2.active{background:var(--yellow);border-bottom-color:var(--yellow);color:#111;}
 .est-lote-tab:not(.est-rev-tab){min-width:600px;}
 .est-lote-tab td:nth-child(3) input{min-width:64px;}
 .est-chk{display:flex;align-items:center;gap:8px;font-size:12px;color:#333;margin:10px 0;}
@@ -1231,6 +1403,7 @@ button.dr-kpi:hover{border-color:var(--black);}
       <div class="mod-topbar-name" id="mod-topbar-name"></div>
     </div>
     <div class="mod-topbar-right">
+      <div class="mod-topbar-info" id="mod-topbar-info"></div>
       <div class="topbar-avatar" id="mod-avatar" style="background:var(--yellow);color:var(--black)">G</div>
       <button class="topbar-btn" onclick="doLogout()">✕ Sair</button>
     </div>
@@ -1471,6 +1644,7 @@ function doLogout(){
 function refreshCurrentView(){
   const modalAberto = document.getElementById('modal-overlay').classList.contains('open');
   if(modalAberto) return;
+  if(typeof _invAtualizacaoRemota==='function' && _invAtualizacaoRemota()) return;   // Inventário: não apaga o que está sendo digitado
   if(currentScreenName==='home') renderPortalGrid();
   else if(currentScreenName==='module' && currentModId && currentModId!=='estrutura') renderModContent(currentModId, currentPage||undefined); // Estrutura Meli é conteúdo fixo: não recarrega (preserva rolagem e filtros)
 }
@@ -1498,6 +1672,8 @@ function initHomeGreeting(){
   document.getElementById('home-greeting').textContent = g + (currentUser?', '+currentUser.nome:'');
 }
 
+// Módulos com o tema Mercado Livre (barra amarela, menu preto, item ativo amarelo). Para incluir outro módulo, acrescente o id aqui.
+const ML_TEMA_MODULOS=['residuos','estoque'];
 const MODULES = [
   {id:'bebedouros',icon:'🥤',color:'#1A73E8',label:'Gestão de Bebedouros',desc:'Equipamentos, filtros, manutenções e histórico de problemas.',badge:()=>{const d=DB.get('bebedouros')||[];return d.filter(b=>b.status==='Em manutenção').length||null;},badgeLabel:'Em manutenção'},
   {id:'residuos',icon:'♻️',color:'#00A650',label:'Gestão de Resíduos',desc:'Controle de coletas, não conformidades e procedimentos.',badge:()=>{const d=DB.get('residuosColetas')||[];return d.filter(r=>r.status==='❌ Não realizada').length||null;},badgeLabel:'Não realizadas'},
@@ -1506,7 +1682,7 @@ const MODULES = [
   {id:'grancoffee',icon:'☕',color:'#D1242F',label:'Gestão GranCoffee',desc:'Máquinas de café, chamados, doses e consumo.',badge:()=>{const d=DB.get('chamadosCafe')||[];return d.filter(c=>c.status==='Aberto').length||null;},badgeLabel:'Chamados abertos'},
   {id:'estrutura',icon:'🚻',color:'#1D6F8F',label:'Estrutura Meli',desc:'Banheiros e composição de boxes do site, com exportação para Excel.',badge:()=>null},
   {id:'reunioes',icon:'📅',color:'#6B21A8',label:'Gestão de Fornecedores',desc:'Reuniões, atas e plano de ação com os fornecedores.',badge:()=>null},
-  {id:'equipe',icon:'🗂️',color:'#0073EA',label:'Plano de Ação da Equipe',desc:'Tarefas da equipe com responsáveis, prazos, prioridade e status.',badge:()=>{const t=DB.get('equipeTarefas')||[];const h=new Date();const hs=`${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(h.getDate()).padStart(2,'0')}`;return t.filter(x=>x.prazo&&x.prazo<hs&&x.status!=='Concluído').length||null;},badgeLabel:'Atrasadas'},
+  {id:'equipe',icon:'🗂️',color:'#0073EA',label:'Plano de Ação da Equipe',desc:'Tarefas da equipe com responsáveis, prazos, prioridade e status.',badge:()=>{ try{ return (DB.get('equipeTarefas')||[]).filter(_eqAtrasada).length||null; }catch(e){ return null; } },badgeLabel:'Atrasadas'},
   {id:'config',icon:'⚙️',color:'#6B6B6B',label:'Configurações',desc:'Fornecedores, localizações, tipos de problemas e cadastros.',badge:()=>null,oculto:true},
 ];
 
@@ -1537,7 +1713,7 @@ function renderPortalGrid(){
 const MODULE_MENUS = {
   bebedouros:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'equipamentos',icon:'🥤',label:'Equipamentos'},{key:'filtros',icon:'🔄',label:'Controle de Filtros'},{key:'historico',icon:'📋',label:'Histórico de Problemas'},{key:'documentacao',icon:'📄',label:'Gestão de Documentação'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
   residuos:[{key:'dashres',icon:'📊',label:'Dashboard de Resíduos'},{key:'dash2',icon:'🚚',label:'Dashboard de Gestão de Coletas'},{key:'coletas',icon:'📋',label:'Controle Geral'},{key:'sobdemanda',icon:'📦',label:'Sob Demanda'},{key:'ncs',icon:'🚨',label:'Não Conformidades'},{key:'docres',icon:'📁',label:'Documentação de Resíduos'},{key:'procedimentos',icon:'📁',label:'Procedimentos'}],
-  estoque:[{key:'dashboard',icon:'🏠',label:'Visão Geral'},{key:'movimentacoes',icon:'⇄',label:'Movimentações'},{key:'itens',icon:'📦',label:'Produtos'},{key:'saldo',icon:'🗄️',label:'Estoque Atual'},{key:'consumo',icon:'📊',label:'Consumo por Item'},{key:'historico',icon:'🕘',label:'Histórico'},{key:'config',icon:'⚙️',label:'Configurações'}],
+  estoque:[{key:'dashboard',icon:'🏠',label:'Visão Geral'},{key:'movimentacoes',icon:'⇄',label:'Movimentações'},{key:'itens',icon:'📦',label:'Produtos'},{key:'inventario',icon:'📋',label:'Inventário e Acuracidade'},{key:'saldo',icon:'🗄️',label:'Estoque Atual'},{key:'consumo',icon:'📊',label:'Consumo por Item'},{key:'historico',icon:'🕘',label:'Histórico'},{key:'config',icon:'⚙️',label:'Configurações'}],
   checklist:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'lancamento',icon:'➕',label:'Novo Lançamento'},{key:'painel',icon:'📋',label:'Painel Mensal'}],
   grancoffee:[{key:'dashboard',icon:'📊',label:'Dashboard'},{key:'maquinas',icon:'☕',label:'Máquinas'},{key:'chamados',icon:'🔔',label:'Chamados'},{key:'doses',icon:'📊',label:'Controle de Doses'},{key:'tipos',icon:'⚙️',label:'Tipos de Problema'}],
   estrutura:[{key:'dashboard',icon:'🚻',label:'Banheiros e boxes'}],
@@ -1555,6 +1731,8 @@ function openModule(id){
   if(!mod) return;
   currentModId=id;
   currentScreenName='module';
+  { const sm=document.getElementById('screen-module'), ml=ML_TEMA_MODULOS.includes(id); sm.classList.toggle('tema-ml',ml);
+    const inf=document.getElementById('mod-topbar-info'); if(inf) inf.innerHTML=ml?`${_estEsc(currentUser?currentUser.nome:'')}<i></i>Betim<i></i>MG02`:''; }
   document.getElementById('mod-breadcrumb').textContent=mod.label;
   document.getElementById('mod-topbar-name').textContent=mod.label;
   const ti=document.getElementById('mod-topbar-icon');
@@ -6138,6 +6316,7 @@ function renderEstoque(page){
   const pop=document.getElementById('est-pop'); if(pop) pop.remove();
   if(page==='movimentacoes'||page==='movimentos') return _estPgMov();
   if(page==='itens') return _estPgProdutos();
+  if(page==='inventario') return _invPagina();
   if(page==='saldo') return _estPgSaldo();
   if(page!=='consumo') _eciItem=null;
   if(page==='consumo') return _estPgConsumo();
@@ -7613,6 +7792,669 @@ function _estPgHistorico(){
     </tbody></table></div>${log.length>500?'<div class="est-nota">Mostrando os 500 registros mais recentes.</div>':''}</div>
   </div>`;
 }
+
+
+// ═════ INVENTÁRIO E ACURACIDADE ═════
+// Toda contagem física fica registrada num inventário próprio (nó 'estoqueInventarios'):
+//   • o saldo teórico da ABERTURA é congelado por produto (fotografia) e nunca é sobrescrito;
+//   • enquanto se conta, o saldo oficial NÃO muda (nenhum movimento é criado) e as movimentações normais seguem sendo registradas;
+//   • na apuração, cada contagem é comparada com o saldo CONCILIADO = fotografia + movimentações ocorridas entre a abertura e o
+//     momento da contagem do item (sem divergência artificial por movimento posterior à abertura);
+//   • alteração/exclusão de movimentação ANTERIOR à abertura não é conciliável com segurança → controle explícito: o item vai para
+//     conferência e o fechamento fica bloqueado até alguém validar;
+//   • ao fechar, cada diferença validada vira um movimento de AJUSTE novo (nenhum registro anterior é apagado ou editado).
+const INV_MOTIVOS=['Saída sem baixa','Erro de recebimento','Avaria ou perda','Erro de contagem','Movimentação registrada incorretamente','Motivo não identificado','Outro'];
+const INV_AUTORIZADOS=['admin','gestor'];                 // quem pode revelar saldo, validar, fechar e cancelar (ou estoqueConfig.inventarioAutorizados)
+const INV_FRAC=['kg','g','l','ml','lt','litro','litros','m','mt','mts','metro','metros','m2','m²','m3','m³','quilo','quilos'];  // unidade inteira em que a quantidade pode ser fracionária
+const INV_ATIVOS=['em_contagem','apurado','fechando'];
+const INV_STATUS_TXT={em_contagem:'Em contagem',apurado:'Apurado',fechando:'Fechando…',fechado:'Fechado',cancelado:'Cancelado'};
+const INV_TIPO_TXT={completo:'Completo',categoria:'Por categoria',selecao:'Por seleção de produtos'};
+let _inv={vista:'painel',aba:'estoque',invId:null,f:null,pg:1,abrir:null,reveal:false,editando:new Set(),busca:'',cat:'todas',filt:'todos',pgC:1,filtAp:'todos',buscaAp:'',pgAp:1,salvo:''};
+
+const _invMapa=()=>DB.get('estoqueInventarios')||{};
+const _invLista=()=>Object.values(_invMapa()).filter(x=>x&&x.id).sort((a,b)=>String(b.abertoEm).localeCompare(String(a.abertoEm)));
+const _invGet=id=>_invMapa()[id]||null;
+const _invAtivos=()=>_invLista().filter(i=>INV_ATIVOS.includes(i.status));
+const _invAut=()=>{ const u=(typeof currentUser!=='undefined'&&currentUser&&currentUser.user)||''; return (_estCfg().inventarioAutorizados||INV_AUTORIZADOS).includes(u); };
+const _invLimpa=o=>JSON.parse(JSON.stringify(o));
+const _invRound=n=>(Math.round(n*1000)/1000)||0;                    // (||0 troca -0 por 0: evita "-R$ 0,00")
+const _invDH=iso=>iso?new Date(iso).toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'}):'—';
+const _invBRL=n=>n==null?'—':Number(n).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const _invFrac=p=>p.fracionavel===true||INV_FRAC.includes(_estNorm(p.unidade).replace(/\./g,'').trim());
+const _invContado=it=>it&&it.qtdContada!==undefined&&it.qtdContada!==null;      // 0 É contagem válida; só undefined/null é "não contado"
+function _invNumero(){ const ano=new Date().getFullYear(); return `INV-${ano}-${String(_invLista().filter(i=>String(i.numero||'').startsWith(`INV-${ano}-`)).length+1).padStart(3,'0')}`; }
+// "1.234,5" · "12,5" · "12.5" · "0" → número; '' → vazio; inválido → erro
+function _invParseQtd(txt){
+  let s=String(txt==null?'':txt).trim().replace(/\s/g,''); if(s==='') return {vazio:true};
+  if(s.includes(',')) s=s.replace(/\./g,'').replace(',','.'); else if(/^\d{1,3}(\.\d{3})+$/.test(s)) s=s.replace(/\./g,'');
+  if(!/^\d+(\.\d+)?$/.test(s)) return {erro:'Informe um número válido (use 0 para "não há nenhuma unidade").'};
+  return {valor:Number(s)};
+}
+// Momento em que o movimento passa a valer: o MAIS TARDIO entre o registro e a data do movimento (compra datada no futuro só vale na data)
+const _invTE=m=>Math.max(Date.parse(m.createdAt)||0,new Date(String(m.data||'1970-01-01').slice(0,10)+'T00:00:00').getTime());
+function _invCtx(prodIds){
+  const set=prodIds?new Set(prodIds):null, mp=new Map(), prod=new Map(_estProdutos().map(p=>[p.id,p]));
+  _estMovs().forEach(m=>{ if(!m.produtoId||(set&&!set.has(m.produtoId))) return; let l=mp.get(m.produtoId); if(!l){ l=[]; mp.set(m.produtoId,l); } l.push(m); });
+  return {mp,prod};
+}
+// Saldo oficial de TODOS os produtos de uma vez (mesma conta de _estSaldo: inicial + efeitos com data ≤ hoje)
+function _invSaldos(prods){
+  const ef=new Map(), hoje=_estHoje();
+  _estMovs().forEach(m=>{ if(m.produtoId&&String(m.data)<=hoje) ef.set(m.produtoId,(ef.get(m.produtoId)||0)+_estEfeito(m)); });
+  return new Map(prods.map(p=>[p.id,_invRound(_estInicial(p)+(ef.get(p.id)||0))]));
+}
+const _invAcur=(a,b)=>(a===0&&b===0)?100:(a<0||b<0||Math.max(a,b)===0?0:Math.min(a,b)/Math.max(a,b)*100);
+// Cálculo de um item (inventário em aberto). Tudo derivado da fotografia + movimentações reais; nada é gravado aqui.
+function _invCalcItem(inv,it,ctx){
+  const ab=Date.parse(inv.abertoEm), movs=ctx.mp.get(it.produtoId)||[], p=ctx.prod.get(it.produtoId);
+  const tc=_invContado(it)&&it.contadoEm?Date.parse(it.contadoEm):null;
+  const r={abertura:it.saldoAbertura,durante:0,conciliado:null,alteracao:0,contada:null,divergencia:null,ajuste:null,pct:null,valor:null,resultado:'pendente',acuracia:null,novos:[]};
+  let livros=p?_estInicial(p):0, durante=0;
+  movs.forEach(m=>{ const te=_invTE(m), e=_estEfeito(m);
+    if(te>ab) r.novos.push({m,te,conciliada:tc!==null&&te<=tc});
+    if(tc!==null&&te<=tc){ livros+=e; if(te>ab) durante+=e; }
+  });
+  r.durante=_invRound(durante); r.conciliado=_invRound(it.saldoAbertura+durante);
+  r.alteracao=tc!==null?_invRound(livros-r.conciliado):0;                 // ≠ 0 → movimento ANTERIOR à abertura foi alterado/excluído (ou estoque inicial mudou)
+  if(tc!==null){
+    const q=Number(it.qtdContada);
+    r.contada=q; r.divergencia=_invRound(q-r.conciliado); r.ajuste=_invRound(q-livros);   // ajuste = o que leva o saldo oficial à contagem
+    r.resultado=r.divergencia===0?'correto':(r.divergencia<0?'falta':'sobra');
+    r.pct=r.conciliado>0?r.divergencia/r.conciliado*100:null; r.valor=_invRound(r.divergencia*(Number(it.custoUnitario)||0)); r.acuracia=_invAcur(q,r.conciliado);
+  }
+  return r;
+}
+// Situação da conferência do item
+function _invConf(it,c){
+  if(it.situacao==='excluido') return 'excluido';
+  if(c.resultado==='pendente') return 'pendente';
+  if(c.resultado==='correto'&&Math.abs(c.alteracao)<1e-6) return 'ok';
+  return it.situacaoConf==='validado'?'validado':it.situacaoConf==='em_apuracao'?'em_apuracao':'em_conferencia';
+}
+// Resultado de um item: fotografia final (inventário fechado) ou cálculo ao vivo
+function _invRes(inv,it,ctx){
+  if(inv.status==='fechado'&&it.final) return it.final;
+  if(inv.status==='cancelado'&&it.final) return it.final;
+  const c=_invCalcItem(inv,it,ctx); c.conf=_invConf(it,c); return c;
+}
+function _invLinhas(inv,ctx){ ctx=ctx||_invCtx(Object.keys(inv.itens||{})); return Object.keys(inv.itens||{}).map(pid=>{ const it=inv.itens[pid]; return {pid,it,c:_invRes(inv,it,ctx)}; }); }
+function _invResumo(linhas){
+  const R={previstos:linhas.length,contados:0,pendentes:0,excluidos:0,corretos:0,faltas:0,sobras:0,emConf:0,emApur:0,validados:0,valFaltas:0,valSobras:0,unFaltas:0,unSobras:0,alterados:0,ajustes:0};
+  linhas.forEach(({it,c})=>{
+    if(it.situacao==='excluido'){ R.excluidos++; return; }
+    if(c.resultado==='pendente'){ R.pendentes++; return; }
+    R.contados++; if(c.resultado==='correto') R.corretos++;
+    if(c.resultado==='falta'){ R.faltas++; R.valFaltas+=Math.abs(c.valor); R.unFaltas+=Math.abs(c.divergencia); }
+    if(c.resultado==='sobra'){ R.sobras++; R.valSobras+=c.valor; R.unSobras+=c.divergencia; }
+    if(Math.abs(c.alteracao)>1e-6) R.alterados++;
+    if(c.conf==='em_conferencia') R.emConf++; if(c.conf==='em_apuracao') R.emApur++; if(c.conf==='validado') R.validados++;
+    if(c.conf==='validado'&&Math.abs(c.ajuste)>1e-9) R.ajustes++;
+  });
+  R.valFaltas=_invRound(R.valFaltas); R.valSobras=_invRound(R.valSobras); R.liquido=_invRound(R.valSobras-R.valFaltas);
+  R.acuracia=R.contados?R.corretos/R.contados*100:null; R.pct=R.previstos?Math.round((R.contados+R.excluidos)/R.previstos*100):0;
+  return R;
+}
+// Persistência: cada item é gravado no seu próprio caminho (salvamento automático, sem reescrever o inventário inteiro)
+function _invCache(inv){ DB_CACHE.estoqueInventarios={..._invMapa(),[inv.id]:inv}; }
+function _invSalvarItem(inv,pid,campos,evento){
+  const novo={...inv,itens:{...inv.itens,[pid]:{...inv.itens[pid],...campos}}};
+  const upd={}; Object.keys(campos).forEach(k=>{ upd[`itens/${pid}/${k}`]=campos[k]===undefined?null:campos[k]; });
+  if(evento){ const eid=uid(); const ev={em:new Date().toISOString(),por:_estUsuario(),...evento}; upd[`eventos/${eid}`]=ev; novo.eventos={...(inv.eventos||{}),[eid]:ev}; }
+  _invCache(novo);
+  return fbRoot.child('estoqueInventarios').child(inv.id).update(_invLimpa(upd));
+}
+function _invSalvarInv(inv,campos,evento){
+  const novo={...inv,...campos}; const upd={...campos};
+  if(evento){ const eid=uid(), ev={em:new Date().toISOString(),por:_estUsuario(),...evento}; upd[`eventos/${eid}`]=ev; novo.eventos={...(inv.eventos||{}),[eid]:ev}; }
+  _invCache(novo);
+  return fbRoot.child('estoqueInventarios').child(inv.id).update(_invLimpa(upd));
+}
+function _invAlerta(e){ console.error(e); const s=document.getElementById('inv-salvo'); if(s){ s.className='inv-salvo erro'; s.textContent='⚠ Não salvou — verifique a conexão'; } }
+function _invMarcarSalvo(ok){ const s=document.getElementById('inv-salvo'); if(!s) return; s.className='inv-salvo'+(ok?'':' salvando'); s.textContent=ok?`✓ Alterações salvas às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`:'Salvando…'; }
+
+// ═══ Navegação interna do módulo ═══
+function _invPagina(){
+  const v=_inv.vista;
+  if(v==='abrir') return _invVistaAbrir();
+  if(v==='contagem') return _invVistaContagem();
+  if(v==='apuracao'||v==='detalhe') return _invVistaApuracao();
+  if(v==='revisao') return _invVistaRevisao();
+  return _invVistaPainel();
+}
+function _invRender(manterScroll){
+  if(!(currentModId==='estoque'&&currentPage==='inventario')) return;
+  const c=document.getElementById('mod-content'); if(!c) return; const sy=c.scrollTop;
+  c.innerHTML=_invPagina(); if(manterScroll) c.scrollTop=sy;
+}
+function invIr(vista,id){ _inv.vista=vista; if(id!==undefined) _inv.invId=id; _inv.pgC=1; _inv.pgAp=1; _inv.reveal=false; _inv.editando=new Set(); _invRender(); const c=document.getElementById('mod-content'); if(c) c.scrollTop=0; }
+const _invDataLocal=iso=>iso?_estIsoData(new Date(iso)):'';
+function _invFiltrosGet(){
+  if(!_inv.f){ const h=_estHoje(), d=new Date(h+'T12:00:00'); d.setMonth(d.getMonth()-1); d.setDate(1); _inv.f={de:_estIsoData(d),ate:h,cat:'todas',status:'todos',q:''}; }
+  return _inv.f;
+}
+// ═══ PAINEL (visão geral: acuracidade, divergências, inventários) ═══
+function _invAgregar(invs){
+  const A={contados:0,corretos:0,divergentes:0,valorAbs:0,liquido:0,naoContados:0,previstos:0,motivos:{},porProd:new Map(),porCat:{}};
+  invs.slice().sort((a,b)=>String(a.fechadoEm).localeCompare(String(b.fechadoEm))).forEach(inv=>{
+    Object.keys(inv.itens||{}).forEach(pid=>{
+      const it=inv.itens[pid], c=it.final; if(!c) return; A.previstos++;
+      if(it.situacao==='excluido'||c.resultado==='pendente'){ A.naoContados++; return; }
+      A.contados++; const cat=it.categoria||'Sem categoria'; A.porCat[cat]=A.porCat[cat]||{contados:0,corretos:0,valor:0};
+      A.porCat[cat].contados++; A.porProd.set(pid,{inv,it,c});
+      if(c.resultado==='correto'){ A.corretos++; A.porCat[cat].corretos++; }
+      else { A.divergentes++; A.valorAbs+=Math.abs(c.valor||0); A.porCat[cat].valor+=Math.abs(c.valor||0); const m=it.motivo||'Sem motivo informado'; A.motivos[m]=(A.motivos[m]||0)+1; }
+      A.liquido+=c.valor||0;
+    });
+  });
+  A.valorAbs=_invRound(A.valorAbs); A.liquido=_invRound(A.liquido); A.acuracia=A.contados?A.corretos/A.contados*100:null; return A;
+}
+function _invDonut(corr,div,nao){
+  const tot=corr+div+nao, R=38, C=2*Math.PI*R; if(!tot) return `<svg viewBox="0 0 100 100" class="inv-donut"><circle cx="50" cy="50" r="${R}" fill="none" stroke="#EEF0F4" stroke-width="13"/></svg>`;
+  let off=0; const arco=(n,cor)=>{ if(!n) return ''; const len=n/tot*C, s=`<circle cx="50" cy="50" r="${R}" fill="none" stroke="${cor}" stroke-width="13" stroke-dasharray="${len} ${C-len}" stroke-dashoffset="${-off}" transform="rotate(-90 50 50)"/>`; off+=len; return s; };
+  return `<svg viewBox="0 0 100 100" class="inv-donut"><circle cx="50" cy="50" r="${R}" fill="none" stroke="#EEF0F4" stroke-width="13"/>${arco(corr,'#00A650')}${arco(div,'#FFE600')}${arco(nao,'#D1242F')}</svg>`;
+}
+const _invPct=n=>n==null?'—':Number(n).toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})+'%';
+function _invPill(tipo){
+  const m={ok:['Ok','inv-p-ok'],correto:['Ok','inv-p-ok'],falta:['Falta','inv-p-falta'],sobra:['Sobra','inv-p-sobra'],div:['Com divergência','inv-p-div'],nao:['Não contado','inv-p-nao'],pendente:['Pendente','inv-p-nao'],
+    em_conferencia:['Em conferência','inv-p-div'],em_apuracao:['Em apuração','inv-p-apur'],validado:['Validado','inv-p-ok'],excluido:['Não contado (excluído)','inv-p-nao'],contado:['Contado','inv-p-ok']}[tipo]||[tipo,'inv-p-nao'];
+  return `<span class="inv-pill ${m[1]}">${m[0]}</span>`;
+}
+function _invVistaPainel(){
+  const f=_invFiltrosGet(), invs=_invPeriodoInvs(f), ag=_invAgregar(invs), ativos=_invAtivos(), todosFechados=_invLista().filter(i=>i.status==='fechado');
+  const ult=todosFechados[0], dias=ult?Math.max(0,Math.round((new Date(_estHoje()+'T12:00:00')-new Date(_invDataLocal(ult.fechadoEm)+'T12:00:00'))/86400000)):null;
+  const kpi=(ic,cor,t,v,s)=>`<div class="inv-kpi"><span class="inv-kpi-ic ${cor}">${ic}</span><div><small>${t}</small><b>${v}</b><em>${s}</em></div></div>`;
+  const cats=_estCategorias();
+  const aba=_inv.aba;
+  const tabs=[['estoque','🗄️ Estoque Atual'],['inventarios','📋 Inventários'],['acuracidade','🎯 Acuracidade']].map(([k,t])=>`<button class="inv-tab${aba===k?' on':''}" onclick="invAba('${k}')">${t}</button>`).join('');
+  return `<div class="est inv">
+    ${_estCab('Inventário e Acuracidade','Realize contagens físicas, identifique divergências e acompanhe a acuracidade do seu estoque.','📋',
+      `<div class="est-head-f"><button class="inv-btn-k" onclick="invAbrirForm()">＋ Iniciar inventário</button><button class="inv-btn-o" onclick="invRelatorios()">⬇ Relatórios</button></div>`)}
+    <div class="inv-kpis">
+      ${kpi('◎','g','Acuracidade geral',_invPct(ag.acuracia),ag.contados?`(contagem de ${ag.contados} ${ag.contados===1?'item':'itens'})`:'(sem inventário fechado no período)')}
+      ${kpi('⚠','y','Itens com divergência',ag.divergentes,ag.contados?`(${_invPct(ag.divergentes/ag.contados*100)} do total)`:'—')}
+      ${kpi('▲','r','Divergência financeira',_invBRL(ag.valorAbs),'(faltas e sobras)')}
+      ${kpi('📅','b','Último inventário',ult?fmtDate(_invDataLocal(ult.fechadoEm)):'—',ult?`(há ${dias} ${dias===1?'dia':'dias'})`:'(nenhum fechado ainda)')}
+    </div>
+    <div class="est-card inv-filtros">
+      <div class="est-f"><label>Período do inventário</label><div class="inv-periodo"><input type="date" id="invf-de" value="${f.de}" onchange="invFiltro('de',this.value)"/><span>a</span><input type="date" id="invf-ate" value="${f.ate}" onchange="invFiltro('ate',this.value)"/></div></div>
+      <div class="est-f"><label>Categoria</label><select onchange="invFiltro('cat',this.value)"><option value="todas">Todas</option>${cats.map(c=>`<option${f.cat===c?' selected':''}>${_estEsc(c)}</option>`).join('')}</select></div>
+      <div class="est-f"><label>Status da contagem</label><select onchange="invFiltro('status',this.value)">${[['todos','Todos'],['ok','Ok'],['falta','Falta'],['sobra','Sobra'],['div','Com divergência'],['nao','Não contado']].map(([v,t])=>`<option value="${v}"${f.status===v?' selected':''}>${t}</option>`).join('')}</select></div>
+      <div class="est-f" style="flex:1;min-width:200px"><label>Buscar item</label><input id="invf-q" placeholder="Nome, código ou descrição" value="${_estEsc(f.q)}" oninput="invBuscar(this.value)"/></div>
+      <div class="est-f-bts"><button class="est-btn-out" onclick="invLimparFiltros()">Limpar filtros</button></div>
+    </div>
+    <div class="inv-grid">
+      <div class="inv-main"><div class="inv-tabs">${tabs}</div><div id="inv-aba">${aba==='inventarios'?_invAbaInventarios(f,invs):aba==='acuracidade'?_invAbaAcuracidade(f,invs,ag):_invAbaEstoque(f,ag)}</div></div>
+      <div class="inv-side">${_invCardAndamento(ativos)}${_invCardResumo(ag,ativos)}
+        <div class="inv-como"><b>💡 Como funciona</b><p>O inventário registra a contagem física e compara com o saldo do sistema. As divergências são apontadas e, após validação, geram um ajuste de estoque com histórico completo.</p></div></div>
+    </div>
+    <div class="est-nota">Acuracidade = (itens corretos ÷ total de itens contados) × 100 · considera os inventários fechados no período.</div>
+  </div>`;
+}
+function _invCardAndamento(ativos){
+  if(!ativos.length) return `<div class="est-card inv-and"><div class="inv-and-h"><span class="inv-kpi-ic y">📋</span><div><b>Nenhum inventário em andamento</b><small>Inicie uma contagem completa ou parcial.</small></div></div><button class="inv-btn-y" onclick="invAbrirForm()">＋ Iniciar inventário</button></div>`;
+  return ativos.map(inv=>{ const R=_invResumo(_invLinhas(inv)); return `<div class="est-card inv-and"><div class="inv-and-h"><span class="inv-kpi-ic y">📋</span><div><b>Inventário em andamento</b><small>${_estEsc(inv.nome)} · ${INV_TIPO_TXT[inv.tipo]||''} — ${R.contados} de ${R.previstos} itens</small></div></div>
+    <div class="inv-barra"><div style="width:${R.pct}%"></div><span>${R.pct}%</span></div>
+    <button class="inv-btn-y" onclick="invIr('${inv.status==='em_contagem'?'contagem':'apuracao'}','${inv.id}')">Continuar inventário ›</button></div>`; }).join('');
+}
+function _invCardResumo(ag,ativos){
+  const nao=ag.naoContados, tot=ag.contados+nao, mot=Object.entries(ag.motivos).sort((a,b)=>b[1]-a[1]), max=mot.length?mot[0][1]:1;
+  const cores=['#D1242F','#FFE600','#1A73E8','#AAAAAA'];
+  return `<div class="est-card inv-res"><div class="inv-res-h"><b>📊 Resumo da acuracidade</b></div>
+    <div class="inv-res-corpo">${_invDonut(ag.corretos,ag.divergentes,nao)}<div class="inv-donut-c"><b>${_invPct(ag.acuracia)}</b><small>Acuracidade geral</small></div>
+      <ul class="inv-leg"><li><i style="background:#00A650"></i>Corretos<b>${ag.corretos}</b></li><li><i style="background:#FFE600"></i>Com divergência<b>${ag.divergentes}</b></li><li><i style="background:#D1242F"></i>Não contados<b>${nao}</b></li></ul></div>
+    <div class="inv-mot"><b>Divergências por motivo</b>${mot.length?mot.slice(0,6).map(([m,n],i)=>`<div class="inv-mot-l"><span>${_estEsc(m)}</span><div><i style="width:${Math.max(6,n/max*100)}%;background:${cores[Math.min(i,3)]}"></i></div><b>${n}</b></div>`).join(''):'<div class="inv-vazio-s">Sem divergências no período.</div>'}</div></div>`;
+}
+function _invAbaEstoque(f,ag){
+  const q=_estNorm(f.q);
+  const sal=_invSaldos(_estProdutos());                       // saldo de todos de uma vez (não varre as movimentações a cada produto)
+  let l=_estProdutos().map(p=>{ const u=ag.porProd.get(p.id); return {p,u,saldo:sal.get(p.id)}; });
+  l=l.filter(x=>(f.cat==='todas'||x.p.categoria===f.cat)&&(!q||_estNorm(`${x.p.nome} ${x.p.codigo} ${x.p.categoria||''} ${x.p.obs||''}`).includes(q)));
+  const stat=x=>!x.u?'nao':(x.u.c.resultado==='correto'?'ok':(x.u.c.conf==='em_apuracao'||x.u.c.conf==='em_conferencia'?'div':x.u.c.resultado));
+  if(f.status!=='todos') l=l.filter(x=>stat(x)===f.status);
+  l.sort((a,b)=>a.p.nome.localeCompare(b.p.nome,'pt-BR'));
+  const PG=12, pags=Math.max(1,Math.ceil(l.length/PG)); _inv.pg=Math.min(Math.max(1,_inv.pg),pags);
+  const pg=l.slice((_inv.pg-1)*PG,_inv.pg*PG);
+  const num=n=>_estNum(n);
+  return `<div class="est-card inv-tabela"><div class="est-tab-wrap"><table class="est-tab inv-tab-lista"><colgroup><col style="width:25%"><col style="width:11%"><col style="width:8%"><col style="width:9%"><col style="width:8%"><col style="width:9%"><col style="width:12%"><col style="width:10%"><col style="width:8%"></colgroup><thead><tr><th>Item</th><th>Categoria</th><th class="num" title="Estoque atual">Estoque</th><th class="num" title="Contagem física">Contagem</th><th class="num" title="Divergência">Diverg.</th><th class="num" title="Acuracidade">Acurac.</th><th>Status</th><th title="Último inventário">Último inv.</th><th></th></tr></thead><tbody>
+    ${pg.map(x=>{ const c=x.u&&x.u.c; return `<tr><td><b>${_estEsc(x.p.nome)}</b><small>${_estEsc(x.p.codigo||'s/ código')} · ${_estEsc(x.p.unidade||'')}</small></td><td>${_estEsc(x.p.categoria||'—')}</td>
+      <td class="num">${num(x.saldo)}</td><td class="num">${c?num(c.contada):'—'}</td><td class="num ${c&&c.divergencia<0?'neg':c&&c.divergencia>0?'pos':''}">${c?(c.divergencia>0?'+':'')+num(c.divergencia):'—'}</td><td class="num">${c?_invPct(c.acuracia):'—'}</td>
+      <td>${_invPill(stat(x))}</td><td>${x.u?fmtDate(_invDataLocal(x.u.inv.fechadoEm)):'—'}</td>
+      <td class="est-acoes">${x.u?`<button title="Ver inventário" onclick="invIr('detalhe','${x.u.inv.id}')">⋯</button>`:''}</td></tr>`; }).join('')||'<tr><td colspan="9"><div class="rn-empty">Nenhum item para os filtros atuais.</div></td></tr>'}
+    </tbody></table></div>
+    <div class="inv-pager"><span>Total de itens: ${l.length}</span><div>${_invPaginas(_inv.pg,pags,'invPg')}</div></div></div>`;
+}
+function _invPaginas(atual,total,fn){
+  if(total<=1) return '';
+  const nums=[]; for(let i=1;i<=total;i++){ if(i===1||i===total||Math.abs(i-atual)<=1) nums.push(i); else if(nums[nums.length-1]!=='…') nums.push('…'); }
+  return `<button ${atual===1?'disabled':''} onclick="${fn}(${atual-1})">‹</button>${nums.map(n=>n==='…'?'<span>…</span>':`<button class="${n===atual?'on':''}" onclick="${fn}(${n})">${n}</button>`).join('')}<button ${atual===total?'disabled':''} onclick="${fn}(${atual+1})">›</button>`;
+}
+function _invAbaInventarios(f,invsFechados){
+  const todos=_invLista().filter(i=>{ if(INV_ATIVOS.includes(i.status)) return true; const d=_invDataLocal(i.abertoEm); return (!f.de||d>=f.de)&&(!f.ate||d<=f.ate); });
+  return `<div class="est-card inv-tabela"><div class="est-tab-wrap"><table class="est-tab"><thead><tr><th>Nº</th><th>Inventário</th><th>Tipo</th><th>Aberto em</th><th>Status</th><th class="num">Itens</th><th class="num">Acuracidade</th><th class="num">Divergência</th><th></th></tr></thead><tbody>
+    ${todos.map(inv=>{ const R=_invResumo(_invLinhas(inv)); return `<tr><td><b>${_estEsc(inv.numero)}</b></td><td>${_estEsc(inv.nome)}</td><td>${INV_TIPO_TXT[inv.tipo]||''}${inv.tipo==='categoria'?`<small>${_estEsc(inv.categoria||'')}</small>`:''}</td><td>${_invDH(inv.abertoEm)}<small>${_estEsc(inv.abertoPor||'')}</small></td>
+      <td><span class="inv-pill ${inv.status==='fechado'?'inv-p-ok':inv.status==='cancelado'?'inv-p-falta':'inv-p-div'}">${INV_STATUS_TXT[inv.status]||inv.status}</span></td><td class="num">${R.contados}/${R.previstos}</td><td class="num">${_invPct(R.acuracia)}</td><td class="num">${_invBRL(R.valFaltas+R.valSobras)}</td>
+      <td class="est-acoes">${INV_ATIVOS.includes(inv.status)?`<button class="est-btn-y" onclick="invIr('${inv.status==='em_contagem'?'contagem':'apuracao'}','${inv.id}')">Continuar</button>`:`<button class="est-btn-out" onclick="invIr('detalhe','${inv.id}')">Ver</button>`}</td></tr>`; }).join('')||'<tr><td colspan="9"><div class="rn-empty">Nenhum inventário no período. Clique em “Iniciar inventário”.</div></td></tr>'}
+    </tbody></table></div></div>`;
+}
+function _invAbaAcuracidade(f,invs,ag){
+  const cats=Object.entries(ag.porCat).map(([c,v])=>({c,...v,ac:v.contados?v.corretos/v.contados*100:null})).sort((a,b)=>(a.ac??101)-(b.ac??101));
+  const ord=invs.slice().sort((a,b)=>String(a.fechadoEm).localeCompare(String(b.fechadoEm)));
+  const barra=v=>v==null?'':`<div class="inv-ac-b"><i style="width:${v}%;background:${v>=98?'#00A650':v>=90?'#FFE600':'#D1242F'}"></i></div>`;
+  return `<div class="est-card inv-tabela"><div class="inv-ac-t">Evolução por inventário fechado</div><div class="est-tab-wrap"><table class="est-tab"><thead><tr><th>Inventário</th><th>Fechado em</th><th class="num">Contados</th><th class="num">Corretos</th><th class="num">Acuracidade</th><th></th><th class="num">Valor da divergência</th></tr></thead><tbody>
+    ${ord.map(inv=>{ const R=_invResumo(_invLinhas(inv)); return `<tr><td><b>${_estEsc(inv.numero)}</b><small>${_estEsc(inv.nome)}</small></td><td>${fmtDate(_invDataLocal(inv.fechadoEm))}</td><td class="num">${R.contados}</td><td class="num">${R.corretos}</td><td class="num">${_invPct(R.acuracia)}</td><td style="width:140px">${barra(R.acuracia)}</td><td class="num">${_invBRL(R.valFaltas+R.valSobras)}</td></tr>`; }).join('')||'<tr><td colspan="7"><div class="rn-empty">Nenhum inventário fechado no período.</div></td></tr>'}
+    </tbody></table></div>
+    <div class="inv-ac-t" style="margin-top:14px">Por categoria</div><div class="est-tab-wrap"><table class="est-tab"><thead><tr><th>Categoria</th><th class="num">Contados</th><th class="num">Corretos</th><th class="num">Acuracidade</th><th></th><th class="num">Divergência (R$)</th></tr></thead><tbody>
+    ${cats.map(x=>`<tr><td><b>${_estEsc(x.c)}</b></td><td class="num">${x.contados}</td><td class="num">${x.corretos}</td><td class="num">${_invPct(x.ac)}</td><td style="width:140px">${barra(x.ac)}</td><td class="num">${_invBRL(x.valor)}</td></tr>`).join('')||'<tr><td colspan="6"><div class="rn-empty">Sem dados no período.</div></td></tr>'}
+    </tbody></table></div></div>`;
+}
+function invAba(k){ _inv.aba=k; _inv.pg=1; _invRender(true); }
+function invFiltro(k,v){ _invFiltrosGet()[k]=v; _inv.pg=1; _invRender(true); }
+function invBuscar(v){ _invFiltrosGet().q=v; _inv.pg=1; const a=document.getElementById('inv-aba'); if(a){ const f=_invFiltrosGet(),invs=_invPeriodoInvs(f),ag=_invAgregar(invs); a.innerHTML=_inv.aba==='inventarios'?_invAbaInventarios(f,invs):_inv.aba==='acuracidade'?_invAbaAcuracidade(f,invs,ag):_invAbaEstoque(f,ag); } }
+function invLimparFiltros(){ _inv.f=null; _inv.pg=1; _invRender(true); }
+function invPg(n){ _inv.pg=n; const f=_invFiltrosGet(),a=document.getElementById('inv-aba'); if(a) a.innerHTML=_invAbaEstoque(f,_invAgregar(_invPeriodoInvs(f))); }
+function _invPeriodoInvs(f){ return _invLista().filter(i=>i.status==='fechado'&&(!f.de||_invDataLocal(i.fechadoEm)>=f.de)&&(!f.ate||_invDataLocal(i.fechadoEm)<=f.ate)); }
+
+// ═══ 1. ABERTURA: configuração do inventário ═══
+function invAbrirForm(){
+  const h=new Date(); _inv.abrir={nome:`Inventário geral — ${h.toLocaleDateString('pt-BR')}`,tipo:'completo',cat:'',sel:new Set(),busca:'',obs:'',nomeEditado:false};
+  _inv.vista='abrir'; _invRender(); const c=document.getElementById('mod-content'); if(c) c.scrollTop=0;
+}
+// Produtos que já estão em outro inventário em aberto não podem entrar neste (evita contagem em duplicidade e ajustes conflitantes)
+function _invOcupados(){ const m=new Map(); _invAtivos().forEach(inv=>Object.keys(inv.itens||{}).forEach(pid=>{ if(inv.itens[pid].situacao!=='excluido') m.set(pid,inv); })); return m; }
+function _invAlvo(){
+  const A=_inv.abrir, prods=_estProdutos(), oc=_invOcupados(); let base;
+  if(A.tipo==='completo') base=prods; else if(A.tipo==='categoria') base=A.cat?prods.filter(p=>p.categoria===A.cat):[]; else base=prods.filter(p=>A.sel.has(p.id));
+  return {incluidos:base.filter(p=>!oc.has(p.id)),bloqueados:base.filter(p=>oc.has(p.id)),oc};
+}
+function _invVistaAbrir(){
+  const A=_inv.abrir; if(!A) return _invVistaPainel();
+  const al=_invAlvo(), cats=_estCategorias(), agora=new Date();
+  const sugestao=A.tipo==='completo'?`Inventário geral — ${agora.toLocaleDateString('pt-BR')}`:A.tipo==='categoria'?`Inventário ${A.cat||'por categoria'} — ${agora.toLocaleDateString('pt-BR')}`:`Contagem parcial — ${agora.toLocaleDateString('pt-BR')}`;
+  return `<div class="est inv">
+    ${_estCab('Iniciar inventário','Configure a contagem. O saldo teórico de cada produto será congelado no momento da abertura.','📋',`<div class="est-head-f"><button class="inv-btn-o" onclick="invIr('painel')">← Voltar ao painel</button></div>`)}
+    <div class="est-card est-sec inv-form">
+      <div class="inv-form-grid">
+        <div class="form-group" style="grid-column:span 2"><label class="form-label">Nome do inventário *</label><input class="form-input" id="inva-nome" value="${_estEsc(A.nome)}" oninput="invAbrirSet('nome',this.value)"/></div>
+        <div class="form-group"><label class="form-label">Data e hora de abertura</label><input class="form-input" value="${agora.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'})}" readonly/><small class="inv-dica">Preenchida automaticamente no momento em que você confirmar.</small></div>
+        <div class="form-group"><label class="form-label">Aberto por</label><input class="form-input" value="${_estEsc(_estUsuario())}" readonly/></div>
+        <div class="form-group"><label class="form-label">Tipo de inventário *</label><select class="form-select" id="inva-tipo" onchange="invAbrirTipo(this.value)">${Object.entries(INV_TIPO_TXT).map(([k,t])=>`<option value="${k}"${A.tipo===k?' selected':''}>${t}</option>`).join('')}</select></div>
+        ${A.tipo==='categoria'?`<div class="form-group"><label class="form-label">Categoria *</label><select class="form-select" id="inva-cat" onchange="invAbrirSet('cat',this.value);invAbrirRefresh()"><option value="">Selecione…</option>${cats.map(c=>`<option${A.cat===c?' selected':''}>${_estEsc(c)}</option>`).join('')}</select></div>`:'<div></div>'}
+      </div>
+      ${A.tipo==='selecao'?`<div class="inv-sel"><div class="inv-sel-h"><input class="form-input" id="inva-busca" placeholder="Buscar produto por nome, código ou categoria…" value="${_estEsc(A.busca)}" oninput="invAbrirBusca(this.value)"/>
+        <button class="est-btn-out" onclick="invSelTodos(true)">Selecionar os filtrados</button><button class="est-btn-out" onclick="invSelTodos(false)">Limpar seleção</button></div><div id="inva-lista" class="inv-sel-lista">${_invListaSelecao()}</div></div>`:''}
+      <div class="form-group"><label class="form-label">Observações</label><textarea class="form-textarea" id="inva-obs" style="min-height:60px" oninput="invAbrirSet('obs',this.value)" placeholder="Ex.: contagem de fim de mês, área do almoxarifado, equipe responsável…">${_estEsc(A.obs)}</textarea></div>
+      <div id="inva-resumo">${_invResumoSelecao(al)}</div>
+      <div class="inv-form-bts"><button class="inv-btn-o" onclick="invIr('painel')">Cancelar</button><button class="inv-btn-y" id="inva-ok" onclick="invConfirmarAbertura()" ${al.incluidos.length?'':'disabled'}>Iniciar contagem</button></div>
+    </div></div>`;
+}
+function _invResumoSelecao(al){
+  const A=_inv.abrir, n=al.incluidos.length;
+  const cats=[...new Set(al.incluidos.map(p=>p.categoria||'Sem categoria'))];
+  return `<div class="inv-resumo"><div><small>Resumo da seleção</small><b>${n} ${n===1?'produto será contado':'produtos serão contados'}</b>${n?`<span>em ${cats.length} ${cats.length===1?'categoria':'categorias'}</span>`:'<span>'+(A.tipo==='categoria'&&!A.cat?'Escolha uma categoria.':A.tipo==='selecao'?'Marque os produtos que deseja contar.':'Nenhum produto disponível.')+'</span>'}</div>
+    ${al.bloqueados.length?`<div class="inv-aviso">⚠ ${al.bloqueados.length} ${al.bloqueados.length===1?'produto já está':'produtos já estão'} em outro inventário em andamento e ${al.bloqueados.length===1?'não entra':'não entram'} neste: <span>${_estEsc(al.bloqueados.slice(0,4).map(p=>p.nome).join(', '))}${al.bloqueados.length>4?'…':''}</span> (${[...new Set(al.bloqueados.map(p=>al.oc.get(p.id).numero))].join(', ')})</div>`:''}</div>`;
+}
+function _invListaSelecao(){
+  const A=_inv.abrir, q=_estNorm(A.busca), oc=_invOcupados();
+  const l=_estProdutos().filter(p=>!q||_estNorm(`${p.nome} ${p.codigo} ${p.categoria||''}`).includes(q)).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  return l.slice(0,300).map(p=>`<label class="inv-sel-it${oc.has(p.id)?' bloq':''}"><input type="checkbox" ${A.sel.has(p.id)?'checked':''} ${oc.has(p.id)?'disabled':''} onchange="invSelItem('${p.id}',this.checked)"/><span><b>${_estEsc(p.nome)}</b><small>${_estEsc(p.codigo||'s/ código')} · ${_estEsc(p.categoria||'sem categoria')}${oc.has(p.id)?` · em ${_estEsc(oc.get(p.id).numero)}`:''}</small></span></label>`).join('')+(l.length>300?`<div class="inv-vazio-s">Mostrando 300 de ${l.length} — refine a busca.</div>`:'')||'<div class="inv-vazio-s">Nenhum produto encontrado.</div>';
+}
+function invAbrirSet(k,v){ const A=_inv.abrir; A[k]=v; if(k==='nome') A.nomeEditado=true; }
+function invAbrirTipo(t){ const A=_inv.abrir; A.tipo=t; if(!A.nomeEditado){ const d=new Date().toLocaleDateString('pt-BR'); A.nome=t==='completo'?`Inventário geral — ${d}`:t==='categoria'?`Inventário por categoria — ${d}`:`Contagem parcial — ${d}`; } _invRender(true); }
+function invAbrirRefresh(){ const A=_inv.abrir; if(A.tipo==='categoria'&&!A.nomeEditado&&A.cat) A.nome=`Inventário ${A.cat} — ${new Date().toLocaleDateString('pt-BR')}`; _invRender(true); }
+function invAbrirBusca(v){ _inv.abrir.busca=v; const l=document.getElementById('inva-lista'); if(l) l.innerHTML=_invListaSelecao(); }
+function invSelItem(id,on){ const A=_inv.abrir; on?A.sel.add(id):A.sel.delete(id); _invAtualizarResumo(); }
+function invSelTodos(on){ const A=_inv.abrir, q=_estNorm(A.busca), oc=_invOcupados(); _estProdutos().filter(p=>!oc.has(p.id)&&(!q||_estNorm(`${p.nome} ${p.codigo} ${p.categoria||''}`).includes(q))).forEach(p=>on?A.sel.add(p.id):A.sel.delete(p.id)); const l=document.getElementById('inva-lista'); if(l) l.innerHTML=_invListaSelecao(); _invAtualizarResumo(); }
+function _invAtualizarResumo(){ const al=_invAlvo(), r=document.getElementById('inva-resumo'); if(r) r.innerHTML=_invResumoSelecao(al); const b=document.getElementById('inva-ok'); if(b) b.disabled=!al.incluidos.length; }
+// 2. Cria o registro único do inventário e CONGELA o saldo teórico de cada produto
+async function invConfirmarAbertura(){
+  const A=_inv.abrir; if(!A) return;
+  const nome=(document.getElementById('inva-nome').value||'').trim();
+  if(!nome){ alert('Informe o nome do inventário.'); return; }
+  if(A.tipo==='categoria'&&!A.cat){ alert('Escolha a categoria.'); return; }
+  const al=_invAlvo(); if(!al.incluidos.length){ alert('Nenhum produto selecionado para contar.'); return; }
+  const btn=document.getElementById('inva-ok'); if(btn){ btn.disabled=true; btn.textContent='Abrindo…'; }
+  const agora=new Date().toISOString(), usuario=_estUsuario(), saldos=_invSaldos(al.incluidos), itens={};
+  al.incluidos.forEach(p=>{ itens[p.id]={produtoId:p.id,codigo:p.codigo||'',nome:p.nome,categoria:p.categoria||'',unidade:p.unidade||'',fracionavel:_invFrac(p),saldoAbertura:saldos.get(p.id),custoUnitario:Number(p.valorUnitario)||0,situacao:'pendente'}; });
+  const id=uid(), eid=uid();
+  const inv={id,numero:_invNumero(),nome,tipo:A.tipo,categoria:A.tipo==='categoria'?A.cat:'',observacao:(document.getElementById('inva-obs').value||'').trim(),abertoEm:agora,abertoPor:usuario,status:'em_contagem',totalPrevistos:al.incluidos.length,
+    excluidosPorConflito:al.bloqueados.map(p=>p.nome),itens,eventos:{[eid]:{em:agora,por:usuario,acao:'Abertura',detalhe:`${al.incluidos.length} produtos · saldo teórico congelado`}}};
+  try{ _invCache(inv); await fbRoot.child('estoqueInventarios').child(id).set(_invLimpa(inv)); }
+  catch(e){ console.error(e); const m={..._invMapa()}; delete m[id]; DB_CACHE.estoqueInventarios=m; alert('⚠️ Não foi possível abrir o inventário na nuvem. Nada foi registrado. Tente novamente.'); if(btn){ btn.disabled=false; btn.textContent='Iniciar contagem'; } return; }
+  _estLog('Inventário',`Inventário ${inv.numero} aberto — ${inv.nome} (${INV_TIPO_TXT[inv.tipo]}, ${al.incluidos.length} produtos)`,{inventarioId:id});
+  _inv.abrir=null; _inv.busca=''; _inv.cat='todas'; _inv.filt='todos'; invIr('contagem',id);
+}
+
+// ═══ 3. TELA DE CONTAGEM FÍSICA ═══
+function _invFiltrarC(linhas){
+  const q=_estNorm(_inv.busca);
+  return linhas.filter(({it,c})=>{
+    if(q&&!_estNorm(`${it.nome} ${it.codigo} ${it.categoria}`).includes(q)) return false;
+    if(_inv.cat!=='todas'&&it.categoria!==_inv.cat) return false;
+    if(_inv.filt==='pendentes') return !_invContado(it)&&it.situacao!=='excluido';
+    if(_inv.filt==='contados') return _invContado(it);
+    return true;
+  });
+}
+function _invVistaContagem(){
+  const inv=_invGet(_inv.invId); if(!inv) return _invVistaPainel();
+  _inv.statusRender=inv.status;
+  const ctx=_invCtx(Object.keys(inv.itens)), linhas=_invLinhas(inv,ctx), R=_invResumo(linhas), aut=_invAut(), pode=inv.status==='em_contagem';
+  const cats=[...new Set(Object.values(inv.itens).map(i=>i.categoria).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const filtros=[['todos','Todos'],['pendentes','Pendentes'],['contados','Contados']].map(([k,t])=>`<button class="inv-chip${_inv.filt===k?' on':''}" onclick="invFiltroC('${k}')">${t}</button>`).join('');
+  return `<div class="est inv">
+    ${_estCab(`Contagem física — ${_estEsc(inv.numero)}`,`${_estEsc(inv.nome)}`,'📋',`<div class="est-head-f"><button class="inv-btn-o" onclick="invIr('painel')">⏸ Interromper e voltar</button>${aut?`<button class="inv-btn-o" onclick="invRevelar()">${_inv.reveal?'🙈 Ocultar saldo teórico':'👁 Conferir saldo teórico'}</button>`:''}${pode?`<button class="inv-btn-k" onclick="invApurar()">Apurar divergências ›</button>`:`<button class="inv-btn-k" onclick="invIr('apuracao')">Ver apuração ›</button>`}</div>`)}
+    ${pode?'':`<div class="inv-aviso">Este inventário está <b>${INV_STATUS_TXT[inv.status]}</b> — a contagem não pode ser alterada aqui.${inv.status==='apurado'&&aut?' Use "Recontar" na apuração para reabrir um item.':''}</div>`}
+    <div class="est-card inv-cab">
+      <div class="inv-cab-info"><div><small>Inventário</small><b>${_estEsc(inv.numero)}</b></div><div><small>Aberto em</small><b>${_invDH(inv.abertoEm)}</b></div><div><small>Tipo</small><b>${INV_TIPO_TXT[inv.tipo]}${inv.tipo==='categoria'?` · ${_estEsc(inv.categoria)}`:''}</b></div><div><small>Aberto por</small><b>${_estEsc(inv.abertoPor||'—')}</b></div></div>
+      <div class="inv-prog"><div class="inv-barra"><div id="inv-barra-i" style="width:${R.pct}%"></div><span id="inv-barra-t">${R.pct}%</span></div><div id="inv-stats" class="inv-stats">${_invStatsHtml(R)}</div></div>
+      <div id="inv-salvo" class="inv-salvo">${_inv.salvo||'As contagens são salvas automaticamente.'}</div>
+    </div>
+    ${_inv.reveal&&aut?'<div class="inv-aviso inv-aviso-i">👁 Saldo teórico visível (conferência por usuário autorizado). O acesso ficou registrado no histórico do inventário.</div>':''}
+    <div class="est-card inv-filtros"><div class="est-f" style="flex:1;min-width:220px"><label>Buscar produto</label><input id="invc-q" placeholder="Nome, código ou categoria" value="${_estEsc(_inv.busca)}" oninput="invBuscaC(this.value)"/></div>
+      <div class="est-f"><label>Categoria</label><select onchange="invCatC(this.value)"><option value="todas">Todas</option>${cats.map(c=>`<option${_inv.cat===c?' selected':''}>${_estEsc(c)}</option>`).join('')}</select></div>
+      <div class="est-f"><label>Exibir</label><div class="inv-chips">${filtros}</div></div></div>
+    <div id="inv-lista">${_invTabelaC(inv,linhas)}</div>
+  </div>`;
+}
+function _invStatsHtml(R){ return `<span><b>${R.previstos}</b> previstos</span><span class="ok"><b>${R.contados}</b> contados</span><span class="${R.pendentes?'pend':''}"><b>${R.pendentes}</b> pendentes</span>${R.excluidos?`<span><b>${R.excluidos}</b> excluídos</span>`:''}`; }
+function _invTabelaC(inv,linhas){
+  const l=_invFiltrarC(linhas).sort((a,b)=>a.it.nome.localeCompare(b.it.nome,'pt-BR')), PG=50, pags=Math.max(1,Math.ceil(l.length/PG)); _inv.pgC=Math.min(Math.max(1,_inv.pgC),pags);
+  const pg=l.slice((_inv.pgC-1)*PG,_inv.pgC*PG);
+  return `<div class="est-card inv-tabela"><div class="est-tab-wrap"><table class="est-tab inv-tab-c"><thead><tr><th>Código</th><th>Produto</th><th>Categoria</th><th class="num">Saldo teórico</th><th class="num">Contagem física</th><th>Situação</th><th>Observação</th></tr></thead><tbody>
+    ${pg.map(x=>_invLinhaC(inv,x.pid,x.it)).join('')||'<tr><td colspan="7"><div class="rn-empty">Nenhum produto para os filtros atuais.</div></td></tr>'}</tbody></table></div>
+    <div class="inv-pager"><span>${l.length} ${l.length===1?'produto':'produtos'}</span><div>${_invPaginas(_inv.pgC,pags,'invPgC')}</div></div></div>`;
+}
+function _invLinhaC(inv,pid,it){
+  const contado=_invContado(it), edit=!contado||_inv.editando.has(pid), pode=inv.status==='em_contagem', exc=it.situacao==='excluido';
+  const sal=(_inv.reveal&&_invAut())?_estNum(it.saldoAbertura):'<span class="inv-oculto" title="Oculto para não influenciar a contagem">••••</span>';
+  const campo=exc?'<span class="inv-nd">excluído do fechamento</span>':!pode?(contado?`<b>${_estNum(it.qtdContada)}</b>`:'<span class="inv-nd">—</span>')
+    :(contado&&!edit?`<span class="inv-val"><b>${_estNum(it.qtdContada)}</b><button class="inv-recontar" onclick="invRecontar('${pid}')" title="Contar novamente (a contagem anterior fica registrada)">↺ Recontar</button></span><small>${_estEsc(it.contadoPor||'')} · ${_invDH(it.contadoEm)}</small>`
+      :`<input class="inv-in" id="inv-in-${pid}" inputmode="decimal" autocomplete="off" placeholder="—" value="${contado?String(it.qtdContada).replace('.',','):''}" title="${it.fracionavel?'Aceita fração (use vírgula)':'Unidade inteira'}" onchange="invContar('${pid}',this)" onkeydown="invTecla(event)"/><small class="inv-msg" id="inv-m-${pid}"></small>`);
+  return `<tr id="inv-r-${pid}" data-pid="${pid}" data-sig="${_estEsc(_invSig(it))}" class="${contado||exc?'':'inv-pend'}"><td>${_estEsc(it.codigo||'s/ código')}</td><td><b>${_estEsc(it.nome)}</b><small>${_estEsc(it.unidade||'')}${it.fracionavel?' · aceita fração':''}</small></td><td>${_estEsc(it.categoria||'—')}</td><td class="num">${sal}</td>
+    <td class="num inv-cel-c">${campo}</td><td>${_invPill(exc?'excluido':contado?'contado':'pendente')}</td>
+    <td><input class="inv-obs" placeholder="Observação" value="${_estEsc(it.obs||'')}" ${pode||inv.status==='apurado'?'':'disabled'} onchange="invObs('${pid}',this)"/></td></tr>`;
+}
+function _invPatchLinha(pid){
+  const inv=_invGet(_inv.invId), tr=document.getElementById('inv-r-'+pid); if(!inv||!tr) return;
+  tr.outerHTML=_invLinhaC(inv,pid,inv.itens[pid]); _invAtualizarCab(inv);
+}
+function _invAtualizarCab(inv){
+  const R=_invResumo(_invLinhas(inv,_invCtx(Object.keys(inv.itens)))), s=document.getElementById('inv-stats'); if(s) s.innerHTML=_invStatsHtml(R);
+  const b=document.getElementById('inv-barra-i'), t=document.getElementById('inv-barra-t'); if(b) b.style.width=R.pct+'%'; if(t) t.textContent=R.pct+'%';
+}
+function _invMsgLinha(pid,m){ const e=document.getElementById('inv-m-'+pid); if(e){ e.textContent=m; e.className='inv-msg erro'; } }
+function invBuscaC(v){ _inv.busca=v; _inv.pgC=1; _invRefazLista(); }
+function invCatC(v){ _inv.cat=v; _inv.pgC=1; _invRefazLista(); }
+function invFiltroC(k){ _inv.filt=k; _inv.pgC=1; _invRender(true); }
+function invPgC(n){ _inv.pgC=n; _invRefazLista(); }
+function _invRefazLista(){ const inv=_invGet(_inv.invId), l=document.getElementById('inv-lista'); if(inv&&l) l.innerHTML=_invTabelaC(inv,_invLinhas(inv,_invCtx(Object.keys(inv.itens)))); }
+function invTecla(ev){
+  if(ev.key!=='Enter') return; ev.preventDefault();
+  const el=ev.target, ins=[...document.querySelectorAll('.inv-in')], prox=ins[ins.indexOf(el)+1];
+  el.blur();                                                          // dispara o salvamento (change) e já troca a linha, de forma síncrona
+  if(prox&&document.body.contains(prox)) prox.focus();                // foco no próximo campo sem esperar nada (sem corrida com o próximo clique)
+}
+function invRecontar(pid){ _inv.editando.add(pid); _invPatchLinha(pid); const i=document.getElementById('inv-in-'+pid); if(i){ i.focus(); i.select(); } }
+// Registra (ou corrige) a contagem de um item — salva sozinho, valida unidade e protege contra contagem duplicada acidental
+async function invContar(pid,el){
+  const inv=_invGet(_inv.invId); if(!inv||inv.status!=='em_contagem'){ alert('Este inventário não aceita mais contagem.'); return; }
+  const it=inv.itens[pid]; if(!it) return;
+  const r=_invParseQtd(el.value), contado=_invContado(it);
+  const erro=m=>{ el.classList.add('inv-erro'); _invMsgLinha(pid,m); };
+  if(r.erro){ erro(r.erro); return; }
+  if(r.vazio){
+    if(!contado){ el.classList.remove('inv-erro'); return; }
+    if(!confirm(`Remover a contagem de "${it.nome}"?\n\nO item volta para "Pendente" e a contagem anterior (${_estNum(it.qtdContada)}) fica registrada no histórico.`)){ _inv.editando.delete(pid); _invPatchLinha(pid); return; }
+  } else {
+    if(!it.fracionavel&&!Number.isInteger(r.valor)){ erro(`A unidade "${it.unidade||'—'}" só aceita quantidade inteira.`); return; }
+    if(contado){
+      if(Number(it.qtdContada)===r.valor){ _inv.editando.delete(pid); _invPatchLinha(pid); return; }
+      if(!confirm(`"${it.nome}" já foi contado por ${it.contadoPor||'—'} em ${_invDH(it.contadoEm)}: ${_estNum(it.qtdContada)}.\n\nSubstituir por ${_estNum(r.valor)}? A contagem anterior fica registrada no histórico.`)){ _inv.editando.delete(pid); _invPatchLinha(pid); return; }
+    }
+  }
+  const agora=new Date().toISOString(), usuario=_estUsuario(), hist={...(it.historicoContagens||{})};
+  if(contado) hist[uid()]={valor:it.qtdContada,em:it.contadoEm||null,por:it.contadoPor||null,substituidaEm:agora,substituidaPor:usuario};
+  const campos=r.vazio?{qtdContada:null,contadoEm:null,contadoPor:null,situacao:'pendente',historicoContagens:hist,situacaoConf:null,validadoPor:null,validadoEm:null}
+    :{qtdContada:r.valor,contadoEm:agora,contadoPor:usuario,situacao:'contado',historicoContagens:hist,...(contado?{situacaoConf:null,validadoPor:null,validadoEm:null}:{})};
+  _inv.editando.delete(pid); _invMarcarSalvo(false);
+  const p=_invSalvarItem(inv,pid,campos,{acao:r.vazio?'Contagem removida':(contado?'Recontagem':'Contagem'),detalhe:`${it.nome}${r.vazio?'':`: ${_estNum(r.valor)}`}`});
+  _invPatchLinha(pid);
+  try{ await p; _invMarcarSalvo(true); }catch(e){ _invAlerta(e); }
+}
+async function invObs(pid,el){
+  const inv=_invGet(_inv.invId); if(!inv) return; _invMarcarSalvo(false);
+  try{ await _invSalvarItem(inv,pid,{obs:el.value.trim()||null}); _invMarcarSalvo(true); }catch(e){ _invAlerta(e); }
+}
+function invRevelar(){
+  if(!_invAut()){ alert('Apenas usuários autorizados podem conferir o saldo teórico.'); return; }
+  const inv=_invGet(_inv.invId); if(!inv) return;
+  if(_inv.reveal){ _inv.reveal=false; _invRender(true); return; }
+  if(!confirm('Conferir o saldo teórico durante a contagem?\n\nQuem estiver vendo esta tela poderá ver o saldo do sistema, o que pode influenciar a contagem. O acesso fica registrado no histórico do inventário.')) return;
+  _inv.reveal=true; _invSalvarInv(inv,{},{acao:'Saldo teórico conferido',detalhe:'Visualização do saldo teórico durante a contagem por usuário autorizado'}).catch(_invAlerta); _invRender(true);
+}
+async function invApurar(){
+  const inv=_invGet(_inv.invId); if(!inv) return;
+  const R=_invResumo(_invLinhas(inv));
+  if(!R.contados){ alert('Conte ao menos um item antes de apurar.'); return; }
+  if(R.pendentes&&!confirm(`Ainda há ${R.pendentes} ${R.pendentes===1?'item não contado':'itens não contados'}.\n\nEles aparecerão como "Pendente" na apuração e só poderão ser fechados depois de contados ou excluídos do fechamento.\n\nApurar mesmo assim?`)) return;
+  try{ await _invSalvarInv(inv,{status:'apurado',apuradoEm:new Date().toISOString(),apuradoPor:_estUsuario()},{acao:'Apuração',detalhe:`${R.contados} contados · ${R.pendentes} pendentes`}); }
+  catch(e){ _invAlerta(e); alert('Não foi possível registrar a apuração. Tente novamente.'); return; }
+  _estLog('Inventário',`Inventário ${inv.numero} apurado (${R.contados} contados, ${R.pendentes} pendentes)`,{inventarioId:inv.id});
+  invIr('apuracao',inv.id);
+}
+async function invCancelar(){
+  const inv=_invGet(_inv.invId); if(!inv||!_invAut()){ alert('Apenas usuários autorizados podem cancelar um inventário.'); return; }
+  const motivo=(prompt(`Cancelar o inventário ${inv.numero}?\n\nO saldo oficial não foi alterado. Os dados da contagem ficam guardados. Informe o motivo:`)||'').trim();
+  if(!motivo){ return; }
+  try{ await _invSalvarInv(inv,{status:'cancelado',canceladoEm:new Date().toISOString(),canceladoPor:_estUsuario(),canceladoMotivo:motivo},{acao:'Cancelamento',detalhe:motivo}); }catch(e){ _invAlerta(e); alert('Não foi possível cancelar.'); return; }
+  _estLog('Inventário',`Inventário ${inv.numero} cancelado — ${motivo}`,{inventarioId:inv.id}); invIr('painel');
+}
+
+// ═══ Atualização em tempo real sem atrapalhar quem está digitando ═══
+// O Firebase avisa a tela a CADA gravação (inclusive as do salvamento automático). Chamado por refreshCurrentView:
+//  • contagem: atualiza só a barra/contadores e as linhas que OUTRA pessoa alterou — nunca recarrega a tela nem tira o foco do campo;
+//  • demais telas do inventário: não recarrega enquanto houver um campo em edição.
+const _invSig=it=>`${it.qtdContada}|${it.contadoEm}|${it.situacao}|${it.obs||''}`;
+function _invSyncContagem(){
+  const inv=_invGet(_inv.invId); if(!inv) return;
+  if(_inv.statusRender&&inv.status!==_inv.statusRender){ _invRender(true); return; }          // o inventário mudou de fase (ex.: foi apurado por outra pessoa)
+  _invAtualizarCab(inv);
+  document.querySelectorAll('#inv-lista tr[data-pid]').forEach(tr=>{
+    const pid=tr.dataset.pid, it=inv.itens[pid]; if(!it||tr.dataset.sig===_invSig(it)||tr.contains(document.activeElement)||_inv.editando.has(pid)) return;
+    tr.outerHTML=_invLinhaC(inv,pid,it);
+  });
+}
+function _invAtualizacaoRemota(){
+  if(!(typeof currentModId!=='undefined'&&currentModId==='estoque'&&currentPage==='inventario')) return false;
+  if(_inv.vista==='contagem'&&document.getElementById('inv-lista')){ _invSyncContagem(); return true; }
+  const a=document.activeElement; return !!(a&&/^(INPUT|SELECT|TEXTAREA)$/.test(a.tagName)&&a.closest&&a.closest('#mod-content'));
+}
+
+// ═══ 4. APURAÇÃO DAS DIVERGÊNCIAS (e consulta de inventários fechados) ═══
+function _invAcessoRestrito(inv){
+  return `<div class="est inv">${_estCab('Apuração restrita','Esta etapa mostra o saldo teórico e fica disponível só para usuários autorizados.','🔒',`<div class="est-head-f"><button class="inv-btn-o" onclick="invIr('painel')">← Voltar ao painel</button></div>`)}
+  <div class="est-card est-sec"><div class="inv-aviso">Peça a um usuário autorizado para apurar e fechar o inventário <b>${_estEsc(inv.numero)}</b>. A contagem física continua disponível para todos em "Continuar inventário".</div></div></div>`;
+}
+const _invFiltrosAp=[['todos','Todos'],['divergentes','Divergentes'],['faltas','Faltas'],['sobras','Sobras'],['conferencia','Em conferência'],['apuracao','Em apuração'],['pendentes','Pendentes'],['corretos','Corretos']];
+function _invPassaAp(x,f){
+  const r=x.c.resultado, cf=x.c.conf;
+  return f==='todos'||(f==='divergentes'&&(r==='falta'||r==='sobra'))||(f==='faltas'&&r==='falta')||(f==='sobras'&&r==='sobra')||(f==='conferencia'&&cf==='em_conferencia')||(f==='apuracao'&&cf==='em_apuracao')||(f==='pendentes'&&(r==='pendente'||cf==='excluido'))||(f==='corretos'&&r==='correto');
+}
+function _invVistaApuracao(){
+  const inv=_invGet(_inv.invId); if(!inv) return _invVistaPainel();
+  const fechado=inv.status==='fechado'||inv.status==='cancelado', aut=_invAut();
+  if(!fechado&&!aut) return _invAcessoRestrito(inv);
+  const ctx=_invCtx(Object.keys(inv.itens)), linhas=_invLinhas(inv,ctx), R=_invResumo(linhas), edit=!fechado&&aut&&inv.status==='apurado';
+  const q=_estNorm(_inv.buscaAp), cnt=f=>linhas.filter(x=>_invPassaAp(x,f)).length;
+  let l=linhas.filter(x=>_invPassaAp(x,_inv.filtAp)&&(!q||_estNorm(`${x.it.nome} ${x.it.codigo} ${x.it.categoria}`).includes(q)));
+  l.sort((a,b)=>(Math.abs(b.c.valor||0)-Math.abs(a.c.valor||0))||a.it.nome.localeCompare(b.it.nome,'pt-BR'));
+  const PG=25, pags=Math.max(1,Math.ceil(l.length/PG)); _inv.pgAp=Math.min(Math.max(1,_inv.pgAp),pags); const pg=l.slice((_inv.pgAp-1)*PG,_inv.pgAp*PG);
+  const k=(t,v,s,cls)=>`<div class="inv-ka ${cls||''}"><small>${t}</small><b>${v}</b>${s?`<em>${s}</em>`:''}</div>`;
+  const stCls=inv.status==='fechado'?'inv-p-ok':inv.status==='cancelado'?'inv-p-falta':'inv-p-div';
+  return `<div class="est inv">
+    ${_estCab(`${fechado?'Inventário':'Apuração de divergências'} — ${_estEsc(inv.numero)}`,`${_estEsc(inv.nome)} · aberto em ${_invDH(inv.abertoEm)}${inv.fechadoEm?` · fechado em ${_invDH(inv.fechadoEm)}`:''}`,'📋',
+      `<div class="est-head-f"><button class="inv-btn-o" onclick="invIr('painel')">← Painel</button>${!fechado&&inv.status==='apurado'?`<button class="inv-btn-o" onclick="invVoltarContagem()">↺ Voltar à contagem</button>`:''}<button class="inv-btn-o" onclick="invExportar('${inv.id}')">⬇ Exportar</button>${edit?`<button class="inv-btn-k" onclick="invIr('revisao')">Revisão e fechamento ›</button>`:''}</div>`)}
+    <div class="inv-st-linha"><span class="inv-pill ${stCls}">${INV_STATUS_TXT[inv.status]}</span><span>${INV_TIPO_TXT[inv.tipo]}${inv.tipo==='categoria'?` · ${_estEsc(inv.categoria)}`:''}</span>${inv.canceladoMotivo?`<span class="neg">Motivo do cancelamento: ${_estEsc(inv.canceladoMotivo)}</span>`:''}${R.alterados?`<span class="inv-alerta-i">⚠ ${R.alterados} ${R.alterados===1?'item com movimentação anterior alterada':'itens com movimentação anterior alterada'} durante a contagem</span>`:''}</div>
+    <div class="inv-kas">${k('Previstos',R.previstos)}${k('Contados',R.contados)}${k('Pendentes',R.pendentes,R.excluidos?`${R.excluidos} excluídos`:'',R.pendentes?'warn':'')}${k('Corretos',R.corretos,'','ok')}${k('Faltas',R.faltas,`−${_estNum(R.unFaltas)} un · ${_invBRL(R.valFaltas)}`,R.faltas?'neg':'')}${k('Sobras',R.sobras,`+${_estNum(R.unSobras)} un · ${_invBRL(R.valSobras)}`)}${k('Em conferência',R.emConf,R.emApur?`${R.emApur} em apuração`:'',R.emConf?'warn':'')}${k('Acuracidade',_invPct(R.acuracia),'itens corretos ÷ contados')}</div>
+    <div class="est-card inv-filtros"><div class="est-f" style="flex:1;min-width:220px"><label>Buscar produto</label><input placeholder="Nome, código ou categoria" value="${_estEsc(_inv.buscaAp)}" oninput="invBuscaAp(this.value)"/></div>
+      <div class="est-f" style="flex:3"><label>Exibir</label><div class="inv-chips">${_invFiltrosAp.map(([kk,t])=>`<button class="inv-chip${_inv.filtAp===kk?' on':''}" onclick="invFiltroAp('${kk}')">${t} <i>${cnt(kk)}</i></button>`).join('')}</div></div></div>
+    <div class="est-card inv-tabela"><div class="est-tab-wrap"><table class="est-tab inv-tab-ap"><thead><tr><th>Produto</th><th class="num">Saldo teórico</th><th class="num">Mov. durante</th><th class="num">Conciliado</th><th class="num">Contado</th><th class="num">Diferença</th><th class="num">%</th><th class="num">Valor est.</th><th>Resultado</th><th>Conferência</th><th>${fechado?'Motivo informado':'Motivo e ações'}</th></tr></thead><tbody>
+      ${pg.map(x=>_invLinhaAp(inv,x,edit,fechado)).join('')||'<tr><td colspan="11"><div class="rn-empty">Nenhum item neste filtro.</div></td></tr>'}</tbody></table></div>
+      <div class="inv-pager"><span>${l.length} ${l.length===1?'item':'itens'}</span><div>${_invPaginas(_inv.pgAp,pags,'invPgAp')}</div></div></div>
+    <div class="est-nota">Diferença = quantidade física − saldo teórico conciliado (saldo da abertura + movimentações registradas até o momento da contagem do item). O motivo é o informado por quem apurou — não é causa comprovada até a validação. Valores a custo unitário cadastrado.</div></div>`;
+}
+function _invLinhaAp(inv,x,edit,fechado){
+  const {pid,it,c}=x, f=v=>(v>0?'+':'')+_estNum(v), pend=c.resultado==='pendente', exc=it.situacao==='excluido';
+  const alt=Math.abs(c.alteracao)>1e-6, dif=c.divergencia;
+  const precisa=!pend&&(dif!==0||(c.ajuste!=null&&Math.abs(c.ajuste)>1e-9));
+  const durTxt=c.durante?f(c.durante):'—', nNov=(c.novos||[]).length;
+  const motivo=fechado?`${it.motivo?_estEsc(it.motivo):'<span class="inv-nd">—</span>'}${it.motivoObs?`<small>${_estEsc(it.motivoObs)}</small>`:''}${c.ajusteId?'<small>Ajuste gerado</small>':''}`
+    :(precisa?`<select class="inv-mot-sel" ${edit?'':'disabled'} onchange="invMotivo('${pid}',this.value)"><option value="">Selecione o motivo…</option>${INV_MOTIVOS.map(m=>`<option${it.motivo===m?' selected':''}>${_estEsc(m)}</option>`).join('')}</select>
+       <input class="inv-mot-obs" placeholder="Observação complementar" value="${_estEsc(it.motivoObs||'')}" ${edit?'':'disabled'} onchange="invMotivoObs('${pid}',this.value)"/>
+       ${edit?`<div class="inv-acoes"><button class="inv-a-ok" onclick="invValidar('${pid}')" title="Validar esta divergência para gerar o ajuste">✓ Validar</button><button onclick="invManter('${pid}')" title="Manter em apuração (sem ajuste)">⏳ Em apuração</button><button onclick="invReabrir('${pid}')" title="Voltar o item para nova contagem">↺ Recontar</button></div>`:''}`
+      :(edit&&!pend&&!exc?`<div class="inv-acoes"><button onclick="invReabrir('${pid}')">↺ Recontar</button></div>`:''));
+  return `<tr class="${c.conf==='em_conferencia'?'inv-conf':''}"><td><b>${_estEsc(it.nome)}</b><small>${_estEsc(it.codigo||'s/ código')} · ${_estEsc(it.unidade||'')}</small>${alt?`<small class="inv-alt" title="Um movimento anterior à abertura foi alterado ou excluído durante a contagem. Diferença para o saldo oficial: ${f(c.alteracao)}">⚠ movimentação anterior alterada (${f(c.alteracao)})</small>`:''}</td>
+    <td class="num">${_estNum(c.abertura)}</td><td class="num" title="${nNov} movimentação(ões) registrada(s) após a abertura">${durTxt}${nNov&&!pend?`<small>${nNov} mov.</small>`:''}</td><td class="num">${pend?'—':_estNum(c.conciliado)}</td>
+    <td class="num">${pend?'—':`<b>${_estNum(c.contada)}</b>`}</td><td class="num ${dif<0?'neg':dif>0?'pos':''}">${pend?'—':f(dif)}</td><td class="num">${pend||c.pct==null?'—':(c.pct>0?'+':'')+_invPct(c.pct)}</td><td class="num ${dif<0?'neg':dif>0?'pos':''}">${pend?'—':_invBRL(c.valor)}</td>
+    <td>${_invPill(exc?'excluido':c.resultado)}</td><td>${_invPill(exc?'excluido':c.conf)}</td><td class="inv-td-mot">${motivo}</td></tr>`;
+}
+function invBuscaAp(v){ _inv.buscaAp=v; _inv.pgAp=1; _invRender(true); const e=document.querySelector('.inv-filtros input'); if(e){ e.focus(); e.setSelectionRange(v.length,v.length); } }
+function invFiltroAp(k){ _inv.filtAp=k; _inv.pgAp=1; _invRender(true); }
+function invPgAp(n){ _inv.pgAp=n; _invRender(true); }
+async function _invSalvarAp(pid,campos,ev){ const inv=_invGet(_inv.invId); if(!inv) return; try{ await _invSalvarItem(inv,pid,campos,ev); }catch(e){ _invAlerta(e); alert('Não foi possível salvar. Verifique a conexão.'); } _invRender(true); }
+function invMotivo(pid,v){ const inv=_invGet(_inv.invId); if(!inv||!_invAut()) return; _invSalvarAp(pid,{motivo:v||null,situacaoConf:inv.itens[pid].situacaoConf==='validado'?null:inv.itens[pid].situacaoConf,validadoPor:null,validadoEm:null}); }
+function invMotivoObs(pid,v){ const inv=_invGet(_inv.invId); if(!inv||!_invAut()) return; _invSalvarItem(inv,pid,{motivoObs:v.trim()||null}).catch(_invAlerta); }
+async function invValidar(pid){
+  const inv=_invGet(_inv.invId); if(!inv||!_invAut()) return; const it=inv.itens[pid], c=_invCalcItem(inv,it,_invCtx([pid]));
+  if(!it.motivo){ alert('Selecione o motivo da divergência antes de validar.'); return; }
+  if(it.motivo==='Outro'&&!(it.motivoObs||'').trim()){ alert('Para o motivo "Outro", descreva na observação complementar.'); return; }
+  await _invSalvarAp(pid,{situacaoConf:'validado',validadoPor:_estUsuario(),validadoEm:new Date().toISOString()},{acao:'Divergência validada',detalhe:`${it.nome}: ${c.divergencia>0?'+':''}${_estNum(c.divergencia)} · motivo informado: ${it.motivo}`});
+}
+function invManter(pid){ const inv=_invGet(_inv.invId); if(!inv||!_invAut()) return; _invSalvarAp(pid,{situacaoConf:'em_apuracao',validadoPor:null,validadoEm:null},{acao:'Mantido em apuração',detalhe:inv.itens[pid].nome}); }
+async function invReabrir(pid){
+  const inv=_invGet(_inv.invId); if(!inv||!_invAut()) return; const it=inv.itens[pid];
+  if(!confirm(`Reabrir a contagem de "${it.nome}"?\n\nA contagem atual (${_estNum(it.qtdContada)}) fica no histórico e o inventário volta para "Em contagem".`)) return;
+  const hist={...(it.historicoContagens||{}),[uid()]:{valor:it.qtdContada,em:it.contadoEm||null,por:it.contadoPor||null,substituidaEm:new Date().toISOString(),substituidaPor:_estUsuario(),motivo:'Reaberto na apuração'}};
+  try{ await _invSalvarItem(inv,pid,{qtdContada:null,contadoEm:null,contadoPor:null,situacao:'pendente',historicoContagens:hist,situacaoConf:null,validadoPor:null,validadoEm:null},{acao:'Item reaberto para recontagem',detalhe:it.nome});
+       await _invSalvarInv(_invGet(inv.id),{status:'em_contagem'}); }catch(e){ _invAlerta(e); alert('Não foi possível reabrir o item.'); return; }
+  invIr('contagem',inv.id);
+}
+async function invVoltarContagem(){
+  const inv=_invGet(_inv.invId); if(!inv) return;
+  try{ await _invSalvarInv(inv,{status:'em_contagem'},{acao:'Retorno à contagem',detalhe:'A apuração foi reaberta para novas contagens'}); }catch(e){ _invAlerta(e); return; }
+  invIr('contagem',inv.id);
+}
+
+// ═══ 5. REVISÃO E FECHAMENTO ═══
+function _invGates(inv,linhas,R){
+  const aj=linhas.filter(x=>x.c.conf==='validado'&&Math.abs(x.c.ajuste)>1e-9), semMotivo=aj.filter(x=>!x.it.motivo);
+  return [
+    {ok:inv.status==='apurado',txt:'Divergências apuradas',det:inv.status==='apurado'?'':'Use "Apurar divergências" na contagem.'},
+    {ok:R.pendentes===0,txt:'Todos os itens contados (ou excluídos do fechamento)',det:R.pendentes?`${R.pendentes} ${R.pendentes===1?'item pendente':'itens pendentes'} — conte ou exclua do fechamento.`:''},
+    {ok:R.emConf===0,txt:'Nenhuma divergência aguardando conferência',det:R.emConf?`${R.emConf} ${R.emConf===1?'item em conferência':'itens em conferência'} — valide ou mantenha em apuração.`:''},
+    {ok:semMotivo.length===0,txt:'Motivo informado em todos os ajustes',det:semMotivo.length?`${semMotivo.length} ajuste(s) sem motivo.`:''},
+    {ok:_invAut(),txt:'Usuário autorizado a fechar',det:_invAut()?'':'Apenas usuários autorizados fecham inventários.'},
+  ];
+}
+function _invVistaRevisao(){
+  const inv=_invGet(_inv.invId); if(!inv) return _invVistaPainel();
+  if(!_invAut()) return _invAcessoRestrito(inv);
+  if(inv.status!=='apurado') return _invVistaApuracao();
+  const ctx=_invCtx(Object.keys(inv.itens)), linhas=_invLinhas(inv,ctx), R=_invResumo(linhas), gates=_invGates(inv,linhas,R), ok=gates.every(g=>g.ok);
+  const aj=linhas.filter(x=>x.c.conf==='validado'&&Math.abs(x.c.ajuste)>1e-9).sort((a,b)=>Math.abs(b.c.valor)-Math.abs(a.c.valor));
+  const un=aj.reduce((s,x)=>s+x.c.ajuste,0), val=aj.reduce((s,x)=>s+x.c.ajuste*(x.it.custoUnitario||0),0);
+  const novos=[]; linhas.forEach(x=>(x.c.novos||[]).forEach(n=>novos.push({x,...n}))); novos.sort((a,b)=>a.te-b.te);
+  const k=(t,v,s,cls)=>`<div class="inv-ka ${cls||''}"><small>${t}</small><b>${v}</b>${s?`<em>${s}</em>`:''}</div>`;
+  const pend=linhas.filter(x=>x.c.resultado==='pendente'&&x.it.situacao!=='excluido');
+  return `<div class="est inv">
+    ${_estCab(`Revisão e fechamento — ${_estEsc(inv.numero)}`,`${_estEsc(inv.nome)} · nenhum ajuste é efetivado antes da sua confirmação`,'✅',`<div class="est-head-f"><button class="inv-btn-o" onclick="invIr('apuracao')">← Voltar à apuração</button><button class="inv-btn-k" id="inv-fechar" onclick="invFechar()" ${ok?'':'disabled'}>Fechar inventário e gerar ajustes</button></div>`)}
+    <div class="inv-kas">${k('Produtos previstos',R.previstos)}${k('Produtos contados',R.contados)}${k('Sem contagem',R.pendentes+R.excluidos,R.excluidos?`${R.excluidos} excluídos do fechamento`:'',R.pendentes?'warn':'')}${k('Corretos',R.corretos,'','ok')}${k('Faltas',R.faltas,`${_invBRL(R.valFaltas)}`,R.faltas?'neg':'')}${k('Sobras',R.sobras,`${_invBRL(R.valSobras)}`)}${k('Resultado líquido',_invBRL(R.liquido),'sobras − faltas')}${k('Acuracidade',_invPct(R.acuracia))}</div>
+    <div class="inv-rev-grid">
+      <div class="est-card est-sec"><div class="est-sec-h"><b>Condições para fechar</b></div><ul class="inv-gates">${gates.map(g=>`<li class="${g.ok?'ok':'no'}"><i>${g.ok?'✓':'✕'}</i><span><b>${g.txt}</b>${g.det?`<small>${g.det}</small>`:''}</span></li>`).join('')}</ul>
+        ${pend.length?`<div class="inv-pend-box"><b>${pend.length} ${pend.length===1?'item não contado':'itens não contados'}</b><div class="inv-pend-lista">${pend.slice(0,8).map(x=>`<span>${_estEsc(x.it.nome)}</span>`).join('')}${pend.length>8?`<span>+${pend.length-8}</span>`:''}</div><button class="est-btn-out" onclick="invExcluirPendentes()">Excluir do fechamento (informar motivo)</button> <button class="est-btn-out" onclick="invVoltarContagem()">Voltar e contar</button></div>`:''}
+        ${R.emApur?`<div class="inv-aviso inv-aviso-i">${R.emApur} ${R.emApur===1?'item permanece':'itens permanecem'} <b>em apuração</b>: ficam registrados neste inventário, sem ajuste, para acompanhamento.</div>`:''}</div>
+      <div class="est-card est-sec"><div class="est-sec-h"><b>Ajustes que serão criados</b><span class="inv-tag">${aj.length} ${aj.length===1?'ajuste':'ajustes'}</span></div>
+        ${aj.length?`<div class="est-tab-wrap" style="max-height:260px"><table class="est-tab"><thead><tr><th>Produto</th><th class="num">Ajuste</th><th class="num">Valor</th><th>Motivo informado</th></tr></thead><tbody>${aj.map(x=>`<tr><td><b>${_estEsc(x.it.nome)}</b><small>${_estEsc(x.it.codigo||'')}</small></td><td class="num ${x.c.ajuste<0?'neg':'pos'}">${x.c.ajuste>0?'+':''}${_estNum(x.c.ajuste)}</td><td class="num">${_invBRL(x.c.ajuste*(x.it.custoUnitario||0))}</td><td>${_estEsc(x.it.motivo||'—')}</td></tr>`).join('')}</tbody></table></div>
+        <div class="inv-aj-tot">Total: <b class="${un<0?'neg':'pos'}">${un>0?'+':''}${_estNum(_invRound(un))} un</b> · <b>${_invBRL(_invRound(val))}</b></div>`:'<div class="inv-vazio-s">Nenhum ajuste a gerar: só divergências validadas viram ajuste.</div>'}
+        <div class="est-nota" style="margin-top:8px">Cada ajuste é um movimento NOVO (motivo "Inventário"), datado de hoje. Nenhum movimento anterior é alterado ou apagado.</div></div>
+    </div>
+    <div class="est-card est-sec"><div class="est-sec-h"><b>Movimentações registradas durante a contagem</b><span class="inv-tag">${novos.length}</span></div>
+      ${novos.length?`<div class="est-tab-wrap" style="max-height:240px"><table class="est-tab"><thead><tr><th>Produto</th><th>Tipo</th><th>Data</th><th class="num">Qtd.</th><th>Registrada em</th><th>Tratamento</th></tr></thead><tbody>${novos.slice(0,80).map(n=>`<tr><td><b>${_estEsc(n.x.it.nome)}</b></td><td>${_estTipoPill(n.m.tipo)}</td><td>${fmtDate(n.m.data)}</td><td class="num">${_estNum(n.m.quantidade)}</td><td>${_invDH(n.m.createdAt)}<small>${_estEsc(n.m.usuario||'')}</small></td><td>${n.conciliada?'<span class="inv-pill inv-p-ok">Conciliada na contagem</span>':'<small>Depois da contagem do item (ou ainda não vigente): não afeta a diferença</small>'}</td></tr>`).join('')}</tbody></table></div>${novos.length>80?`<div class="est-nota">Mostrando 80 de ${novos.length}.</div>`:''}`:'<div class="inv-vazio-s">Nenhuma movimentação foi registrada nos produtos deste inventário desde a abertura.</div>'}
+      ${R.alterados?`<div class="inv-aviso" style="margin-top:10px">⚠ ${R.alterados} ${R.alterados===1?'item teve':'itens tiveram'} movimento <b>anterior à abertura alterado ou excluído</b> durante a contagem. Isso não pode ser conciliado automaticamente: esses itens exigem validação explícita (coluna “Conferência” da apuração) e o ajuste proposto leva o saldo oficial ao valor contado.</div>`:''}</div>
+  </div>`;
+}
+async function invExcluirPendentes(){
+  const inv=_invGet(_inv.invId); if(!inv||!_invAut()) return;
+  const pend=Object.keys(inv.itens).filter(pid=>!_invContado(inv.itens[pid])&&inv.itens[pid].situacao!=='excluido'); if(!pend.length) return;
+  const motivo=(prompt(`Excluir ${pend.length} ${pend.length===1?'item não contado':'itens não contados'} do fechamento?\n\nEles ficam registrados como "não contados" neste inventário, sem ajuste. Informe o motivo:`)||'').trim(); if(!motivo) return;
+  const upd={}; const novo={...inv,itens:{...inv.itens}};
+  pend.forEach(pid=>{ upd[`itens/${pid}/situacao`]='excluido'; upd[`itens/${pid}/excluidoMotivo`]=motivo; novo.itens[pid]={...novo.itens[pid],situacao:'excluido',excluidoMotivo:motivo}; });
+  const eid=uid(), ev={em:new Date().toISOString(),por:_estUsuario(),acao:'Itens excluídos do fechamento',detalhe:`${pend.length} itens · ${motivo}`}; upd[`eventos/${eid}`]=ev; novo.eventos={...(inv.eventos||{}),[eid]:ev};
+  try{ _invCache(novo); await fbRoot.child('estoqueInventarios').child(inv.id).update(upd); }catch(e){ _invCache(inv); _invAlerta(e); alert('Não foi possível registrar a exclusão.'); return; }
+  _invRender(true);
+}
+async function invFechar(){
+  const inv=_invGet(_inv.invId); if(!inv) return;
+  if(!_invAut()){ alert('Apenas usuários autorizados fecham inventários.'); return; }
+  const ctx=_invCtx(Object.keys(inv.itens)), linhas=_invLinhas(inv,ctx), R=_invResumo(linhas), gates=_invGates(inv,linhas,R);
+  const falha=gates.find(g=>!g.ok); if(falha){ alert(`Não é possível fechar: ${falha.txt}.\n${falha.det||''}`); _invRender(true); return; }
+  const aj=linhas.filter(x=>x.c.conf==='validado'&&Math.abs(x.c.ajuste)>1e-9), un=_invRound(aj.reduce((s,x)=>s+x.c.ajuste,0)), val=_invRound(aj.reduce((s,x)=>s+x.c.ajuste*(x.it.custoUnitario||0),0));
+  if(!confirm(`Fechar o inventário ${inv.numero}?\n\n• ${aj.length} ${aj.length===1?'ajuste será criado':'ajustes serão criados'} (${un>0?'+':''}${_estNum(un)} un · ${_invBRL(val)})\n• ${R.emApur} item(ns) em apuração permanecem sem ajuste\n• Nenhuma movimentação anterior será alterada ou apagada\n\nApós o fechamento o inventário não poderá ser alterado.`)) return;
+  const btn=document.getElementById('inv-fechar'); if(btn){ btn.disabled=true; btn.textContent='Fechando…'; }
+  // 1) reserva o fechamento (impede fechamento duplo por clique repetido ou por outra pessoa)
+  const refSt=fbRoot.child('estoqueInventarios').child(inv.id).child('status');
+  let tx; try{ tx=await refSt.transaction(v=>v==='apurado'?'fechando':undefined); }catch(e){ _invAlerta(e); alert('Não foi possível iniciar o fechamento. Tente novamente.'); _invRender(true); return; }
+  if(!tx.committed){ alert('Este inventário já está sendo fechado ou foi fechado por outra pessoa.'); _invRender(true); return; }
+  try{
+    const agora=new Date().toISOString(), hoje=_estHoje(), usuario=_estUsuario(), upd={}, recs={}, base=`estoqueInventarios/${inv.id}`, finais={};
+    linhas.forEach(x=>{ const c={...x.c}; delete c.novos; c.novosQtd=(x.c.novos||[]).length; if(x.it.situacao==='excluido') c.resultado='pendente';
+      if(x.c.conf==='validado'&&Math.abs(x.c.ajuste)>1e-9){
+        const p=ctx.prod.get(x.pid), custo=Number(x.it.custoUnitario)||0, id=uid(), obs=`${inv.numero} · contagem ${_estNum(x.c.contada)} · saldo conciliado ${_estNum(x.c.conciliado)}${Math.abs(x.c.alteracao)>1e-6?` · efeito de alteração em movimentação anterior ${_estNum(x.c.alteracao)}`:''} · motivo informado: ${x.it.motivo}${x.it.motivoObs?` (${x.it.motivoObs})`:''}`;
+        recs[id]={id,data:hoje,mes:_estMesKey(hoje),tipo:'Ajuste',produtoId:x.pid,codigo:x.it.codigo||'',produto:x.it.nome,categoria:x.it.categoria||'',quantidade:x.c.ajuste,unidade:x.it.unidade||(p&&p.unidade)||'',valorUnitario:custo,valorTotal:Math.round(Math.abs(x.c.ajuste)*custo*100)/100,
+          area:'',areaOrigem:'',motivo:'Inventário',observacao:obs,inventarioId:inv.id,inventarioNumero:inv.numero,divergenciaMotivo:x.it.motivo||'',usuario,createdAt:agora,updatedAt:agora,updatedBy:usuario};
+        upd['estoqueMovimentos/'+id]=recs[id]; c.ajusteId=id;
+      }
+      finais[x.pid]=c; upd[`${base}/itens/${x.pid}/final`]=c; });
+    const eid=uid(), ev={em:agora,por:usuario,acao:'Fechamento',detalhe:`${Object.keys(recs).length} ajustes · acuracidade ${_invPct(R.acuracia)}`};
+    const resumo={..._invLimpa(R),ajustesGerados:Object.keys(recs).length,unidadesAjustadas:un,valorAjustado:val};
+    upd[`${base}/status`]='fechado'; upd[`${base}/fechadoEm`]=agora; upd[`${base}/fechadoPor`]=usuario; upd[`${base}/resumoFinal`]=resumo; upd[`${base}/eventos/${eid}`]=ev;
+    await fbRoot.update(_invLimpa(upd));                    // movimentos + fotografia final + status numa ÚNICA gravação atômica
+    DB_CACHE.estoqueMovimentos={...(DB.get('estoqueMovimentos')||{}),...recs};
+    const itens={}; Object.keys(inv.itens).forEach(pid=>{ itens[pid]={...inv.itens[pid],final:finais[pid]}; });
+    _invCache({...inv,status:'fechado',fechadoEm:agora,fechadoPor:usuario,resumoFinal:resumo,itens,eventos:{...(inv.eventos||{}),[eid]:ev}});
+    _estLog('Inventário',`Inventário ${inv.numero} fechado — ${Object.keys(recs).length} ajustes (${un>0?'+':''}${_estNum(un)} un · ${_invBRL(val)}), acuracidade ${_invPct(R.acuracia)}`,{inventarioId:inv.id,movIds:Object.keys(recs)});
+  }catch(e){
+    console.error(e); try{ await refSt.set('apurado'); }catch(_){}
+    alert('⚠️ Não foi possível fechar o inventário na nuvem. Nada foi ajustado — o inventário voltou para "Apurado". Verifique a conexão e tente novamente.'); _invRender(true); return;
+  }
+  invIr('detalhe',inv.id);
+}
+
+// ═══ Relatórios e exportação (CSV com ";" e vírgula decimal; 0 é exportado como 0) ═══
+function _invCsv(rows,nome){
+  if(!rows.length){ alert('Sem dados para exportar.'); return; }
+  const keys=Object.keys(rows[0]), cel=v=>v===null||v===undefined?'':typeof v==='number'?String(v).replace('.',','):'"'+String(v).replace(/"/g,'""')+'"';
+  const csv=[keys.map(k=>'"'+k+'"').join(';'),...rows.map(r=>keys.map(k=>cel(r[k])).join(';'))].join('\n');
+  const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv); a.download=nome; a.click();
+}
+function _invLinhasExport(inv){
+  return _invLinhas(inv).map(({it,c})=>{ const pend=c.resultado==='pendente'||it.situacao==='excluido';
+    return {'Inventário':inv.numero,'Abertura':_invDH(inv.abertoEm),'Código':it.codigo||'','Produto':it.nome,'Categoria':it.categoria||'','Unidade':it.unidade||'','Saldo teórico (abertura)':c.abertura,'Movimentações durante a contagem':pend?null:c.durante,'Saldo conciliado':pend?null:c.conciliado,
+      'Contagem física':pend?null:c.contada,'Diferença':pend?null:c.divergencia,'Divergência %':pend||c.pct==null?null:_invRound(c.pct),'Custo unitário':it.custoUnitario||0,'Valor da divergência':pend?null:c.valor,
+      'Resultado':it.situacao==='excluido'?'Não contado (excluído)':({correto:'Correto',falta:'Falta',sobra:'Sobra',pendente:'Pendente'})[c.resultado],'Conferência':({ok:'Ok',pendente:'Pendente',excluido:'Excluído',em_conferencia:'Em conferência',em_apuracao:'Em apuração',validado:'Validado'})[c.conf]||'',
+      'Motivo informado':it.motivo||'','Observação do motivo':it.motivoObs||'','Observação da contagem':it.obs||'','Contado por':it.contadoPor||'','Contado em':it.contadoEm?_invDH(it.contadoEm):'','Ajuste gerado (un)':c.ajusteId?c.ajuste:null,'Situação do inventário':INV_STATUS_TXT[inv.status]}; });
+}
+function invExportar(id){ const inv=_invGet(id); if(!inv) return; _invCsv(_invLinhasExport(inv),`inventario_${inv.numero}.csv`); }
+function invRelatorios(){
+  const l=_invLista();
+  openModal('Relatórios de inventário',`<div class="est-imp-intro">Os arquivos exportam os dados completos (inclusive contagens iguais a zero), em CSV com separador “;” para abrir direto no Excel.</div>
+    <div class="form-group"><label class="form-label">Apuração de um inventário</label><div style="display:flex;gap:8px"><select class="form-select" id="invr-sel">${l.map(i=>`<option value="${i.id}">${_estEsc(i.numero)} — ${_estEsc(i.nome)} (${INV_STATUS_TXT[i.status]})</option>`).join('')||'<option value="">Nenhum inventário</option>'}</select><button class="btn btn-primary" onclick="invExportar(document.getElementById('invr-sel').value)" ${l.length?'':'disabled'}>Exportar</button></div></div>
+    <div class="form-group"><label class="form-label">Lista de inventários</label><button class="btn btn-outline" onclick="invExportarLista()" ${l.length?'':'disabled'}>Exportar lista</button></div>
+    <div class="form-group"><label class="form-label">Acuracidade por categoria (período do painel)</label><button class="btn btn-outline" onclick="invExportarCategorias()">Exportar acuracidade por categoria</button></div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Fechar</button>`);
+}
+function invExportarLista(){ _invCsv(_invLista().map(i=>{ const R=_invResumo(_invLinhas(i)); return {'Nº':i.numero,'Inventário':i.nome,'Tipo':INV_TIPO_TXT[i.tipo],'Categoria':i.categoria||'','Aberto em':_invDH(i.abertoEm),'Aberto por':i.abertoPor||'','Status':INV_STATUS_TXT[i.status],'Fechado em':i.fechadoEm?_invDH(i.fechadoEm):'','Previstos':R.previstos,'Contados':R.contados,'Corretos':R.corretos,'Faltas':R.faltas,'Sobras':R.sobras,'Acuracidade %':R.acuracia==null?null:_invRound(R.acuracia),'Valor das faltas':R.valFaltas,'Valor das sobras':R.valSobras}; }),'inventarios.csv'); }
+function invExportarCategorias(){ const ag=_invAgregar(_invPeriodoInvs(_invFiltrosGet())); _invCsv(Object.entries(ag.porCat).map(([c,v])=>({'Categoria':c,'Contados':v.contados,'Corretos':v.corretos,'Acuracidade %':v.contados?_invRound(v.corretos/v.contados*100):null,'Valor da divergência':_invRound(v.valor)})),'acuracidade_por_categoria.csv'); }
 
 // ═════ CONFIGURAÇÕES (HC, início do controle, áreas e motivos) ═════
 function _estPgConfig(){
@@ -10226,7 +11068,8 @@ function pvRemoverEvidencia(src,rid,aid,evId){
 // Dados: equipeGrupos [{id,nome,cor}], equipePessoas [{id,nome}],
 //        equipeTarefas [{id,grupoId,titulo,responsavel,status,prioridade,
 //        prazo,notas,criadoEm,criadoPor,atualizadoEm,atualizadoPor,
-//        comentarios:[{id,autor,texto,data}]}]
+//        comentarios:[{id,autor,texto,data}],
+//        prazoOriginal, conclusao:{data,em,por,obs,prazoVigente,sla,diasAtraso,evidencia}, historico:[{id,tipo,em,por,...}]}]  (ver bloco SLA abaixo)
 // ═══════════════════════════════════════════════════════
 const EQ_STATUS = [
   {v:'Não iniciado',cor:'#C4C4C4'},{v:'Em andamento',cor:'#FDAB3D'},
@@ -10237,13 +11080,13 @@ const EQ_CORES_GRUPO = ['#579BFC','#A25DDC','#00C875','#FDAB3D','#E2445C','#FF15
 let _eqBusca='', _eqPessoa='todos', _eqRecolhidos=new Set();
 
 function _eqEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
-function _eqHoje(){ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
-function _eqAgoraTxt(iso){ if(!iso) return '—'; const d=new Date(iso); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); }
+/* _eqHoje: agora definida no bloco "Conclusão, SLA, farol e histórico" */
+/* _eqAgoraTxt: agora definida no bloco "Conclusão, SLA, farol e histórico" */
 function _eqUsuario(){ return (typeof currentUser!=='undefined'&&currentUser&&currentUser.nome)||'Equipe'; }
 function _eqGrupos(){ return DB.get('equipeGrupos')||[]; }
 function _eqPessoas(){ return DB.get('equipePessoas')||[]; }
 function _eqTarefas(){ return DB.get('equipeTarefas')||[]; }
-function _eqAtrasada(t){ return t.prazo && t.prazo<_eqHoje() && t.status!=='Concluído'; }
+/* _eqAtrasada: agora definida no bloco "Conclusão, SLA, farol e histórico" */
 function _eqCorStatus(v){ return (EQ_STATUS.find(s=>s.v===v)||EQ_STATUS[0]).cor; }
 function _eqCorPrior(v){ const p=EQ_PRIOR.find(s=>s.v===v); return p?p.cor:null; }
 function _eqIniciais(n){ const p=String(n||'').trim().split(/\s+/); return ((p[0]||'?')[0]+(p[1]?p[1][0]:'')).toUpperCase(); }
@@ -10257,11 +11100,8 @@ function _eqGarantirBase(){
   if(!DB.get('equipePessoas')) DB.set('equipePessoas',[{id:uid(),nome:_eqUsuario()}]);
   if(!DB.get('equipeTarefas')) DB.set('equipeTarefas',[]);
 }
-function _eqSalvar(lista){ DB.set('equipeTarefas',lista); }
-function _eqAtualizar(id,campos){
-  const l=_eqTarefas().slice(); const i=l.findIndex(t=>t.id===id); if(i<0) return;
-  l[i]={...l[i],...campos,atualizadoEm:new Date().toISOString(),atualizadoPor:_eqUsuario()}; _eqSalvar(l);
-}
+/* _eqSalvar: agora definida no bloco "Conclusão, SLA, farol e histórico" */
+/* _eqAtualizar: agora definida no bloco "Conclusão, SLA, farol e histórico" */
 function _eqFiltradas(){
   const q=_eqBusca.trim().toLowerCase();
   return _eqTarefas().filter(t=>(!q||String(t.titulo).toLowerCase().includes(q)||String(t.notas||'').toLowerCase().includes(q))
@@ -10284,15 +11124,15 @@ function renderEquipe(page){
 
 function _eqCabecalho(vista){
   const todas=_eqTarefas();
-  const k={total:todas.length,and:todas.filter(t=>t.status==='Em andamento').length,atr:todas.filter(_eqAtrasada).length,ok:todas.filter(t=>t.status==='Concluído').length};
+  const k={total:todas.length,and:todas.filter(t=>t.status==='Em andamento').length,atr:todas.filter(_eqAtrasada).length,ok:todas.filter(t=>t.status===EQ_CONCLUIDO).length};
   const pessoas=_eqPessoas();
   return `<div class="eq-head">
     <div><div class="eq-title">Plano de Ação da Equipe</div>
     <div class="eq-sub">Tarefas da equipe de Facilities com responsável, prazo, prioridade e status.</div></div>
     <div class="eq-kpis">
-      <div><b>${k.total}</b><span>Tarefas</span></div>
+      <div><b>${k.total}</b><span>${k.total===1?'Tarefa':'Tarefas'}</span></div>
       <div><b style="color:#D08A1D">${k.and}</b><span>Em andamento</span></div>
-      <div><b style="color:#E2445C">${k.atr}</b><span>${k.atr===1?'Atrasada':'Atrasadas'}</span></div>
+      <div title="Tarefas abertas com o prazo ultrapassado"><b style="color:#E2445C">${k.atr}</b><span>${k.atr===1?'Atrasada':'Atrasadas'} em aberto</span></div>
       <div><b style="color:#00A862">${k.ok}</b><span>${k.ok===1?'Concluída':'Concluídas'}</span></div>
     </div>
   </div>
@@ -10306,7 +11146,8 @@ function _eqCabecalho(vista){
       <option value="__sem__"${_eqPessoa==='__sem__'?' selected':''}>Sem responsável</option>
     </select>
     ${vista==='quadro'?`<button class="eq-btn-sec" onclick="eqNovoGrupo()">+ Novo grupo</button>`:''}
-  </div>`;
+    <button class="eq-btn-sec eq-btn-ind${_eqPainel.aberto?' on':''}" onclick="eqTogglePainel()" title="Indicadores de SLA por período e responsável">📊 Indicadores de SLA</button>
+  </div>${_eqPainelSla()}`;
 }
 
 function _eqQuadro(){
@@ -10325,22 +11166,28 @@ function _eqQuadro(){
         <button class="eq-g-menu" onclick="eqMenuGrupo(event,'${g.id}')" title="Opções do grupo">⋯</button>
       </div>
       ${rec?'':`<div class="eq-tab-wrap"><table class="eq-tab">
-        <thead><tr><th class="eq-c-tit">Tarefa</th><th>Responsável</th><th>Status</th><th>Prioridade</th><th>Prazo</th><th>Atualizado</th><th class="eq-c-com"></th></tr></thead>
+        <thead><tr><th class="eq-c-tit">Tarefa</th><th>Responsável</th><th>Status</th><th>Prioridade</th><th>Prazo</th><th>Conclusão</th><th>SLA</th><th>Atualizado</th><th>Ação</th><th class="eq-c-com"></th></tr></thead>
         <tbody>
         ${ts.map(t=>{
-          const st=t.status||'Não iniciado', pr=t.prioridade||'', atr=_eqAtrasada(t), nc=(t.comentarios||[]).length;
+          const st=t.status||'Não iniciado', pr=t.prioridade||'', atr=_eqAtrasada(t), nc=(t.comentarios||[]).length, concl=st===EQ_CONCLUIDO, reg=!!(t.conclusao&&t.conclusao.data);
+          const acao=!concl?`<button class="eq-concluir" onclick="eqConcluir('${t.id}')" title="Registrar a conclusão desta atividade">Concluir</button>`
+            :reg?`<button class="eq-done" onclick="eqHistorico('${t.id}')" title="Ver histórico e detalhes da entrega">✓ Concluída</button><button class="eq-reab" onclick="eqReabrir('${t.id}')" title="Reabrir (exige justificativa)">↺</button>`
+            :`<button class="eq-regs" onclick="eqConcluir('${t.id}')" title="Esta tarefa estava concluída sem data registrada">Registrar conclusão</button>`;
           return `<tr>
-            <td class="eq-c-tit"><button class="eq-tit" onclick="eqAbrirTarefa('${t.id}')"><span class="${st==='Concluído'?'eq-riscado':''}">${_eqEsc(t.titulo)}</span></button></td>
+            <td class="eq-c-tit"><button class="eq-tit" onclick="eqAbrirTarefa('${t.id}')"><span class="${concl?'eq-riscado':''}">${_eqEsc(t.titulo)}</span></button></td>
             <td class="eq-c-pes"><button class="eq-cel-btn" onclick="eqPop(event,'${t.id}','responsavel')">${_eqAvatar(t.responsavel)}<span>${_eqEsc(t.responsavel||'')}</span></button></td>
-            <td class="eq-c-lbl" style="background:${_eqCorStatus(st)}" onclick="eqPop(event,'${t.id}','status')">${_eqEsc(st)}</td>
+            <td class="eq-c-lbl" style="background:${_eqCorStatus(st)}" onclick="eqPop(event,'${t.id}','status')">${_eqEsc(_eqRotulo(st))}</td>
             <td class="eq-c-lbl" style="background:${_eqCorPrior(pr)||'#fff'};color:${pr?'#fff':'#999'}" onclick="eqPop(event,'${t.id}','prioridade')">${_eqEsc(pr||'—')}</td>
-            <td class="eq-c-data${atr?' atr':''}"><input type="date" value="${t.prazo||''}" onchange="eqSet('${t.id}','prazo',this.value)" title="${atr?'Atrasada':''}"/>${atr?'<i title="Atrasada">!</i>':''}</td>
+            <td class="eq-c-data${atr?' atr':''}"><input type="date" value="${t.prazo||''}" data-v="${t.prazo||''}" onchange="eqPrazoInline(this,'${t.id}')" title="${atr?'Atrasada':''}"/>${atr?'<i title="Atrasada">!</i>':''}</td>
+            <td class="eq-c-conc">${reg?fmtDate(t.conclusao.data):'<span class="eq-nd">-</span>'}</td>
+            <td class="eq-c-sla">${_eqSlaBadge(t)}</td>
             <td class="eq-c-upd" title="${_eqEsc(t.atualizadoPor||'')}">${(t.atualizadoPor||t.criadoPor)?_eqAvatar(t.atualizadoPor||t.criadoPor,20):''}<span>${_eqAgoraTxt(t.atualizadoEm||t.criadoEm)}</span></td>
-            <td class="eq-c-com"><button class="eq-com${nc?' tem':''}" onclick="eqAbrirTarefa('${t.id}')" title="Atualizações">💬${nc?`<b>${nc}</b>`:''}</button></td>
+            <td class="eq-c-acao">${acao}</td>
+            <td class="eq-c-com"><button class="eq-hist" onclick="eqHistorico('${t.id}')" title="Histórico da atividade">🕘</button><button class="eq-com${nc?' tem':''}" onclick="eqAbrirTarefa('${t.id}')" title="Atualizações">💬${nc?`<b>${nc}</b>`:''}</button></td>
           </tr>`;}).join('')}
-        ${filtrando?'':`<tr class="eq-add-row"><td colspan="7"><input id="eq-add-${g.id}" class="eq-add-in" placeholder="+ Adicionar tarefa" onkeydown="if(event.key==='Enter')eqAdicionarRapido('${g.id}',this)"/></td></tr>`}
+        ${filtrando?'':`<tr class="eq-add-row"><td colspan="10"><input id="eq-add-${g.id}" class="eq-add-in" placeholder="+ Adicionar tarefa" onkeydown="if(event.key==='Enter')eqAdicionarRapido('${g.id}',this)"/></td></tr>`}
         </tbody></table></div>
-        ${ts.length?`<div class="eq-bateria" title="Distribuição por status">${dist.map(s=>`<i style="flex:${s.n};background:${s.cor}" title="${s.v}: ${s.n}"></i>`).join('')}</div>`:''}`}
+        ${ts.length?`<div class="eq-bateria" title="Distribuição por status">${dist.map(s=>`<i style="flex:${s.n};background:${s.cor}" title="${_eqRotulo(s.v)}: ${s.n}"></i>`).join('')}</div>`:''}`}
     </div>`;
   }).join('');
 }
@@ -10351,15 +11198,18 @@ function _eqKanban(){
     const ts=tarefas.filter(t=>(t.status||'Não iniciado')===s.v).sort((a,b)=>(a.prazo||'9999').localeCompare(b.prazo||'9999'));
     return `<div class="eq-col" ondragover="event.preventDefault();this.classList.add('over')" ondragleave="this.classList.remove('over')"
         ondrop="event.preventDefault();this.classList.remove('over');eqSet(event.dataTransfer.getData('text/plain'),'status','${s.v}')">
-      <div class="eq-col-h" style="background:${s.cor}">${s.v}<span>${ts.length}</span></div>
+      <div class="eq-col-h" style="background:${s.cor}">${_eqRotulo(s.v)}<span>${ts.length}</span></div>
       <div class="eq-col-body">
-      ${ts.map(t=>{ const g=grupos.find(x=>x.id===t.grupoId); const atr=_eqAtrasada(t); const pr=t.prioridade;
+      ${ts.map(t=>{ const g=grupos.find(x=>x.id===t.grupoId); const atr=_eqAtrasada(t); const pr=t.prioridade, concl=t.status===EQ_CONCLUIDO, reg=!!(t.conclusao&&t.conclusao.data);
         return `<div class="eq-card" draggable="true" ondragstart="event.dataTransfer.setData('text/plain','${t.id}')" onclick="eqAbrirTarefa('${t.id}')">
           ${g?`<span class="eq-card-g" style="color:${g.cor}">● ${_eqEsc(g.nome)}</span>`:''}
           <div class="eq-card-t">${_eqEsc(t.titulo)}</div>
           <div class="eq-card-f">${_eqAvatar(t.responsavel,22)}
             ${pr?`<span class="eq-card-p" style="background:${_eqCorPrior(pr)}">${_eqEsc(pr)}</span>`:''}
             <span class="eq-card-d${atr?' atr':''}">${t.prazo?fmtDate(t.prazo):''}</span></div>
+          <div class="eq-card-acao">${_eqSlaBadge(t,true)}
+            ${!concl?`<button class="eq-concluir" onclick="event.stopPropagation();eqConcluir('${t.id}')" title="Registrar a conclusão desta atividade">Concluir</button>`
+              :reg?`<span class="eq-card-conc">✓ ${fmtDate(t.conclusao.data)}</span>`:`<button class="eq-regs" onclick="event.stopPropagation();eqConcluir('${t.id}')">Registrar</button>`}</div>
         </div>`;}).join('')||'<div class="eq-col-vazio">Arraste tarefas para cá</div>'}
       </div></div>`;
   }).join('')}</div>`;
@@ -10385,13 +11235,13 @@ function _eqConfig(){
 }
 
 // ─── Ações ───
-function eqSet(id,campo,valor){ if(!id) return; _eqAtualizar(id,{[campo]:valor}); _eqRender(); }
+/* eqSet: agora definida no bloco "Conclusão, SLA, farol e histórico" */
 function eqRecolher(gid){ _eqRecolhidos.has(gid)?_eqRecolhidos.delete(gid):_eqRecolhidos.add(gid); _eqRender(); }
 function eqAdicionarRapido(gid,input){
   const titulo=input.value.trim(); if(!titulo) return;
   const agora=new Date().toISOString();
   const l=_eqTarefas().slice();
-  l.push({id:uid(),grupoId:gid,titulo,responsavel:'',status:'Não iniciado',prioridade:'',prazo:'',notas:'',criadoEm:agora,criadoPor:_eqUsuario(),atualizadoEm:agora,atualizadoPor:_eqUsuario(),comentarios:[]});
+  l.push({id:uid(),grupoId:gid,titulo,responsavel:'',status:'Não iniciado',prioridade:'',prazo:'',notas:'',criadoEm:agora,criadoPor:_eqUsuario(),atualizadoEm:agora,atualizadoPor:_eqUsuario(),comentarios:[],historico:[{id:uid(),tipo:'criacao',em:agora,por:_eqUsuario()}]});
   _eqSalvar(l); input.value=''; _eqRender();
   const el=document.getElementById('eq-add-'+gid); if(el) el.focus();
 }
@@ -10402,7 +11252,7 @@ function eqPop(e,id,campo){
   const velho=document.getElementById('eq-pop'); if(velho) velho.remove();
   const t=_eqTarefas().find(x=>x.id===id); if(!t) return;
   let itens=[];
-  if(campo==='status') itens=EQ_STATUS.map(s=>`<button class="eq-pop-lbl" style="background:${s.cor}" onclick="eqSet('${id}','status','${s.v}')">${s.v}</button>`);
+  if(campo==='status') itens=EQ_STATUS.map(s=>`<button class="eq-pop-lbl" style="background:${s.cor}" onclick="eqSet('${id}','status','${s.v}')">${_eqRotulo(s.v)}</button>`);
   else if(campo==='prioridade') itens=[...EQ_PRIOR.map(s=>`<button class="eq-pop-lbl" style="background:${s.cor}" onclick="eqSet('${id}','prioridade','${s.v}')">${s.v}</button>`),`<button class="eq-pop-lbl eq-pop-limpar" onclick="eqSet('${id}','prioridade','')">Sem prioridade</button>`];
   else itens=[..._eqPessoas().map(p=>`<button class="eq-pop-pes" onclick="eqSet('${id}','responsavel',this.dataset.n)" data-n="${_eqEsc(p.nome)}">${_eqAvatar(p.nome,22)}${_eqEsc(p.nome)}</button>`),
     `<button class="eq-pop-pes" onclick="eqSet('${id}','responsavel','')">${_eqAvatar('',22)}Sem responsável</button>`,
@@ -10466,14 +11316,14 @@ function eqRenomearPessoa(pid){
   const p=_eqPessoas().slice(); const i=p.findIndex(x=>x.id===pid); if(i<0) return;
   const antigo=p[i].nome, nome=prompt('Novo nome:',antigo); if(!nome||!nome.trim()||nome.trim()===antigo) return;
   p[i]={...p[i],nome:nome.trim()}; DB.set('equipePessoas',p);
-  _eqSalvar(_eqTarefas().map(t=>t.responsavel===antigo?{...t,responsavel:nome.trim()}:t)); _eqRender();
+  _eqSalvar(_eqTarefas().map(t=>t.responsavel===antigo?{...t,responsavel:nome.trim(),historico:[...(t.historico||[]),_eqEnt('responsavel',{de:antigo,para:nome.trim(),nota:'pessoa renomeada'})]}:t)); _eqRender();
 }
 function eqExcluirPessoa(pid){
   const p=_eqPessoas(); const pes=p.find(x=>x.id===pid); if(!pes) return;
   const n=_eqTarefas().filter(t=>t.responsavel===pes.nome).length;
   if(!confirm(`Remover ${pes.nome} da equipe?${n?`\n\n${n} ${n===1?'tarefa ficará':'tarefas ficarão'} sem responsável.`:''}`)) return;
   DB.set('equipePessoas',p.filter(x=>x.id!==pid));
-  if(n) _eqSalvar(_eqTarefas().map(t=>t.responsavel===pes.nome?{...t,responsavel:''}:t));
+  if(n) _eqSalvar(_eqTarefas().map(t=>t.responsavel===pes.nome?{...t,responsavel:'',historico:[...(t.historico||[]),_eqEnt('responsavel',{de:pes.nome,para:'',nota:'pessoa removida da equipe'})]}:t));
   _eqRender();
 }
 
@@ -10484,7 +11334,7 @@ function eqAbrirTarefa(id){
   if(id&&!t) return;
   const grupos=_eqGrupos(), pessoas=_eqPessoas();
   const v=t||{grupoId:(grupos[0]||{}).id,status:'Não iniciado',prioridade:'',responsavel:'',prazo:'',titulo:'',notas:'',comentarios:[]};
-  const opt=(lista,sel)=>lista.map(o=>`<option value="${_eqEsc(o)}"${o===sel?' selected':''}>${_eqEsc(o)}</option>`).join('');
+  const opt=(lista,sel)=>lista.map(o=>`<option value="${_eqEsc(o)}"${o===sel?' selected':''}>${_eqEsc(_eqRotulo(o))}</option>`).join('');
   const coms=(v.comentarios||[]).slice().reverse();
   openModal(t?'Tarefa':'Nova tarefa',`
     <div class="form-group"><label class="form-label">Tarefa *</label><input class="form-input" id="eqm-tit" value="${_eqEsc(v.titulo)}" placeholder="O que precisa ser feito"/></div>
@@ -10492,7 +11342,9 @@ function eqAbrirTarefa(id){
     <div class="form-group"><label class="form-label">Responsável</label><select class="form-select" id="eqm-resp"><option value="">Sem responsável</option>${opt(pessoas.map(p=>p.nome).concat(v.responsavel&&!pessoas.some(p=>p.nome===v.responsavel)?[v.responsavel]:[]),v.responsavel)}</select></div></div>
     <div class="form-row"><div class="form-group"><label class="form-label">Status</label><select class="form-select" id="eqm-st">${opt(EQ_STATUS.map(s=>s.v),v.status)}</select></div>
     <div class="form-group"><label class="form-label">Prioridade</label><select class="form-select" id="eqm-pr"><option value="">Sem prioridade</option>${opt(EQ_PRIOR.map(s=>s.v),v.prioridade)}</select></div>
-    <div class="form-group"><label class="form-label">Prazo</label><input type="date" class="form-input" id="eqm-prazo" value="${v.prazo||''}"/></div></div>
+    <div class="form-group"><label class="form-label">Prazo</label><input type="date" class="form-input" id="eqm-prazo" value="${v.prazo||''}" data-v="${v.prazo||''}" onchange="document.getElementById('eqm-pj-g').style.display=(this.dataset.v&&this.value!==this.dataset.v)?'':'none'"/></div></div>
+    <small class="eqc-dica" style="margin:-6px 0 10px">Concluir e reabrir passam pelo registro de conclusão (data, SLA e histórico).</small>
+    <div class="form-group" id="eqm-pj-g" style="display:none"><label class="form-label">Justificativa da mudança de prazo (opcional)</label><textarea class="form-textarea" id="eqm-pjust" style="min-height:52px" placeholder="Ex.: Aguardando entrega do fornecedor."></textarea></div>
     <div class="form-group"><label class="form-label">Descrição / notas</label><textarea class="form-textarea" id="eqm-notas" style="min-height:70px">${_eqEsc(v.notas||'')}</textarea></div>
     ${t?`<div class="eq-upd">
       <div class="form-label" style="margin-bottom:8px">Atualizações</div>
@@ -10501,7 +11353,7 @@ function eqAbrirTarefa(id){
       ${coms.map(c=>`<div class="eq-upd-item">${_eqAvatar(c.autor,26)}<div><div class="eq-upd-meta"><b>${_eqEsc(c.autor)}</b> · ${_eqAgoraTxt(c.data)}</div><div class="eq-upd-txt">${_eqEsc(c.texto)}</div></div></div>`).join('')||'<div class="rn-muted">Nenhuma atualização ainda.</div>'}
       <div class="eq-upd-rod">Criada por ${_eqEsc(t.criadoPor||'—')} em ${_eqAgoraTxt(t.criadoEm)}${t.atualizadoEm?` · atualizada por ${_eqEsc(t.atualizadoPor||'—')} em ${_eqAgoraTxt(t.atualizadoEm)}`:''}</div>
     </div>`:''}`,
-    `${t?`<button class="btn btn-outline" style="margin-right:auto;color:var(--red)" onclick="eqExcluirTarefa('${t.id}')">Excluir</button>`:''}
+    `${t?`<button class="btn btn-outline" style="margin-right:auto;color:var(--red)" onclick="eqExcluirTarefa('${t.id}')">Excluir</button><button class="btn btn-outline" onclick="eqHistorico('${t.id}')">🕘 Histórico</button>`:''}
      <button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button>
      <button class="btn btn-primary" onclick="eqSalvarTarefa(${t?`'${t.id}'`:'null'})">${t?'Salvar':'Criar tarefa'}</button>`,true);
   setTimeout(()=>{ const el=document.getElementById('eqm-tit'); if(el&&!t) el.focus(); },50);
@@ -10512,9 +11364,21 @@ function eqSalvarTarefa(id){
   const campos={titulo,grupoId:document.getElementById('eqm-grp').value,responsavel:document.getElementById('eqm-resp').value,
     status:document.getElementById('eqm-st').value,prioridade:document.getElementById('eqm-pr').value,
     prazo:document.getElementById('eqm-prazo').value,notas:document.getElementById('eqm-notas').value.trim()};
-  if(id) _eqAtualizar(id,campos);
-  else{ const agora=new Date().toISOString(); _eqSalvar([..._eqTarefas(),{id:uid(),...campos,criadoEm:agora,criadoPor:_eqUsuario(),atualizadoEm:agora,atualizadoPor:_eqUsuario(),comentarios:[]}]); }
-  closeModalDirect(); _eqRender();
+  if(campos.prazo&&!_eqDataOk(campos.prazo)){ alert('Prazo inválido.'); return; }
+  const just=((document.getElementById('eqm-pjust')||{}).value||'').trim();
+  let depois=null, idFinal=id;
+  if(id){
+    const t=_eqTarefas().find(x=>x.id===id); if(!t) return;
+    const concl=t.status===EQ_CONCLUIDO;
+    if(campos.status===EQ_CONCLUIDO&&!concl){ depois=()=>eqConcluir(id); campos.status=t.status; }              // concluir = fluxo de registro
+    else if(concl&&campos.status!==EQ_CONCLUIDO){ const alvo=campos.status; depois=()=>eqReabrir(id,alvo); campos.status=t.status; }   // reabrir = justificativa
+    _eqAtualizar(id,campos,{justificativaPrazo:just});
+  } else {
+    const agora=new Date().toISOString(); idFinal=uid();
+    if(campos.status===EQ_CONCLUIDO){ campos.status='Em andamento'; depois=()=>eqConcluir(idFinal); }
+    _eqSalvar([..._eqTarefas(),{id:idFinal,...campos,prazoOriginal:campos.prazo||undefined,criadoEm:agora,criadoPor:_eqUsuario(),atualizadoEm:agora,atualizadoPor:_eqUsuario(),comentarios:[],historico:[{id:uid(),tipo:'criacao',em:agora,por:_eqUsuario()}]}]);
+  }
+  closeModalDirect(); _eqRender(); if(depois) depois();
 }
 function eqComentar(id){
   const el=document.getElementById('eqm-com'); const texto=(el&&el.value||'').trim(); if(!texto) return;
@@ -10523,9 +11387,337 @@ function eqComentar(id){
   _eqSalvar(l); eqAbrirTarefa(id);
 }
 function eqExcluirTarefa(id){
-  if(!confirm('Excluir esta tarefa e suas atualizações?')) return;
+  if(!confirm('Excluir esta tarefa, suas atualizações e o histórico dela?')) return;
   _eqSalvar(_eqTarefas().filter(t=>t.id!==id)); closeModalDirect(); _eqRender();
 }
+
+// ═══ CONCLUSÃO, SLA, FAROL E HISTÓRICO (Plano de Ação da Equipe) ═══
+// Campos NOVOS e opcionais em cada tarefa (tarefas antigas continuam valendo, sem datas inventadas):
+//   prazoOriginal  → primeiro prazo conhecido (nunca é sobrescrito)
+//   conclusao      → conclusão VIGENTE {data,em,por,obs,prazoVigente,prazoOriginal,sla,diasAtraso,evidencia}; some ao reabrir
+//   historico      → trilha de auditoria [{id,tipo,em,por,...}]: criacao · status · prazo · responsavel · prioridade · grupo · titulo · conclusao · reabertura
+// A conclusão anterior NUNCA é apagada: ao reabrir, o registro dela vai dentro da entrada "reabertura" do histórico.
+const EQ_SLA={ diasAlerta:2 };                    // dias corridos antes do vencimento em que a tarefa ABERTA passa a "Atenção" (parametrizável aqui)
+const EQ_FUSO='America/Sao_Paulo';                // todas as datas do módulo são as de Brasília
+const EQ_CONCLUIDO='Concluído';
+const EQ_ANEXO_MAX=10*1024*1024;
+const fbEqEvid=firebase.database().ref('portal_facilities_arquivos/equipeEvidencias');
+const _eqFmtDia=new Intl.DateTimeFormat('en-CA',{timeZone:EQ_FUSO,year:'numeric',month:'2-digit',day:'2-digit'});
+let _eqEmGravacao=new Set();                      // tarefas com gravação em andamento (barra clique repetido)
+let _eqPainel={aberto:false,periodo:'mes',de:'',ate:''};
+
+// ─── Datas (sempre AAAA-MM-DD de Brasília; diferenças em dias corridos, sem depender de horário nem de horário de verão) ───
+function _eqHoje(){ return _eqFmtDia.format(new Date()); }
+function _eqDia(iso){ return iso?_eqFmtDia.format(new Date(iso)):''; }                   // dia (Brasília) de um instante
+function _eqDataOk(s){ if(!/^\d{4}-\d{2}-\d{2}$/.test(String(s||''))) return false; const [y,m,d]=s.split('-').map(Number), x=new Date(Date.UTC(y,m-1,d)); return x.getUTCFullYear()===y&&x.getUTCMonth()===m-1&&x.getUTCDate()===d; }
+function _eqUTC(s){ const [y,m,d]=s.split('-').map(Number); return Date.UTC(y,m-1,d); }
+function _eqDiasEntre(a,b){ return Math.round((_eqUTC(b)-_eqUTC(a))/86400000); }          // b − a
+function _eqSomaDias(s,n){ const x=new Date(_eqUTC(s)+n*86400000); return `${x.getUTCFullYear()}-${String(x.getUTCMonth()+1).padStart(2,'0')}-${String(x.getUTCDate()).padStart(2,'0')}`; }
+function _eqAgoraTxt(iso){ if(!iso) return '—'; const d=new Date(iso); return d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',timeZone:EQ_FUSO})+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:EQ_FUSO}); }
+function _eqDH(iso){ if(!iso) return '—'; const d=new Date(iso); return d.toLocaleDateString('pt-BR',{timeZone:EQ_FUSO})+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:EQ_FUSO}); }
+const _eqPl=(n,s,p)=>`${n} ${n===1?s:p}`;
+const _eqRotulo=v=>v===EQ_CONCLUIDO?'Concluída':v;
+
+// ─── SLA: ÚNICA função de cálculo (tabela, Kanban, indicadores e selo do portal usam esta) ───
+// Regra de datas: o dia do vencimento ainda é "no prazo". Concluída: compara a data de conclusão com o PRAZO VIGENTE NA CONCLUSÃO
+// (guardado na conclusão). Aberta: vencida se hoje > prazo; "Atenção" se faltam até EQ_SLA.diasAlerta dias; senão no prazo.
+function eqSlaInfo(t,hoje){
+  hoje=hoje||_eqHoje();
+  const b={cod:'sem_classificacao',cor:'cinza',texto:'Sem prazo',dias:null,aberta:t.status!==EQ_CONCLUIDO,prazo:t.prazo||'',conclusao:null,detalhe:'Defina um prazo para acompanhar o SLA.'};
+  if(t.status===EQ_CONCLUIDO){
+    const c=t.conclusao;
+    if(!(c&&c.data)) return {...b,aberta:false,cod:'sem_registro',texto:'Sem data de conclusão',detalhe:'Tarefa marcada como concluída antes do registro de conclusão: não há data para calcular o SLA.'};
+    const prazo=c.prazoVigente||'';
+    if(!prazo) return {...b,aberta:false,cod:'sem_prazo',texto:'Concluída sem prazo',prazo:'',conclusao:c.data,detalhe:'A tarefa foi concluída sem prazo definido.'};
+    const atraso=_eqDiasEntre(prazo,c.data);
+    return atraso>0?{...b,aberta:false,cod:'concluida_atraso',cor:'vermelho',texto:'Concluída com atraso',dias:atraso,prazo,conclusao:c.data,detalhe:`Prazo ${fmtDate(prazo)}, concluída em ${fmtDate(c.data)}: ${_eqPl(atraso,'dia','dias')} de atraso.`}
+      :{...b,aberta:false,cod:'concluida_no_prazo',cor:'verde',texto:'No prazo',dias:0,prazo,conclusao:c.data,detalhe:`Concluída em ${fmtDate(c.data)}, dentro do prazo (${fmtDate(prazo)}).`};
+  }
+  if(!t.prazo||!_eqDataOk(t.prazo)) return b;
+  const faltam=_eqDiasEntre(hoje,t.prazo);
+  if(faltam<0) return {...b,cod:'atrasada',cor:'vermelho',texto:'Atrasada',dias:-faltam,detalhe:`Prazo ${fmtDate(t.prazo)} ultrapassado há ${_eqPl(-faltam,'dia','dias')}.`};
+  if(faltam<=EQ_SLA.diasAlerta) return {...b,cod:'atencao',cor:'amarelo',texto:'Atenção',dias:faltam,detalhe:faltam===0?`Vence hoje (${fmtDate(t.prazo)}).`:`Vence em ${_eqPl(faltam,'dia','dias')} (${fmtDate(t.prazo)}).`};
+  return {...b,cod:'no_prazo',cor:'verde',texto:'No prazo',dias:faltam,detalhe:`Vence em ${_eqPl(faltam,'dia','dias')} (${fmtDate(t.prazo)}).`};
+}
+function _eqAtrasada(t){ return eqSlaInfo(t).cod==='atrasada'; }                       // ABERTA e vencida (concluída com atraso é outra coisa)
+function _eqSlaBadge(t,pequeno){
+  const s=eqSlaInfo(t), ico={verde:'✔',amarelo:'⚠',vermelho:'✖',cinza:'–'}[s.cor];
+  let sub=''; if(s.cod==='concluida_atraso') sub=_eqPl(s.dias,'dia','dias')+' de atraso'; else if(s.cod==='atrasada') sub='há '+_eqPl(s.dias,'dia','dias'); else if(s.cod==='atencao') sub=s.dias===0?'vence hoje':'vence em '+_eqPl(s.dias,'dia','dias');
+  return `<button type="button" class="eq-sla eq-sla-${s.cor}${pequeno?' eq-sla-p':''}" onclick="event.stopPropagation();eqHistorico('${t.id}')" title="${_eqEsc(s.detalhe)}"><i>${ico}</i><span>${_eqEsc(s.texto)}${sub?`<small>${sub}</small>`:''}</span></button>`;
+}
+
+// ─── Persistência: devolve sucesso/erro de verdade e desfaz o estado local se a nuvem não confirmar ───
+const _eqLimpa=o=>JSON.parse(JSON.stringify(o));                                        // tira undefined (o Firebase recusa)
+function _eqNormLista(v){ if(!v) return []; return Array.isArray(v)?v.filter(Boolean):Object.keys(v).sort((a,b)=>a-b).map(k=>v[k]); }
+const _eqLimite=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('Sem confirmação do servidor')),ms||15000))]);
+function _eqPersistir(lista){
+  const antes=DB_CACHE.equipeTarefas; DB_CACHE.equipeTarefas=lista;
+  return _eqLimite(fbRoot.child('equipeTarefas').set(_eqLimpa(lista))).catch(e=>{ DB_CACHE.equipeTarefas=antes; throw e; });
+}
+function _eqSalvar(lista){
+  _eqPersistir(lista).catch(e=>{ console.error('Plano de ação: falha ao salvar',e); alert('⚠️ Não foi possível salvar na nuvem. A alteração foi desfeita nesta tela — verifique a conexão e tente novamente.'); _eqRender(); });
+}
+// Altera UMA tarefa com o valor mais recente do servidor (transação): sem sobrescrever o que outras pessoas gravaram e sem duplicar
+// a conclusão em clique repetido. fn(tarefa) → {tarefa:nova} ou {erro:'mensagem'}. Resolve {ok:true,tarefa} | {ok:false,erro}; rejeita se a gravação falhar.
+async function _eqMutarTarefa(id,fn){
+  let res=null;
+  const tx=await _eqLimite(fbRoot.child('equipeTarefas').transaction(cur=>{
+    const arr=_eqNormLista(cur); if(!arr.length){ res={erro:'Não foi possível ler as tarefas no servidor.'}; return undefined; }
+    const i=arr.findIndex(t=>t&&t.id===id); if(i<0){ res={erro:'Tarefa não encontrada (pode ter sido excluída).'}; return undefined; }
+    const r=fn(arr[i]); if(r.erro){ res={erro:r.erro}; return undefined; }
+    arr[i]=r.tarefa; res={ok:true,tarefa:r.tarefa}; return _eqLimpa(arr);
+  }));
+  if(!tx.committed) return {ok:false,erro:(res&&res.erro)||'A gravação não foi confirmada (alteração simultânea ou sem conexão). Tente novamente.'};
+  DB_CACHE.equipeTarefas=_eqNormLista(tx.snapshot.val());
+  return res;
+}
+function _eqToast(msg,tipo){ const el=document.createElement('div'); el.className='eq-toast '+(tipo||'ok'); el.textContent=msg; document.body.appendChild(el); setTimeout(()=>el.classList.add('on'),10); setTimeout(()=>{ el.classList.remove('on'); setTimeout(()=>el.remove(),300); },3800); }
+const _eqEnt=(tipo,dados)=>({id:uid(),tipo,em:new Date().toISOString(),por:_eqUsuario(),...dados});
+
+// ─── Atualização comum (campos editáveis) com registro no histórico ───
+const EQ_CAMPOS_HIST={status:'status',prazo:'prazo',responsavel:'responsavel',prioridade:'prioridade',grupoId:'grupo',titulo:'titulo'};
+function _eqAtualizar(id,campos,extra){
+  extra=extra||{}; const l=_eqTarefas().slice(), i=l.findIndex(t=>t.id===id); if(i<0) return false;
+  const velho=l[i]; campos={...campos};
+  // "Concluído" só nasce (e só deixa de existir) pelos fluxos Concluir / Reabrir
+  if('status' in campos&&((campos.status===EQ_CONCLUIDO)!==(velho.status===EQ_CONCLUIDO))) delete campos.status;
+  const agora=new Date().toISOString(), hist=(velho.historico||[]).slice(), novo={...velho,...campos}, gn=gid=>(_eqGrupos().find(g=>g.id===gid)||{}).nome||'';
+  Object.keys(campos).forEach(c=>{
+    const tipo=EQ_CAMPOS_HIST[c]; if(!tipo) return;
+    const de=velho[c]==null?'':velho[c], para=campos[c]==null?'':campos[c]; if(String(de)===String(para)) return;
+    const e={id:uid(),tipo,em:agora,por:_eqUsuario(),de,para};
+    if(c==='prazo'){ if(extra.justificativaPrazo) e.justificativa=extra.justificativaPrazo; if(!velho.prazoOriginal&&de) novo.prazoOriginal=de; if(!novo.prazoOriginal&&para) novo.prazoOriginal=para; }
+    if(c==='grupoId'){ e.deNome=gn(de); e.paraNome=gn(para); }
+    hist.push(e);
+  });
+  novo.historico=hist; novo.atualizadoEm=agora; novo.atualizadoPor=_eqUsuario(); l[i]=novo; _eqSalvar(l); return true;
+}
+function eqSet(id,campo,valor){
+  if(!id) return; const t=_eqTarefas().find(x=>x.id===id); if(!t) return;
+  if(campo==='status'){
+    const concl=t.status===EQ_CONCLUIDO;
+    if(valor===EQ_CONCLUIDO){ if(!concl) eqConcluir(id); else _eqRender(); return; }    // nunca marca como concluída sem o fluxo de registro
+    if(concl){ eqReabrir(id,valor); return; }                                            // sair de "Concluída" = reabertura explícita
+  }
+  if(campo==='prazo'){ if((valor||'')!==(t.prazo||'')) eqAlterarPrazo(id,valor); else _eqRender(); return; }
+  _eqAtualizar(id,{[campo]:valor}); _eqRender();
+}
+function eqPrazoInline(el,id){ const novo=el.value; el.value=el.dataset.v||''; eqSet(id,'prazo',novo); }   // o campo só muda depois da confirmação
+
+// ─── CONCLUIR ───
+function _eqPrevia(t,data){
+  if(!_eqDataOk(data)) return '<span class="eqc-pv cinza">Informe uma data válida.</span>';
+  if(!t.prazo) return '<span class="eqc-pv cinza">Tarefa sem prazo definido: a conclusão será registrada sem classificação de SLA.</span>';
+  const atraso=_eqDiasEntre(t.prazo,data);
+  return atraso>0?`<span class="eqc-pv vermelho">✖ Concluída com atraso — prazo ${fmtDate(t.prazo)}, ${_eqPl(atraso,'dia','dias')} de atraso</span>`:`<span class="eqc-pv verde">✔ No prazo — prazo ${fmtDate(t.prazo)}</span>`;
+}
+function eqcPrevia(id){ const t=_eqTarefas().find(x=>x.id===id), e=document.getElementById('eqc-previa'); if(t&&e) e.innerHTML='<small>Resultado do SLA com esta data:</small> '+_eqPrevia(t,document.getElementById('eqc-data').value); }
+function eqConcluir(id){
+  const pop=document.getElementById('eq-pop'); if(pop) pop.remove();
+  const t=_eqTarefas().find(x=>x.id===id); if(!t) return;
+  if(t.status===EQ_CONCLUIDO&&t.conclusao&&t.conclusao.data){ _eqToast('Esta tarefa já está concluída.','info'); return; }
+  const hoje=_eqHoje(), criada=_eqDia(t.criadoEm), regul=t.status===EQ_CONCLUIDO;
+  openModal('Concluir atividade',`
+    <div class="eqc-tarefa">${_eqEsc(t.titulo)}</div>
+    ${regul?'<div class="eqc-aviso">Esta tarefa já constava como “Concluída”, mas sem data de conclusão registrada. Informe a data real.</div>':''}
+    <div class="form-group"><label class="form-label">Data de conclusão *</label><input type="date" class="form-input" id="eqc-data" value="${hoje}" max="${hoje}" ${criada?`min="${criada}"`:''} oninput="eqcPrevia('${id}')" onchange="eqcPrevia('${id}')"/><small class="eqc-dica">Preenchida com a data de hoje (Brasília). Ajuste se a atividade foi concluída em outro dia — não pode ser futura nem anterior à criação da tarefa.</small></div>
+    <div id="eqc-previa" class="eqc-previa"></div>
+    <div class="form-group"><label class="form-label">Observação da conclusão (opcional)</label><textarea class="form-textarea" id="eqc-obs" style="min-height:70px" placeholder="Ex.: Etiquetas entregues e validadas na operação."></textarea></div>
+    <div class="form-group"><label class="form-label">Evidência ou anexo (opcional, até 10 MB)</label><input type="file" class="form-input" id="eqc-arq"/></div>
+    <div id="eqc-msg" class="eqc-msg"></div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button><button class="btn btn-primary eqc-ok" id="eqc-btn" onclick="eqConfirmarConclusao('${id}')">Concluir</button>`);
+  eqcPrevia(id);
+}
+async function eqConfirmarConclusao(id){
+  if(_eqEmGravacao.has(id)) return;
+  const msg=m=>{ const e=document.getElementById('eqc-msg'); if(e) e.textContent=m||''; }, btn=document.getElementById('eqc-btn');
+  const t=_eqTarefas().find(x=>x.id===id); if(!t){ msg('Tarefa não encontrada.'); return; }
+  const data=document.getElementById('eqc-data').value, obs=(document.getElementById('eqc-obs').value||'').trim(), arq=(document.getElementById('eqc-arq').files||[])[0], hoje=_eqHoje(), criada=_eqDia(t.criadoEm);
+  if(!_eqDataOk(data)){ msg('Informe uma data de conclusão válida.'); return; }
+  if(data>hoje){ msg('A data de conclusão não pode ser futura.'); return; }
+  if(criada&&data<criada){ msg(`A data de conclusão não pode ser anterior à criação da tarefa (${fmtDate(criada)}).`); return; }
+  if(arq&&arq.size>EQ_ANEXO_MAX){ msg('O anexo passa de 10 MB.'); return; }
+  _eqEmGravacao.add(id); if(btn){ btn.disabled=true; btn.textContent='Salvando…'; } msg('');
+  let evid=null;
+  try{
+    if(arq){
+      const up=uid(), url=await _lerArquivoComoBase64(arq), total=Math.max(1,Math.ceil(url.length/PDF_PARTE_CHARS)), ref=fbEqEvid.child(id).child(up);
+      for(let i=0;i<total;i++) await _eqLimite(ref.child('partes').child('p'+i).set(url.slice(i*PDF_PARTE_CHARS,(i+1)*PDF_PARTE_CHARS)),30000);
+      await _eqLimite(ref.child('meta').set({totalPartes:total})); evid={nome:arq.name,tamanho:arq.size,tipo:arq.type||'application/octet-stream',uploadId:up};
+    }
+    const r=await _eqMutarTarefa(id,cur=>{
+      if(cur.status===EQ_CONCLUIDO&&cur.conclusao&&cur.conclusao.data) return {erro:`Esta tarefa já foi concluída (${fmtDate(cur.conclusao.data)}, por ${cur.conclusao.por||'—'}).`};
+      const cr=_eqDia(cur.criadoEm); if(cr&&data<cr) return {erro:`A data de conclusão não pode ser anterior à criação da tarefa (${fmtDate(cr)}).`};
+      const agora=new Date().toISOString(), prazo=cur.prazo||'', atraso=prazo?_eqDiasEntre(prazo,data):0;
+      const c={data,em:agora,por:_eqUsuario(),prazoVigente:prazo,prazoOriginal:cur.prazoOriginal||prazo,sla:!prazo?'sem_prazo':atraso>0?'atraso':'no_prazo',diasAtraso:atraso>0?atraso:0};
+      if(obs) c.obs=obs; if(evid) c.evidencia=evid;
+      return {tarefa:{...cur,status:EQ_CONCLUIDO,conclusao:c,prazoOriginal:cur.prazoOriginal||prazo||undefined,atualizadoEm:agora,atualizadoPor:c.por,
+        historico:[...(cur.historico||[]),{id:uid(),tipo:'conclusao',em:agora,por:c.por,statusDe:cur.status||'Não iniciado',...c}]}};
+    });
+    if(!r.ok){ if(evid) fbEqEvid.child(id).child(evid.uploadId).remove().catch(()=>{}); msg(r.erro); if(btn){ btn.disabled=false; btn.textContent='Concluir'; } _eqEmGravacao.delete(id); return; }
+    _eqEmGravacao.delete(id); closeModalDirect(); _eqRender();
+    const s=eqSlaInfo(r.tarefa); _eqToast(`Atividade concluída — SLA: ${s.texto}${s.cod==='concluida_atraso'?` (${_eqPl(s.dias,'dia','dias')} de atraso)`:''}`,s.cor==='vermelho'?'atraso':'ok');
+  }catch(e){
+    console.error('Plano de ação: falha ao concluir',e); _eqEmGravacao.delete(id);
+    if(evid) fbEqEvid.child(id).child(evid.uploadId).remove().catch(()=>{});
+    msg('Não foi possível salvar a conclusão. Nada foi registrado — verifique a conexão e tente novamente.'); if(btn){ btn.disabled=false; btn.textContent='Concluir'; }
+  }
+}
+
+// ─── REABRIR (ação explícita, com justificativa; a conclusão anterior fica preservada no histórico) ───
+function eqReabrir(id,alvo){
+  const pop=document.getElementById('eq-pop'); if(pop) pop.remove();
+  const t=_eqTarefas().find(x=>x.id===id); if(!t||t.status!==EQ_CONCLUIDO) return;
+  const c=t.conclusao, s=eqSlaInfo(t), opcoes=EQ_STATUS.filter(x=>x.v!==EQ_CONCLUIDO).map(x=>x.v), padrao=opcoes.includes(alvo)?alvo:'Em andamento';
+  openModal('Reabrir atividade',`
+    <div class="eqc-tarefa">${_eqEsc(t.titulo)}</div>
+    <div class="eqc-aviso">${c?`Concluída em ${fmtDate(c.data)} por ${_eqEsc(c.por||'—')} (${_eqEsc(s.texto)}). Esse registro fica guardado no histórico.`:'Esta tarefa constava como concluída sem registro de conclusão.'}</div>
+    <div class="form-group"><label class="form-label">Voltar para o status</label><select class="form-select" id="eqr-st">${opcoes.map(o=>`<option${o===padrao?' selected':''}>${_eqEsc(o)}</option>`).join('')}</select></div>
+    <div class="form-group"><label class="form-label">Justificativa da reabertura *</label><textarea class="form-textarea" id="eqr-just" style="min-height:80px" placeholder="Por que a atividade precisa ser reaberta?"></textarea></div>
+    <div id="eqr-msg" class="eqc-msg"></div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button><button class="btn btn-primary eqc-ok" id="eqr-btn" onclick="eqConfirmarReabertura('${id}')">Reabrir atividade</button>`);
+}
+async function eqConfirmarReabertura(id){
+  if(_eqEmGravacao.has(id)) return;
+  const msg=m=>{ const e=document.getElementById('eqr-msg'); if(e) e.textContent=m||''; }, btn=document.getElementById('eqr-btn');
+  const just=(document.getElementById('eqr-just').value||'').trim(), st=document.getElementById('eqr-st').value;
+  if(just.length<3){ msg('Informe a justificativa da reabertura.'); return; }
+  _eqEmGravacao.add(id); btn.disabled=true; btn.textContent='Salvando…'; msg('');
+  try{
+    const r=await _eqMutarTarefa(id,cur=>{
+      if(cur.status!==EQ_CONCLUIDO) return {erro:'Esta tarefa não está concluída (pode já ter sido reaberta).'};
+      const agora=new Date().toISOString(), s=eqSlaInfo(cur);
+      return {tarefa:{...cur,status:st,conclusao:null,atualizadoEm:agora,atualizadoPor:_eqUsuario(),
+        historico:[...(cur.historico||[]),{id:uid(),tipo:'reabertura',em:agora,por:_eqUsuario(),justificativa:just,statusPara:st,conclusaoAnterior:cur.conclusao||null,slaAnterior:s.texto}]}};
+    });
+    _eqEmGravacao.delete(id);
+    if(!r.ok){ msg(r.erro); btn.disabled=false; btn.textContent='Reabrir atividade'; return; }
+    closeModalDirect(); _eqRender(); _eqToast('Atividade reaberta — a conclusão anterior ficou registrada no histórico.','info');
+  }catch(e){ console.error(e); _eqEmGravacao.delete(id); msg('Não foi possível salvar a reabertura. Nada foi alterado — verifique a conexão e tente novamente.'); btn.disabled=false; btn.textContent='Reabrir atividade'; }
+}
+
+// ─── ALTERAR PRAZO (o prazo original é preservado; toda mudança vira registro no histórico) ───
+function eqAlterarPrazo(id,novo){
+  const t=_eqTarefas().find(x=>x.id===id); if(!t) return;
+  if(novo&&!_eqDataOk(novo)){ alert('Data de prazo inválida.'); _eqRender(); return; }
+  if(!t.prazo){ _eqAtualizar(id,{prazo:novo}); _eqRender(); return; }               // 1ª definição do prazo: sem justificativa
+  openModal('Alterar prazo',`
+    <div class="eqc-tarefa">${_eqEsc(t.titulo)}</div>
+    <div class="eqp-troca"><div><small>Prazo atual</small><b>${fmtDate(t.prazo)}</b></div><span>→</span><div><small>Novo prazo</small><b>${novo?fmtDate(novo):'sem prazo'}</b></div></div>
+    ${t.prazoOriginal&&t.prazoOriginal!==t.prazo?`<div class="eqc-dica">Prazo original: ${fmtDate(t.prazoOriginal)} (permanece registrado).</div>`:''}
+    ${t.status===EQ_CONCLUIDO?'<div class="eqc-aviso">Esta tarefa já foi concluída: o SLA da entrega continua calculado pelo prazo vigente no momento da conclusão.</div>':''}
+    <div class="form-group"><label class="form-label">Justificativa da alteração (recomendada)</label><textarea class="form-textarea" id="eqp-just" style="min-height:70px" placeholder="Ex.: Aguardando entrega do fornecedor."></textarea></div>
+    <div id="eqp-msg" class="eqc-msg"></div>`,
+    `<button class="btn btn-outline" onclick="closeModalDirect()">Cancelar</button><button class="btn btn-primary eqc-ok" id="eqp-btn" onclick="eqConfirmarPrazo('${id}','${novo||''}')">Confirmar novo prazo</button>`);
+}
+async function eqConfirmarPrazo(id,novo){
+  if(_eqEmGravacao.has(id)) return;
+  const msg=m=>{ const e=document.getElementById('eqp-msg'); if(e) e.textContent=m||''; }, btn=document.getElementById('eqp-btn'), just=(document.getElementById('eqp-just').value||'').trim();
+  _eqEmGravacao.add(id); btn.disabled=true; btn.textContent='Salvando…';
+  try{
+    const r=await _eqMutarTarefa(id,cur=>{
+      const de=cur.prazo||''; if(de===novo) return {erro:'O prazo já está com esse valor.'};
+      const agora=new Date().toISOString(), e={id:uid(),tipo:'prazo',em:agora,por:_eqUsuario(),de,para:novo}; if(just) e.justificativa=just;
+      return {tarefa:{...cur,prazo:novo,prazoOriginal:cur.prazoOriginal||de||novo||undefined,atualizadoEm:agora,atualizadoPor:_eqUsuario(),historico:[...(cur.historico||[]),e]}};
+    });
+    _eqEmGravacao.delete(id);
+    if(!r.ok){ msg(r.erro); btn.disabled=false; btn.textContent='Confirmar novo prazo'; return; }
+    closeModalDirect(); _eqRender(); _eqToast('Prazo alterado e registrado no histórico.','info');
+  }catch(e){ console.error(e); _eqEmGravacao.delete(id); msg('Não foi possível salvar o novo prazo. Nada foi alterado — tente novamente.'); btn.disabled=false; btn.textContent='Confirmar novo prazo'; }
+}
+
+// ─── HISTÓRICO E DETALHES DA ENTREGA ───
+function _eqLinhaHist(h){
+  const g=_eqEsc, de=v=>v===''||v==null?'<i>vazio</i>':g(v), dt=v=>v?fmtDate(v):'<i>sem prazo</i>';
+  const meta=`<div class="eqh-meta"><b>${g(h.por||'—')}</b> · ${_eqDH(h.em)}</div>`;
+  const ic={criacao:'＋',status:'●',prazo:'📅',responsavel:'👤',prioridade:'⚑',grupo:'▤',titulo:'✎',conclusao:'✔',reabertura:'↺',observacao:'💬'}[h.tipo]||'•';
+  let txt='';
+  if(h.tipo==='criacao') txt='Atividade criada'+(h.legado?' <span class="eqh-leg">(registro anterior ao histórico)</span>':'');
+  else if(h.tipo==='status') txt=`Status: ${de(_eqRotulo(h.de))} → <b>${g(_eqRotulo(h.para))}</b>`;
+  else if(h.tipo==='prazo') txt=`Prazo: ${dt(h.de)} → <b>${dt(h.para)}</b>${h.justificativa?`<div class="eqh-just">Justificativa: ${g(h.justificativa)}</div>`:''}`;
+  else if(h.tipo==='responsavel') txt=`Responsável: ${de(h.de)} → <b>${de(h.para)}</b>${h.nota?` <span class="eqh-leg">(${g(h.nota)})</span>`:''}`;
+  else if(h.tipo==='prioridade') txt=`Prioridade: ${de(h.de)} → <b>${de(h.para)}</b>`;
+  else if(h.tipo==='grupo') txt=`Grupo: ${de(h.deNome)} → <b>${de(h.paraNome)}</b>`;
+  else if(h.tipo==='titulo') txt=`Título alterado: “${g(h.de)}” → “${g(h.para)}”`;
+  else if(h.tipo==='conclusao'){ const s=eqSlaInfo({status:EQ_CONCLUIDO,conclusao:h}); txt=`<b>Concluída</b> em ${fmtDate(h.data)} · prazo vigente ${h.prazoVigente?fmtDate(h.prazoVigente):'não definido'} · <span class="eqh-sla ${s.cor}">${g(s.texto)}${s.cod==='concluida_atraso'?` (${_eqPl(s.dias,'dia','dias')})`:''}</span>${h.obs?`<div class="eqh-just">Observação: ${g(h.obs)}</div>`:''}${h.evidencia?`<div><button class="eqh-evid" onclick="eqVerEvidencia('${h.uidTarefa||''}','${h.evidencia.uploadId}')">📎 ${g(h.evidencia.nome)}</button></div>`:''}`; }
+  else if(h.tipo==='reabertura'){ const c=h.conclusaoAnterior; txt=`<b>Reaberta</b> (→ ${g(_eqRotulo(h.statusPara||''))})<div class="eqh-just">Justificativa: ${g(h.justificativa||'—')}</div>${c?`<div class="eqh-leg">Conclusão anterior preservada: ${fmtDate(c.data)}, por ${g(c.por||'—')}${h.slaAnterior?` — ${g(h.slaAnterior)}`:''}</div>`:''}`; }
+  else if(h.tipo==='observacao') txt=`Atualização: <span class="eqh-obs">${g(h.texto)}</span>`;
+  return `<div class="eqh-item eqh-${h.tipo}"><span class="eqh-ic">${ic}</span><div>${txt}${meta}</div></div>`;
+}
+function _eqLinhaDoTempo(t){
+  const l=(t.historico||[]).map(h=>({...h,uidTarefa:t.id}));
+  if(!l.some(h=>h.tipo==='criacao')&&t.criadoEm) l.push({id:'_cr',tipo:'criacao',em:t.criadoEm,por:t.criadoPor,legado:true});
+  (t.comentarios||[]).forEach(c=>l.push({id:'c'+c.id,tipo:'observacao',em:c.data,por:c.autor,texto:c.texto}));
+  return l.sort((a,b)=>String(b.em).localeCompare(String(a.em)));
+}
+function eqHistorico(id){
+  const pop=document.getElementById('eq-pop'); if(pop) pop.remove();
+  const t=_eqTarefas().find(x=>x.id===id); if(!t) return;
+  const s=eqSlaInfo(t), c=t.conclusao, concl=t.status===EQ_CONCLUIDO;
+  const painel=`<div class="eqh-sla-box ${s.cor}"><div class="eqh-sla-t"><span class="eqh-sla-ic">${{verde:'✔',amarelo:'⚠',vermelho:'✖',cinza:'–'}[s.cor]}</span><div><small>SLA da entrega</small><b>${_eqEsc(s.texto)}</b></div></div>
+    <div><small>${t.prazoOriginal&&t.prazoOriginal!==(concl&&c?c.prazoVigente:t.prazo)?'Prazo vigente':'Prazo'}</small><b>${(concl&&c?c.prazoVigente:t.prazo)?fmtDate(concl&&c?c.prazoVigente:t.prazo):'—'}</b></div>
+    ${t.prazoOriginal&&t.prazoOriginal!==(concl&&c?c.prazoVigente:t.prazo)?`<div><small>Prazo original</small><b>${fmtDate(t.prazoOriginal)}</b></div>`:''}
+    <div><small>${concl?'Data de conclusão':'Situação'}</small><b>${concl&&c?fmtDate(c.data):_eqEsc(s.texto)}</b></div>
+    ${s.cod==='concluida_atraso'?`<div><small>Dias de atraso</small><b>${_eqPl(s.dias,'dia','dias')}</b></div>`:(s.dias!=null&&!concl?`<div><small>${s.cod==='atrasada'?'Atraso':'Faltam'}</small><b>${_eqPl(s.dias,'dia','dias')}</b></div>`:'')}</div>
+    <div class="eqh-det">${_eqEsc(s.detalhe)}${concl&&c?` Registrada por <b>${_eqEsc(c.por||'—')}</b> em ${_eqDH(c.em)}.`:''}</div>`;
+  const tl=_eqLinhaDoTempo(t);
+  openModal('Histórico da atividade',`<div class="eqc-tarefa">${_eqEsc(t.titulo)}</div>${painel}
+    <div class="form-label" style="margin:14px 0 6px">Linha do tempo (${tl.length})</div><div class="eqh-lista">${tl.map(_eqLinhaHist).join('')}</div>`,
+    `${concl?`<button class="btn btn-outline" style="margin-right:auto" onclick="eqReabrir('${id}')">↺ Reabrir atividade</button>`:`<button class="btn btn-primary eqc-ok" style="margin-right:auto" onclick="eqConcluir('${id}')">Concluir atividade</button>`}${concl&&!(c&&c.data)?`<button class="btn btn-outline" onclick="eqConcluir('${id}')">Registrar conclusão</button>`:''}<button class="btn btn-outline" onclick="closeModalDirect()">Fechar</button>`,true);
+}
+async function eqVerEvidencia(id,up){
+  const t=_eqTarefas().find(x=>x.id===id); if(!t) return;
+  const ev=((t.historico||[]).map(h=>h.evidencia).concat([t.conclusao&&t.conclusao.evidencia]).concat((t.historico||[]).map(h=>h.conclusaoAnterior&&h.conclusaoAnterior.evidencia))).find(e=>e&&e.uploadId===up); if(!ev) return;
+  const visivel=/^(application\/pdf|image\/)/.test(ev.tipo||''), janela=visivel?window.open('','_blank'):null;
+  try{
+    const v=(await fbEqEvid.child(id).child(up).once('value')).val(); if(!v||!v.meta||!v.partes) throw new Error('não encontrado');
+    let s=''; for(let i=0;i<v.meta.totalPartes;i++) s+=v.partes['p'+i]||'';
+    const p=s.split(','), bin=atob(p[1]), u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+    const bu=URL.createObjectURL(new Blob([u],{type:ev.tipo}));
+    if(janela) janela.location.href=bu; else { const a=document.createElement('a'); a.href=bu; a.download=ev.nome; document.body.appendChild(a); a.click(); a.remove(); }
+    setTimeout(()=>URL.revokeObjectURL(bu),60000);
+  }catch(e){ if(janela) janela.close(); alert('Não foi possível abrir a evidência.'); }
+}
+
+// ─── INDICADORES DE SLA (cálculo real sobre as tarefas gravadas; respeita busca e responsável do quadro) ───
+function _eqPeriodoSel(){
+  const h=_eqHoje(), [y,m]=h.split('-').map(Number), p=_eqPainel.periodo, mm=String(m).padStart(2,'0');
+  if(p==='todos') return {de:'',ate:'',rot:'todo o período'};
+  if(p==='30d') return {de:_eqSomaDias(h,-29),ate:h,rot:'últimos 30 dias'};
+  if(p==='mes') return {de:`${y}-${mm}-01`,ate:h,rot:'este mês'};
+  if(p==='trimestre'){ const q=Math.floor((m-1)/3)*3+1; return {de:`${y}-${String(q).padStart(2,'0')}-01`,ate:h,rot:'este trimestre'}; }
+  if(p==='ano') return {de:`${y}-01-01`,ate:h,rot:'este ano'};
+  return {de:_eqDataOk(_eqPainel.de)?_eqPainel.de:'',ate:_eqDataOk(_eqPainel.ate)?_eqPainel.ate:'',rot:'período personalizado'};
+}
+function eqIndicadores(tarefas,per){
+  const hoje=_eqHoje(), dentro=d=>d&&(!per.de||d>=per.de)&&(!per.ate||d<=per.ate);
+  const concl=tarefas.filter(t=>t.status===EQ_CONCLUIDO&&t.conclusao&&t.conclusao.data&&dentro(t.conclusao.data));
+  const sl=concl.map(t=>eqSlaInfo(t)).filter(s=>s.cod==='concluida_no_prazo'||s.cod==='concluida_atraso');
+  const ok=sl.filter(s=>s.cod==='concluida_no_prazo').length, atraso=sl.length-ok;
+  const tempos=concl.map(t=>{ const c=_eqDia(t.criadoEm); return c?_eqDiasEntre(c,t.conclusao.data):null; }).filter(x=>x!==null&&x>=0);
+  return {concluidas:concl.length,classificadas:sl.length,ok,atraso,pctOk:sl.length?ok/sl.length*100:null,pctAtraso:sl.length?atraso/sl.length*100:null,
+    vencidas:tarefas.filter(t=>eqSlaInfo(t,hoje).cod==='atrasada').length,tempoMedio:tempos.length?tempos.reduce((a,b)=>a+b,0)/tempos.length:null,nTempo:tempos.length,semClassificar:concl.length-sl.length};
+}
+const _eqPct=n=>n==null?'—':Number(n).toLocaleString('pt-BR',{maximumFractionDigits:0})+'%';
+function _eqPainelSla(){
+  if(!_eqPainel.aberto) return '';
+  const per=_eqPeriodoSel(), I=eqIndicadores(_eqFiltradas(),per), p=_eqPainel.periodo;
+  const opt=[['mes','Este mês'],['30d','Últimos 30 dias'],['trimestre','Este trimestre'],['ano','Este ano'],['todos','Todo o período'],['custom','Personalizado']];
+  const nd='<span class="eqi-nd">Sem dados suficientes</span>';
+  const card=(cor,t,v,s)=>`<div class="eqi-card ${cor}"><small>${t}</small><b>${v}</b><em>${s}</em></div>`;
+  return `<div class="eqi-painel"><div class="eqi-topo"><div class="eqi-tit">📊 Indicadores de SLA <span>— ${per.rot}${_eqPessoa!=='todos'?` · ${_eqPessoa==='__sem__'?'sem responsável':_eqEsc(_eqPessoa)}`:''}</span></div>
+    <div class="eqi-filtro"><select class="eq-sel" onchange="eqPeriodoPainel(this.value)">${opt.map(([v,t])=>`<option value="${v}"${p===v?' selected':''}>${t}</option>`).join('')}</select>
+    ${p==='custom'?`<input type="date" class="eq-sel" value="${_eqPainel.de}" onchange="_eqPainel.de=this.value;_eqRender()"/><span>a</span><input type="date" class="eq-sel" value="${_eqPainel.ate}" onchange="_eqPainel.ate=this.value;_eqRender()"/>`:''}</div></div>
+    <div class="eqi-cards">
+      ${card('verde','SLA cumprido',I.pctOk==null?nd:_eqPct(I.pctOk),I.pctOk==null?'Nenhuma tarefa concluída com prazo no período':`${I.ok} de ${I.classificadas} concluídas dentro do prazo`)}
+      ${card('vermelho','Conclusões com atraso',I.pctAtraso==null?nd:`${I.atraso} <span class="eqi-pct">(${_eqPct(I.pctAtraso)})</span>`,I.pctAtraso==null?'Nenhuma tarefa concluída com prazo no período':`${I.atraso} de ${I.classificadas} concluídas após o prazo`)}
+      ${card('vermelho','Atividades vencidas',I.vencidas,'abertas com prazo ultrapassado (situação de hoje)')}
+      ${card('cinza','Tempo médio de conclusão',I.tempoMedio==null?nd:`${I.tempoMedio.toLocaleString('pt-BR',{minimumFractionDigits:1,maximumFractionDigits:1})} dias`,I.tempoMedio==null?'Nenhuma conclusão no período':`criação → conclusão, em ${_eqPl(I.nTempo,'tarefa','tarefas')}`)}
+    </div>
+    <div class="eqi-nota">${_eqPl(I.concluidas,'tarefa concluída','tarefas concluídas')} no período.${I.semClassificar?` ${_eqPl(I.semClassificar,'concluída sem prazo definido não entra','concluídas sem prazo definido não entram')} nos percentuais.`:''} Atrasadas em aberto e concluídas com atraso são situações diferentes e aparecem separadas. Tarefas antigas concluídas sem data registrada não entram no cálculo.</div></div>`;
+}
+function eqTogglePainel(){ _eqPainel.aberto=!_eqPainel.aberto; _eqRender(); }
+function eqPeriodoPainel(v){ _eqPainel.periodo=v; _eqRender(); }
 
 // ═══════════════════════════════════════════════════════
 // BEBEDOUROS — GESTÃO DE DOCUMENTAÇÃO (laudos semestrais)
